@@ -1,0 +1,19 @@
+{
+  "name": "geeo-user",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@types/node": "^12.12.17",
+    "path": "^0.12.7",
+    "typescript": "^3.7.3",
+    "typescript-map": "0.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "tsc && node ./output/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

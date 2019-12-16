@@ -1,0 +1,19 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "jsx": "react",
+        "allowJs": true,
+        "sourceMap": false,
+        "outDir": "output",
+        "watch": false
+    },
+    "exclude": [
+        "node_modules",
+        "output"
+      ]
+}
