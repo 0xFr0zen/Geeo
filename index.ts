@@ -15,5 +15,5 @@ import Server from './dev/Server';
 // let dbuser = new DatabaseUser('geeo_admin_penetrator');
 // console.log(dbuser);
 
-let server:Server = new Server();
+let server: Server = new Server();
 server.start();

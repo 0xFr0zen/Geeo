@@ -1,5 +1,4 @@
 import Node from './dev/Crypt';
-import { Edon } from './dev/Crypt';
 import * as fs from 'fs';
 import Database from './dev/Database';
 import * as path from 'path';
@@ -17,12 +16,13 @@ fs.writeFileSync(
     path.join(Database.GeeoDatabaseRoot, './admin-user.geeocypher'),
     x
 );
-let e = new Edon(
+let e = new Node(
     fs
         .readFileSync(
             path.join(Database.GeeoDatabaseRoot, './admin-user.geeocypher')
         )
-        .toString()
+        .toString(),
+    true
 ).toString();
 
 admin1 = JSON.parse(e);

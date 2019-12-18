@@ -1,17 +1,16 @@
 import Node from './dev/Crypt';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Edon } from './dev/Crypt';
 import Database from './dev/Database';
 
-let file = fs.readFileSync(Database.GeeoCypherFile);
+let profile = {
+    user:"root",
+    pass:"root"
+};
+let file = JSON.stringify(profile);
+console.log('f', file);
 
-let decrypted = new Edon(file).toString();
+let encrypted = new Node(file).toString();
 
-
-let j = JSON.parse(decrypted);
-j.admins.forEach((admin:string) => {
-    
-    let s = new Edon(admin).toString();
-    console.log(s);
-});
+let s = new Node(encrypted, true).toString();
+console.log('s', s);

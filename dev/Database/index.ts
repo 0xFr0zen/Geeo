@@ -1,8 +1,8 @@
 import Entity from '../Entity';
-import { Edon } from '../Crypt';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mysql from 'mysql';
+import Node from '../Crypt/index';
 
 export default class Database extends Entity {
     public static readonly GeeoDatabaseRoot = path.join(
@@ -24,22 +24,22 @@ export default class Database extends Entity {
         if (Database.connection == null) {
             Database.connection = mysql.createConnection({
                 localAddress: '127.0.0.1',
-                connectTimeout:60,
+                connectTimeout: 60,
                 user: options.username,
                 password: options.username,
                 port: options.port | Database.MYSQL_PORT,
                 database: 'm104',
             });
-            
-            Database.connection.connect(function(err){
-                console.error(err)
+
+            Database.connection.connect(function(err) {
+                console.error(err);
             });
         }
     }
     public query(string: string, values?: any[]): any {
         let retresults = null;
         if (Database.connection != null) {
-            if(values){
+            if (values) {
                 Database.connection.query(string, values, function(
                     error,
                     results,
@@ -48,7 +48,7 @@ export default class Database extends Entity {
                     if (error) throw error;
                     retresults = results;
                 });
-            }else {
+            } else {
                 Database.connection.query(string, function(
                     error,
                     results,
@@ -58,7 +58,6 @@ export default class Database extends Entity {
                     retresults = results;
                 });
             }
-            
         }
         return retresults;
     }
@@ -72,7 +71,7 @@ export class DatabaseUser extends Entity {
     constructor(username: string) {
         super('dbuser', username);
         let json = JSON.parse(
-            new Edon(
+            new Node(
                 fs
                     .readFileSync(
                         path.join(
@@ -80,11 +79,12 @@ export class DatabaseUser extends Entity {
                             './admin-user.geeocypher'
                         )
                     )
-                    .toString()
+                    .toString(),
+                true
             ).toString()
         );
         this.addParameter('username', json['username']);
-        this.addParameter('password', new Edon(json['password']).toString());
+        this.addParameter('password', new Node(json['password']).toString());
     }
     public getUsername(): string {
         let result = null;

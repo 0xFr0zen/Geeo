@@ -27,12 +27,11 @@ export default class Entity {
         this.addParameter('type', type);
         this.addParameter('name', name.toString());
         this.addParameter('created', Date.now());
-        this.addParameter('node', new Node(this));
+        this.addParameter('node', new Node(this.toString()));
         this.addParameter('last_saved', null);
         this.addParameter('last_loaded', Date.now());
         this.addParameter('updated', []);
         this.addParameter('removed', null);
-        
     }
 
     /**
@@ -145,18 +144,16 @@ export default class Entity {
      */
     protected update(key: string, value: Object): void {
         this.parameters = this.parameters.addItem(key, value);
-        let node = this.getParameter('node');
         let old: any = this.getParameter('updated');
-        if(node instanceof Node){
-            node.update(this);
-            
-            this.parameters = this.parameters.addItem('node', node);
-        }
+
+        this.parameters = this.parameters.addItem(
+            'node',
+            new Node(this.toString())
+        );
         if (Array.isArray(old)) {
             old.push(Date.now());
             this.parameters = this.parameters.addItem('updated', old);
         }
-        
     }
 
     /**
@@ -342,7 +339,6 @@ export class Package {
         if (entity == null) {
             return 'null';
         } else {
-
             let props = JSON.parse(this.geeomapWrap(entity.getParameters()));
 
             let wrapped: PackageWrapped = {
