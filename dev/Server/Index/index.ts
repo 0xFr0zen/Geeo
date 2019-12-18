@@ -2,12 +2,14 @@ import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import User from '../User/';
+import Login from '../Login/';
 function RIndex() {
     let router: express.Router = express.Router({mergeParams:true});
     router.use('/$', function(req: express.Request, res: express.Response) {
         res.render('index', { loggedin: false });
     });
     router.use('/user/', User);
+    router.use('/login', Login);
     router.use('/themes/:file', function(
         req: express.Request,
         res: express.Response

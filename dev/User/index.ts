@@ -23,29 +23,30 @@ export class User extends Entity {
         this.addParameter('storages', []);
         this.addSafe(new Safe('documents'));
     }
-    public static from(name: string | JSON): User {
+    public static from(name: string): User {
         let u: User = null;
-        if (typeof name === 'string') {
-            let p = path.join(
-                path.dirname(require.main.filename),
-                '../saved/users/',
-                name.concat('.geeocypher')
-            );
-            let file = fs.readFileSync(p).toString();
+        let p = path.join(
+            path.dirname(require.main.filename),
+            '../saved/users/',
+            name.concat('.geeocypher')
+        );
+        let file = fs.readFileSync(p).toString();
 
-            let encJSON = Node.from(JSON.parse(file));
+        let encJSON = Node.from(JSON.parse(file));
 
-            let userJSON = JSON.parse(JSON.parse(encJSON.toString()).data).user;
-            u = new User(name);
-            let keys = Object.keys(userJSON);
+        let userJSON = JSON.parse(JSON.parse(encJSON.toString()).data).user;
+        u = new User(name);
+        let keys = Object.keys(userJSON);
 
-            keys.forEach(key => {
-                u.addParameter(key, userJSON[key]);
-            });
-            u.update('last_loaded', Date.now());
-        } else {
-            console.log('');
-        }
+        keys.forEach(key => {
+            u.addParameter(key, userJSON[key]);
+        });
+        u.update('last_loaded', Date.now());
+        return u;
+    }
+    static load(name: string): User {
+        let u:User = null;
+        
         return u;
     }
     /**

@@ -21,8 +21,13 @@ function UserNormalRouter() {
         req: express.Request,
         res: express.Response
     ) {
+        let user = null;
         let name = req.params.name;
-        let user = User.from(name);
+        if(name === 'me'){
+            user = User.load(name);
+        }else {
+            user = User.from(name);
+        }
         let safes = user.getSafes();
         let showcase_safes: any[] = [];
         safes.forEach(safe => {
