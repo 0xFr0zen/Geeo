@@ -11,7 +11,7 @@ export enum StorageType {
  * Unit Class
  *
  * @export
- * @class Storage
+ * @class Safe
  * @extends {Entity}
  */
 export default class Safe extends Entity {
@@ -19,7 +19,7 @@ export default class Safe extends Entity {
      * Creates an instance of Unit.
      *
      * @param {string} name Name of storage.
-     * @memberof Storage
+     * @memberof Safe
      */
     constructor(
         name: string,
@@ -29,12 +29,24 @@ export default class Safe extends Entity {
         this.addParameter('storagetype', storagetype);
         this.addParameter('space', new GeeoMap<string, any>());
     }
+    public static from(json:any): Safe {
+        json = json.safe;
+        let safe:Safe = new Safe(json.name);
+        
+        let keys = Object.keys(json)
+
+        keys.forEach(key => {
+            safe.addParameter(key, json[key]);
+        });
+        safe.update('last_loaded', Date.now());
+        return safe;
+    }
     public getSpace(): GeeoMap<string, any> {
         let result = null;
         let s = this.getParameter('space');
-        if (s instanceof GeeoMap) {
-            result = s;
-        }
+        let gm:GeeoMap<string,any> = new GeeoMap<string,any>();
+        gm.fromJSON(JSON.parse(JSON.stringify(s)));
+        result = gm;
         return result;
     }
     public addItem(name: string, item: any): Safe {
@@ -50,23 +62,5 @@ export default class Safe extends Entity {
         this.update('space', space);
         return this;
     }
-    /**
-     * Saves whole storageunit (true => or all inventories)
-     *
-     * @returns {boolean} success of the action.
-     * @memberof Storage
-     */
-    public save(): boolean {
-        let result = true;
-        let s = this.toString();
-        fs.writeFileSync(
-            path.join(
-                path.dirname(require.main.filename),
-                `${this.getName()}.json`
-            ),
-            s
-        );
 
-        return result;
-    }
 }

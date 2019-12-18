@@ -4,27 +4,46 @@ interface IKeyIV {
     iv: Buffer;
 }
 export default class Node {
+    
     private priv: string = null;
     private iv: Buffer = null;
     private key: Buffer = null;
+    private encoding: crypto.HexBase64BinaryEncoding = 'hex';
     constructor(data: string, givenkeyiv?: IKeyIV) {
         let keyiv = this.getKeyAndIV('geeopenetrator');
-        
-        this.key = (typeof givenkeyiv !== 'undefined') ? Buffer.from(givenkeyiv.key): keyiv.key;
-        this.iv = (typeof givenkeyiv !== 'undefined') ? Buffer.from(givenkeyiv.iv): keyiv.iv;
-        
+
+        this.key =
+            typeof givenkeyiv !== 'undefined'
+                ? Buffer.from(givenkeyiv.key)
+                : keyiv.key;
+        this.iv =
+            typeof givenkeyiv !== 'undefined'
+                ? Buffer.from(givenkeyiv.iv)
+                : keyiv.iv;
+
         if (!givenkeyiv) {
             this.priv = this.encryptText(
                 'aes-128-cbc',
                 this.key,
                 this.iv,
-                data
+                data,
+                this.encoding
             );
         } else {
             this.priv = Buffer.from(
-                this.decryptText('aes-128-cbc', this.key, this.iv, data)
+                this.decryptText(
+                    'aes-128-cbc',
+                    this.key,
+                    this.iv,
+                    data,
+                    this.encoding
+                )
             ).toString('utf8');
         }
+    }
+    static from(json: any): Node {
+        
+        return new Node(json.data, {key:json.key, iv:json.iv});
     }
     private getKeyAndIV(key: any): any {
         let result: any = {
@@ -52,7 +71,7 @@ export default class Node {
         let result = cipher.update(text, 'utf8', encoding);
         result += cipher.final(encoding);
 
-        return result;
+        return this.toBase64(result);
     }
 
     private decryptText(
@@ -66,12 +85,20 @@ export default class Node {
 
         encoding = encoding || 'binary';
 
-        let result: any = decipher.update(text, encoding);
+        let result: any = decipher.update(this.toHex(text), encoding);
         result += decipher.final('utf8');
 
         return result;
     }
     public toString(): string {
-        return JSON.stringify({ key: this.key, iv: this.iv, data: this.priv });
+        let json = { key: this.key, iv: this.iv, data: this.priv };
+        let result = JSON.stringify(json);
+        return result;
+    }
+    private toBase64(text:string):string {
+        return Buffer.from(text, 'hex').toString('base64');
+    }
+    private toHex(text:string):string {
+        return Buffer.from(text, 'base64').toString('hex');
     }
 }

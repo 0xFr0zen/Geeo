@@ -10,7 +10,7 @@ export default class Server {
     constructor() {
         this.application = express();
 
-        this.router = express.Router();
+        this.router = express.Router({mergeParams:true});
         this.application.set('view engine', 'vash');
         this.application.set(
             'views',

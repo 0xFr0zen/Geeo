@@ -1,6 +1,6 @@
 import { TSMap } from 'typescript-map';
 import Node from '../Crypt';
-import { GeeoMap } from '../GeeoMap/index';
+import { GeeoMap } from '../GeeoMap';
 
 /**
  *Entity Class
@@ -55,7 +55,65 @@ export default class Entity {
         let type = this.getParameter('type');
         return type.toString();
     }
+    /**
+     * Returns Created Date.
+     *
+     * @returns {string} Type of Entity.
+     * @memberof Entity
+     */
+    public getCreated(): Date {
+        let date = this.getParameter('created');
+        return new Date(Number.parseInt(date.toString()));
+    }
 
+    /**
+     *  Returns last saved date
+     *
+     * @returns {Date}
+     * @memberof Entity
+     */
+    public getLastSaved(): Date {
+        let date = this.getParameter('last_saved');
+        return new Date(Number.parseInt(date.toString()));
+    }
+    /**
+     * Returns last loaded date
+     *
+     * @returns {Date}
+     * @memberof Entity
+     */
+    public getLastLoaded(): Date {
+        let date = this.getParameter('last_saved');
+        return new Date(Number.parseInt(date.toString()));
+    }
+    /**
+     * Returns last loaded date
+     *
+     * @returns {Date}
+     * @memberof Entity
+     */
+    public getUpdated(): Date[] {
+        let dates = this.getParameter('updated');
+        let result:Date[] = [];
+        if (Array.isArray(dates)) {
+            result = dates;
+        }
+        return result;
+    }
+    /**
+     * Returns removedDate
+     *
+     * @returns {Date}
+     * @memberof Entity
+     */
+    public getRemoved(): Entity[] {
+        let removed = this.getParameter('removed');
+        let result = [];
+        if(Array.isArray(removed)){
+            result = removed;
+        }
+        return result;
+    }
     /**
      * Return Node of Entity.
      *
@@ -63,12 +121,12 @@ export default class Entity {
      * @memberof Entity
      */
     public getNode(): Node {
+        let result = null;
         let x = this.getParameter('node');
-        if (x instanceof Node) {
-            return x;
-        } else {
-            return null;
-        }
+        let json = JSON.parse(JSON.stringify(x));
+        
+        result = Node.from({data:json.priv,key:json.key, iv:json.iv});
+        return result;
     }
 
     /**
@@ -145,11 +203,13 @@ export default class Entity {
     protected update(key: string, value: Object): void {
         this.parameters = this.parameters.addItem(key, value);
         let old: any = this.getParameter('updated');
+        if (key !== 'node') {
+            this.parameters = this.parameters.addItem(
+                'node',
+                new Node(this.toString())
+            );
+        }
 
-        this.parameters = this.parameters.addItem(
-            'node',
-            new Node(this.toString())
-        );
         if (Array.isArray(old)) {
             old.push(Date.now());
             this.parameters = this.parameters.addItem('updated', old);
@@ -301,7 +361,6 @@ export class Package {
             case 'object':
                 if (value instanceof Array && Array.isArray(value)) {
                     let ree = '';
-
                     value.forEach(element => {
                         let see = me.otherWrap(element);
                         ree = ree.concat(see).concat(',');
@@ -312,15 +371,17 @@ export class Package {
                     result += `${me.geeomapWrap(value)}`;
                 } else if (value instanceof Entity) {
                     result += `${me.wrap(value)}`;
+                } else if (value instanceof Node) {
+                    result += `${value.toString()}`;
                 } else {
-                    result += `"${value.toString()}"`;
+                    result += `${JSON.stringify(value)}`;
                 }
                 break;
             case 'undefined':
                 result += `null`;
                 break;
             default:
-                result += `"${value.toString()}"`;
+                result += `${JSON.stringify(value)}`;
                 break;
         }
 
@@ -339,17 +400,17 @@ export class Package {
         if (entity == null) {
             return 'null';
         } else {
-            let props = JSON.parse(this.geeomapWrap(entity.getParameters()));
+            let props = this.geeomapWrap(entity.getParameters());
+            let json = JSON.parse(props);
 
             let wrapped: PackageWrapped = {
-                [entity.getType()]: props,
+                [entity.getType()]: json,
             };
 
             return JSON.stringify(wrapped);
         }
     }
 }
-
 /**
  *
  *

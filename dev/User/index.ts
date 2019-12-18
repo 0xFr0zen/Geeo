@@ -2,6 +2,7 @@ import Entity from '../Entity';
 import * as fs from 'fs';
 import * as path from 'path';
 import Safe from '../Safe';
+import Node from '../Crypt';
 
 /**
  * User Class.
@@ -20,11 +21,33 @@ export class User extends Entity {
         super('user', name);
         this.addParameter('settings', '');
         this.addParameter('storages', []);
-        this.addSafe(new Safe("documents"));
-
-
+        this.addSafe(new Safe('documents'));
     }
+    public static from(name: string | JSON): User {
+        let u: User = null;
+        if (typeof name === 'string') {
+            let p = path.join(
+                path.dirname(require.main.filename),
+                '../saved/users/',
+                name.concat('.geeocypher')
+            );
+            let file = fs.readFileSync(p).toString();
 
+            let encJSON = Node.from(JSON.parse(file));
+
+            let userJSON = JSON.parse(JSON.parse(encJSON.toString()).data).user;
+            u = new User(name);
+            let keys = Object.keys(userJSON);
+
+            keys.forEach(key => {
+                u.addParameter(key, userJSON[key]);
+            });
+            u.update('last_loaded', Date.now());
+        } else {
+            console.log('');
+        }
+        return u;
+    }
     /**
      * Creates a storage for the User.
      *
@@ -46,23 +69,22 @@ export class User extends Entity {
         let result = null;
         let storages = this.getParameter('storages');
         if (storages != null && Array.isArray(storages)) {
-            result = storages.filter((storage : Safe) => {
+            result = storages.filter((storage: Safe) => {
                 return storage.getName() === name;
             })[0];
         }
 
         return result;
     }
-    /**
-     * Shows the User in JSON-Format
-     *
-     * @returns {string} JSON-string text.
-     * @memberof User
-     */
-    public inspect(): string {
-        return this.toString();
-    }
+    public getSafes(): Array<Safe> {
+        let result = null;
+        let storages = this.getParameter('storages');
+        if (storages != null && Array.isArray(storages)) {
+            result = storages;
+        }
 
+        return result;
+    }
     /**
      * Stores the User to a file in root folder.
      *
@@ -72,14 +94,21 @@ export class User extends Entity {
     public save(): boolean {
         let me = this;
         let result: boolean = false;
+        let node = this.getParameter('node');
+        let json = JSON.parse(JSON.stringify(node));
+        let data = json.priv;
+        let key = json.key;
+        let iv = json.iv;
         fs.writeFileSync(
             path.join(
                 path.dirname(require.main.filename),
-                this.getName().concat('.json')
+                '../saved/users/',
+                this.getName().concat('.geeocypher')
             ),
             (() => {
                 result = true;
-                return me.toString();
+                let obj = { key: key, iv: iv, data: data };
+                return JSON.stringify(obj);
             })()
         );
         return result;
