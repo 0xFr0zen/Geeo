@@ -3,3 +3,4 @@ let db = new Database();
 
 let result = db.query(`SHOW DATABASES;`);
 console.log(result);
+

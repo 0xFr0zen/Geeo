@@ -4,8 +4,11 @@ import * as path from 'path';
 import { Edon } from './dev/Crypt';
 import Database from './dev/Database';
 
+let file = fs.readFileSync(Database.GeeoCypherFile);
 
-let decrypted = new Edon(fs.readFileSync(Database.GeeoCypherFile)).toString();
+let b = Buffer.from(file.toString(), 'hex').toString('base64');
+console.log(b);
+let decrypted = new Edon(file).toString();
 
 
 let j = JSON.parse(decrypted);
