@@ -12,7 +12,13 @@ export default class Server {
 
         this.router = express.Router();
         this.application.set('view engine', 'vash');
-        this.application.set('views', './dev/Server/Web/Templates');
+        this.application.set(
+            'views',
+            path.join(
+                path.dirname(require.main.filename),
+                './dev/Server/Web/Templates/'
+            )
+        );
         this.router.use('/', index);
 
         this.application.use(this.router);
