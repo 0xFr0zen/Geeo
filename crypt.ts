@@ -1,7 +1,4 @@
 import Node from './dev/Crypt';
-import * as fs from 'fs';
-import * as path from 'path';
-import Database from './dev/Database';
 
 let profile = {
     user:"root",
