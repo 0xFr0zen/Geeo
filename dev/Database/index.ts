@@ -36,17 +36,29 @@ export default class Database extends Entity {
             });
         }
     }
-    public query(string: string, values: any[]): any {
+    public query(string: string, values?: any[]): any {
         let retresults = null;
         if (Database.connection != null) {
-            Database.connection.query(string, values, function(
-                error,
-                results,
-                fields
-            ) {
-                if (error) throw error;
-                retresults = results;
-            });
+            if(values){
+                Database.connection.query(string, values, function(
+                    error,
+                    results,
+                    fields
+                ) {
+                    if (error) throw error;
+                    retresults = results;
+                });
+            }else {
+                Database.connection.query(string, function(
+                    error,
+                    results,
+                    fields
+                ) {
+                    if (error) throw error;
+                    retresults = results;
+                });
+            }
+            
         }
         return retresults;
     }
