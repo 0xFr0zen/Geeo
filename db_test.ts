@@ -1,5 +1,5 @@
 import Database from './dev/Database/index';
 let db = new Database();
 
-let result = db.query(`use m104;select * from ?`,["ort"]);
+let result = db.query(`SHOW DATABASES;`);
 console.log(result);
