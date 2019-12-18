@@ -16,25 +16,25 @@ fs.writeFileSync(
     path.join(Database.GeeoDatabaseRoot, './admin-user.geeocypher'),
     x
 );
-let e = new Node(
-    fs
-        .readFileSync(
-            path.join(Database.GeeoDatabaseRoot, './admin-user.geeocypher')
-        )
-        .toString(),
-    true
-).toString();
 
-admin1 = JSON.parse(e);
-let db = new Database();
+// let e = new Node(
+//     fs
+//         .readFileSync(
+//             path.join(Database.GeeoDatabaseRoot, './admin-user.geeocypher')
+//         )
+//         .toString()
+// ).toString();
 
-let result = db.query(
-    fs
-        .readFileSync(path.join(Database.GeeoDatabaseRoot, './cu.sql'))
-        .toString(),
-    [admin1.username, admin1.password]
-);
-console.log(result);
+// admin1 = JSON.parse(e);
+// let db = new Database();
+
+// let result = db.query(
+//     fs
+//         .readFileSync(path.join(Database.GeeoDatabaseRoot, './cu.sql'))
+//         .toString(),
+//     [admin1.username, admin1.password]
+// );
+// console.log(result);
 
 // let admin = new Node(JSON.stringify(admin1)).toString();
 // let dbusers:any = {
