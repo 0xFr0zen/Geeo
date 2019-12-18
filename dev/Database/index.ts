@@ -70,21 +70,21 @@ export default class Database extends Entity {
 export class DatabaseUser extends Entity {
     constructor(username: string) {
         super('dbuser', username);
-        let json = JSON.parse(
-            new Node(
-                fs
-                    .readFileSync(
-                        path.join(
-                            Database.GeeoDatabaseRoot,
-                            './admin-user.geeocypher'
-                        )
-                    )
-                    .toString(),
-                true
-            ).toString()
-        );
-        this.addParameter('username', json['username']);
-        this.addParameter('password', new Node(json['password']).toString());
+        // let json = JSON.parse(
+        //     new Node(
+        //         fs
+        //             .readFileSync(
+        //                 path.join(
+        //                     Database.GeeoDatabaseRoot,
+        //                     './admin-user.geeocypher'
+        //                 )
+        //             )
+        //             .toString(),
+        //         true
+        //     ).toString()
+        // );
+        // this.addParameter('username', json['username']);
+        // this.addParameter('password', new Node(json['password']).toString());
     }
     public getUsername(): string {
         let result = null;

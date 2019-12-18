@@ -1,32 +1,28 @@
 import * as crypto from 'crypto';
 export default class Node {
     private priv: string = null;
-    constructor(data: string, decrypt = false) {
+    private iv:Buffer = null;
+    constructor(data: string, decryptiv?:Buffer) {
         let me = this;
 
         let keyiv = this.getKeyAndIV('geeopenetrator');
-        if (!decrypt) {
+        this.iv = keyiv.iv;
+        if (!decryptiv) {
             this.priv = me.encryptText(
                 'aes-128-cbc',
                 keyiv.key,
                 keyiv.iv,
-                data,
-                'base64'
+                data
             );
         } else {
             this.priv = Buffer.from(
-                me.decryptText(
-                    'aes-128-cbc',
-                    keyiv.key,
-                    keyiv.iv,
-                    data,
-                    'base64'
-                ),
-                'base64'
+                me.decryptText('aes-128-cbc', keyiv.key, decryptiv, data)
             ).toString('utf8');
         }
+        console.log(this.priv);
+        
     }
-    private getKeyAndIV(key: any):any {
+    private getKeyAndIV(key: any): any {
         let result: any = {
             iv: null,
             key: null,
@@ -43,7 +39,7 @@ export default class Node {
         key: Buffer,
         iv: Buffer,
         text: string,
-        encoding: crypto.HexBase64BinaryEncoding
+        encoding?: crypto.HexBase64BinaryEncoding
     ) {
         let cipher = crypto.createCipheriv(cipher_alg, key, iv);
 
@@ -60,7 +56,7 @@ export default class Node {
         key: Buffer,
         iv: Buffer,
         text: string,
-        encoding: crypto.HexBase64BinaryEncoding
+        encoding?: crypto.HexBase64BinaryEncoding
     ) {
         let decipher = crypto.createDecipheriv(cipher_alg, key, iv);
 
@@ -72,6 +68,6 @@ export default class Node {
         return result;
     }
     public toString(): string {
-        return this.priv;
+        return JSON.stringify({iv:this.iv, data:this.priv});
     }
 }
