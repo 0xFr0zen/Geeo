@@ -1,26 +1,30 @@
 import * as crypto from 'crypto';
+interface IKeyIV {
+    key: Buffer;
+    iv: Buffer;
+}
 export default class Node {
     private priv: string = null;
-    private iv:Buffer = null;
-    constructor(data: string, decryptiv?:Buffer) {
-        let me = this;
-
+    private iv: Buffer = null;
+    private key: Buffer = null;
+    constructor(data: string, givenkeyiv?: IKeyIV) {
         let keyiv = this.getKeyAndIV('geeopenetrator');
-        this.iv = keyiv.iv;
-        if (!decryptiv) {
-            this.priv = me.encryptText(
+        
+        this.key = (typeof givenkeyiv !== 'undefined') ? Buffer.from(givenkeyiv.key): keyiv.key;
+        this.iv = (typeof givenkeyiv !== 'undefined') ? Buffer.from(givenkeyiv.iv): keyiv.iv;
+        
+        if (!givenkeyiv) {
+            this.priv = this.encryptText(
                 'aes-128-cbc',
-                keyiv.key,
-                keyiv.iv,
+                this.key,
+                this.iv,
                 data
             );
         } else {
             this.priv = Buffer.from(
-                me.decryptText('aes-128-cbc', keyiv.key, decryptiv, data)
+                this.decryptText('aes-128-cbc', this.key, this.iv, data)
             ).toString('utf8');
         }
-        console.log(this.priv);
-        
     }
     private getKeyAndIV(key: any): any {
         let result: any = {
@@ -68,6 +72,6 @@ export default class Node {
         return result;
     }
     public toString(): string {
-        return JSON.stringify({iv:this.iv, data:this.priv});
+        return JSON.stringify({ key: this.key, iv: this.iv, data: this.priv });
     }
 }

@@ -2,7 +2,6 @@ import Entity from '../Entity';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mysql from 'mysql';
-import Node from '../Crypt/index';
 
 export default class Database extends Entity {
     public static readonly GeeoDatabaseRoot = path.join(
