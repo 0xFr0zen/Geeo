@@ -1,5 +1,5 @@
 import { TSMap } from 'typescript-map';
-import GeeoCrypt from './GeeoCrypt';
+import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap/index';
 
 /**
@@ -17,7 +17,6 @@ export default class Entity {
      * @memberof Entity
      */
     private parameters: GeeoMap<string, Object> = new GeeoMap<string, Object>();
-
     /**
      *Creates an instance of Entity.
      * @param {string} type "type" of Entity
@@ -27,12 +26,13 @@ export default class Entity {
     constructor(type: string, name: string) {
         this.addParameter('type', type);
         this.addParameter('name', name.toString());
-        this.addParameter('node', new GeeoCrypt.Node());
         this.addParameter('created', Date.now());
+        this.addParameter('node', new Node(this));
         this.addParameter('last_saved', null);
         this.addParameter('last_loaded', Date.now());
         this.addParameter('updated', []);
         this.addParameter('removed', null);
+        
     }
 
     /**
@@ -63,9 +63,9 @@ export default class Entity {
      * @returns {GeeoCrypt.Node} Node of Entity.
      * @memberof Entity
      */
-    public getNode(): GeeoCrypt.Node {
+    public getNode(): Node {
         let x = this.getParameter('node');
-        if (x instanceof GeeoCrypt.Node) {
+        if (x instanceof Node) {
             return x;
         } else {
             return null;
@@ -145,11 +145,18 @@ export default class Entity {
      */
     protected update(key: string, value: Object): void {
         this.parameters = this.parameters.addItem(key, value);
+        let node = this.getParameter('node');
         let old: any = this.getParameter('updated');
+        if(node instanceof Node){
+            node.update(this);
+            
+            this.parameters = this.parameters.addItem('node', node);
+        }
         if (Array.isArray(old)) {
             old.push(Date.now());
             this.parameters = this.parameters.addItem('updated', old);
         }
+        
     }
 
     /**

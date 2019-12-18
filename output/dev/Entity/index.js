@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var GeeoCrypt_1 = require("./GeeoCrypt");
+var Crypt_1 = require("../Crypt");
 var index_1 = require("../GeeoMap/index");
 var Entity = (function () {
     function Entity(type, name) {
         this.parameters = new index_1.GeeoMap();
         this.addParameter('type', type);
         this.addParameter('name', name.toString());
-        this.addParameter('node', new GeeoCrypt_1.default.Node());
         this.addParameter('created', Date.now());
+        this.addParameter('node', new Crypt_1.default(this));
         this.addParameter('last_saved', null);
         this.addParameter('last_loaded', Date.now());
         this.addParameter('updated', []);
@@ -24,7 +24,7 @@ var Entity = (function () {
     };
     Entity.prototype.getNode = function () {
         var x = this.getParameter('node');
-        if (x instanceof GeeoCrypt_1.default.Node) {
+        if (x instanceof Crypt_1.default) {
             return x;
         }
         else {
@@ -55,7 +55,12 @@ var Entity = (function () {
     };
     Entity.prototype.update = function (key, value) {
         this.parameters = this.parameters.addItem(key, value);
+        var node = this.getParameter('node');
         var old = this.getParameter('updated');
+        if (node instanceof Crypt_1.default) {
+            node.update(this);
+            this.parameters = this.parameters.addItem('node', node);
+        }
         if (Array.isArray(old)) {
             old.push(Date.now());
             this.parameters = this.parameters.addItem('updated', old);

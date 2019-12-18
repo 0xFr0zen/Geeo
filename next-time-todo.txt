@@ -1,4 +1,0 @@
-GeeoMap Inventory Space not filling up, fix please. #fixed 16.12.2019
-Create Documents Area. #fixed 16.12.2019
-Create Folderable Safe
-zipped save-state
