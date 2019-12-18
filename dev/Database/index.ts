@@ -15,7 +15,7 @@ export default class Database extends Entity {
     );
     private static MYSQL_PORT: number = 3306;
     private static connection: mysql.Connection = null;
-    constructor(options = { port: 3306, username: 'root', password: '' }) {
+    constructor(options = { port: 3306, username: 'root', password: 'root' }) {
         super('database', 'db');
         this.addParameter('port', options.port | Database.MYSQL_PORT);
         this.addParameter('pwd', options.password);
