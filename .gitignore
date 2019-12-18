@@ -14,5 +14,7 @@
 .history
 # End of https://www.gitignore.io/api/visualstudiocode
 
+# My Ignore Files/Folders
+.prettierrc
 output
 output/**
