@@ -6,8 +6,6 @@ import Database from './dev/Database';
 
 let file = fs.readFileSync(Database.GeeoCypherFile);
 
-let b = Buffer.from(file.toString(), 'hex').toString('base64');
-console.log(b);
 let decrypted = new Edon(file).toString();
 
 

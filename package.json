@@ -10,7 +10,8 @@
     "mysql": "^2.17.1",
     "path": "^0.12.7",
     "typescript": "^3.7.3",
-    "typescript-map": "0.0.7"
+    "typescript-map": "0.0.7",
+    "vash": "^0.12.9"
   },
   "devDependencies": {},
   "scripts": {

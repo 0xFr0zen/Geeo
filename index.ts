@@ -9,7 +9,11 @@
 // user.getSafe('documents').addItem('loans', [990.00]);
 // user.save();
 
-import {DatabaseUser} from './dev/Database';
+// import {DatabaseUser} from './dev/Database';
+import Server from './dev/Server';
 
-let dbuser = new DatabaseUser('geeo_admin_penetrator');
-console.log(dbuser);
+// let dbuser = new DatabaseUser('geeo_admin_penetrator');
+// console.log(dbuser);
+
+let server:Server = new Server();
+server.start();
