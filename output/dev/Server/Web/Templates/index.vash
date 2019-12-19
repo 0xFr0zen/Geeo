@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Geeo</title>
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/main.js"></script>
+    <link rel="stylesheet" href="/themes/main.css">
+</head>
+<body>
+    <div id="main">
+        <div id="main_inner">
+            <div id="menu">
+                <div id="inventories">
+
+                    <div id="default" class="inventory">
+                        <span class="name">default</span>
+                    </div>
+                    <div id="add" class="inventory">+</div>
+                </div>
+                <div id="user">
+                    <div id="profile">
+                        <img src="https://via.placeholder.com/30" />
+                        <span>Username</span>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+                <div id="inventory">
+                @{
+                    var max = 20;
+                    for(var i = 0;i < 20; i++){
+                        var x = Math.floor(Math.random() * max + 1);
+                        <div class="item">
+                            <span class="name">Itemname</span>
+                            <span class="amount">@x</span>
+                        </div>
+                    }
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

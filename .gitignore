@@ -18,4 +18,8 @@
 .prettierrc
 !output/
 output/*
-!output/dev/Server/Web/**
+!output/dev/
+output/dev/*
+!output/dev/Server/
+output/dev/Server/*
+!output/dev/Server/Web

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Geeo</title>
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/main.js"></script>
+    <link rel="stylesheet" href="/themes/main.css">
+</head>
+<body>
+    <div id="login">
+        <form id="form" method="POST" action="/login">
+            <input type="text" placeholder="Username" />
+            <input type="password" placeholder="Password" />
+            <input type="submit" value="Login"/>
+
+        </form>
+    </div>
+</body>
+</html>
