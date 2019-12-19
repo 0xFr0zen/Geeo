@@ -18,4 +18,4 @@
 .prettierrc
 output
 output/**
-+output/dev/Server/Web
++output/dev/Server/Web/**
