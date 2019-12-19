@@ -1,15 +1,25 @@
 import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import User from '../User/';
+import RUser from '../User/';
+import User from '../../User/';
 import Login from '../Login/';
+import Logout from '../Logout';
 function RIndex() {
     let router: express.Router = express.Router({mergeParams:true});
     router.use('/$', function(req: express.Request, res: express.Response) {
-        res.render('index', { loggedin: false });
+        let user:User = User.from('oezguer.isbert');
+        if(!user.isLoggedIn()){
+            res.redirect("/login");
+            return;
+        }else {
+            res.render('index', { user: user});
+
+        }
     });
-    router.use('/user/', User);
+    router.use('/user/', RUser);
     router.use('/login', Login);
+    router.use('/logout', Logout);
     router.use('/themes/:file', function(
         req: express.Request,
         res: express.Response

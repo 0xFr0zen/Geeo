@@ -12,6 +12,7 @@ import Node from '../Crypt';
  * @extends {Entity}
  */
 export class User extends Entity {
+    
     /**
      * Creates an instance of User.
      * @param {string} name
@@ -22,6 +23,7 @@ export class User extends Entity {
         this.addParameter('settings', '');
         this.addParameter('storages', []);
         this.addSafe(new Safe('documents'));
+        this.addParameter('loggedin', false);
     }
     public static from(name: string): User {
         let u: User = null;
@@ -48,6 +50,18 @@ export class User extends Entity {
         let u:User = null;
         
         return u;
+    }
+    public setLoggedIn(s: boolean) {
+        this.update('loggedin', s);
+    }
+    public isLoggedIn():boolean {
+        let o = this.getParameter('loggedin');
+        let result:boolean = false;
+        if(typeof o === 'boolean'){
+            result = o;
+        }
+        
+        return result;
     }
     /**
      * Creates a storage for the User.

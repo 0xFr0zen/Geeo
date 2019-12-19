@@ -39,14 +39,22 @@ body {
                 
                 .inventory {
                     float:left;
-                    width:100px;
+                    min-width:100px;
+                    width:auto;
                     height:100%;
                     margin-right:10px;
                     padding:10px;
                     color:white;
+                    cursor: pointer;
                     .name {
                         color:white;
                         font-size:12pt;
+                    }
+                    &:hover {
+                        background: rgba(255,255,255,0.2);
+                    }
+                    &:active {
+                        background: rgba(255,255,255,0.1);
                     }
                 }
                 #default {
@@ -55,7 +63,8 @@ body {
                 #add {
                     float:left;
                     height:100%;
-                    width:40px;
+                    min-width:0px;
+                    width:40px !important;
                     padding:10px;
                     text-align: center;
                     color:white;
@@ -121,6 +130,8 @@ body {
                         font-size:medium;
                     }
                     .amount {
+                        margin-top: 2px;
+                        float:right;
                         font-size: small;
                         &::after {
                             content: 'x';
@@ -156,7 +167,7 @@ body {
             border:none;
             margin-bottom:10px;
             font-size:12pt;
-            &[type="password"]:not(:empty) {
+            &[type="password"]{
                 letter-spacing: 0.5em;
             }
             &[type="submit"]{

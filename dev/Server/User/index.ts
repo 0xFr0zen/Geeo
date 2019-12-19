@@ -33,8 +33,6 @@ function UserNormalRouter() {
         safes.forEach(safe => {
             
             let s:Safe = Safe.from(safe);
-
-            console.log(s.toString());
             
             let storage: IStorage = {
                 name: s.getName(),

@@ -46,15 +46,23 @@ body {
 }
 #main #main_inner #menu #inventories .inventory {
   float: left;
-  width: 100px;
+  min-width: 100px;
+  width: auto;
   height: 100%;
   margin-right: 10px;
   padding: 10px;
   color: white;
+  cursor: pointer;
 }
 #main #main_inner #menu #inventories .inventory .name {
   color: white;
   font-size: 12pt;
+}
+#main #main_inner #menu #inventories .inventory:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+#main #main_inner #menu #inventories .inventory:active {
+  background: rgba(255, 255, 255, 0.1);
 }
 #main #main_inner #menu #inventories #default {
   background: #08f;
@@ -62,7 +70,8 @@ body {
 #main #main_inner #menu #inventories #add {
   float: left;
   height: 100%;
-  width: 40px;
+  min-width: 0px;
+  width: 40px !important;
   padding: 10px;
   text-align: center;
   color: white;
@@ -126,6 +135,8 @@ body {
   font-size: medium;
 }
 #main #main_inner #content #inventory .item .amount {
+  margin-top: 2px;
+  float: right;
   font-size: small;
 }
 #main #main_inner #content #inventory .item .amount::after {
@@ -156,7 +167,7 @@ body {
   margin-bottom: 10px;
   font-size: 12pt;
 }
-#login #form input[type="password"]:not(:empty) {
+#login #form input[type="password"] {
   letter-spacing: 0.5em;
 }
 #login #form input[type="submit"] {

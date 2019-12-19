@@ -1,7 +1,7 @@
 import * as express from 'express';
 import index from './Index/';
 import * as path from 'path';
-
+import bodyParser = require('body-parser');
 export default class Server {
     private static DEFAULT_PORT: number = 80;
     private static DEFAULT_HOSTNAME: string = 'geeo';
@@ -9,7 +9,7 @@ export default class Server {
     private application: express.Application = null;
     constructor() {
         this.application = express();
-
+        this.application.use(bodyParser.urlencoded({ extended: false }));
         this.router = express.Router({mergeParams:true});
         this.application.set('view engine', 'vash');
         this.application.set(

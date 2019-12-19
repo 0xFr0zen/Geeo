@@ -1,3 +1,7 @@
+@{
+    var user = model.user;
+    var safes = user.getSafes();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +19,12 @@
                     <div id="default" class="inventory">
                         <span class="name">default</span>
                     </div>
+                    
+                        @safes.forEach(function(safe){
+                            <div class="inventory">
+                                <span class="name" invname="@safe.safe.name">@safe.safe.name</span>
+                            </div>
+                        })
                     <div id="add" class="inventory">+</div>
                 </div>
                 <div id="user">
@@ -26,16 +36,7 @@
             </div>
             <div id="content">
                 <div id="inventory">
-                @{
-                    var max = 20;
-                    for(var i = 0;i < 20; i++){
-                        var x = Math.floor(Math.random() * max + 1);
-                        <div class="item">
-                            <span class="name">Itemname</span>
-                            <span class="amount">@x</span>
-                        </div>
-                    }
-                }
+                
                 </div>
             </div>
         </div>
