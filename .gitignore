@@ -16,5 +16,6 @@
 
 # My Ignore Files/Folders
 .prettierrc
+!output/
 output/*
 !output/dev/Server/Web/**
