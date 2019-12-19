@@ -43,7 +43,7 @@ export class User extends Entity {
         keys.forEach(key => {
             u.addParameter(key, userJSON[key]);
         });
-        u.update('last_loaded', Date.now());
+        u.addParameter('last_loaded', Date.now());
         return u;
     }
     static load(name: string): User {
@@ -52,7 +52,7 @@ export class User extends Entity {
         return u;
     }
     public setLoggedIn(s: boolean) {
-        this.update('loggedin', s);
+        this.addParameter('loggedin', s);
     }
     public isLoggedIn():boolean {
         let o = this.getParameter('loggedin');
