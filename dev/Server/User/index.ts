@@ -31,9 +31,7 @@ function UserNormalRouter() {
         let safes = user.getSafes();
         let showcase_safes: any[] = [];
         safes.forEach(safe => {
-            
             let s:Safe = Safe.from(safe);
-            
             let storage: IStorage = {
                 name: s.getName(),
                 created: s.getCreated(),
