@@ -125,7 +125,7 @@ export default class Entity {
         let x = this.getParameter('node');
         let json = JSON.parse(JSON.stringify(x));
         
-        result = Node.from({data:json.priv,key:json.key, iv:json.iv});
+        result = json;
         return result;
     }
 

@@ -34,7 +34,7 @@ export class User extends Entity {
         );
         let file = fs.readFileSync(p).toString();
 
-        let encJSON = Node.from(JSON.parse(file));
+        let encJSON = new Node(file);
 
         let userJSON = JSON.parse(JSON.parse(encJSON.toString()).data).user;
         u = new User(name);
@@ -109,23 +109,21 @@ export class User extends Entity {
     public save(): boolean {
         let me = this;
         let result: boolean = false;
-        let node = this.getParameter('node');
-        let json = JSON.parse(JSON.stringify(node));
-        let data = json.priv;
-        let key = json.key;
-        let iv = json.iv;
-        fs.writeFileSync(
-            path.join(
-                path.dirname(require.main.filename),
-                '../saved/users/',
-                this.getName().concat('.geeocypher')
-            ),
-            (() => {
-                result = true;
-                let obj = { key: key, iv: iv, data: data };
-                return JSON.stringify(obj);
-            })()
-        );
+        let node = JSON.parse(JSON.stringify(this.getParameter('node')));
+        console.log(node);
+        
+        // fs.writeFileSync(
+        //     path.join(
+        //         path.dirname(require.main.filename),
+        //         '../saved/users/',
+        //         this.getName().concat('.geeocypher')
+        //     ),
+        //     (() => {
+        //         result = true;
+        //         let obj = { key: key, iv: iv, data: data };
+        //         return JSON.stringify(obj);
+        //     })()
+        // );
         return result;
     }
 }

@@ -5,7 +5,7 @@ function decryptText(
     key: Buffer,
     iv: Buffer,
     encoding: crypto.HexBase64BinaryEncoding = 'hex'
-) {
+): string {
     let decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
 
     encoding = encoding || 'binary';
@@ -15,7 +15,7 @@ function decryptText(
 
     return result;
 }
-function toHex(text:string):string {
+function toHex(text: string): string {
     return Buffer.from(text, 'base64').toString('hex');
 }
 export default decryptText;

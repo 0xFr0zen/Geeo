@@ -5,7 +5,7 @@ function encryptText(
     key: Buffer,
     iv: Buffer,
     encoding: crypto.HexBase64BinaryEncoding = 'hex'
-) {
+):string {
     let cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
 
     encoding = encoding || 'binary';

@@ -18,7 +18,6 @@
   "devDependencies": {},
   "scripts": {
     "test": "tsc && node ./output/index.js",
-    "crypt": "tsc && node ./output/crypt.js",
     "init": "tsc && node ./output/init.js",
     "db_test": "tsc && node ./output/db_test.js",
     "test_area": "tsc && node ./output/test_area.js"
