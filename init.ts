@@ -6,4 +6,6 @@ import Safe from './dev/Safe';
 import { StorageType } from './dev/Safe/index';
 
 let oe = new User("oezguer.isbert");
-oe.save();
+console.log(oe.getChanges().getItem('added'));
+
+// oe.save();

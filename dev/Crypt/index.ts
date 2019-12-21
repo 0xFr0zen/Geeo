@@ -18,8 +18,8 @@ export default class Node {
     constructor(
         data: string,
         keys: IKeys = {
-            privateKey: Buffer.from(Node.randomSting(16)),
-            publicKey: Buffer.from(Node.randomSting(16)),
+            privateKey: Buffer.from(Node.randomString(16)),
+            publicKey: Buffer.from(Node.randomString(16)),
         }
     ) {
         this.publickey = keys.publicKey;
@@ -46,7 +46,7 @@ export default class Node {
     public decryptText(): string {
         return decryptText(this.data, this.publickey, this.privatekey);
     }
-    private static randomSting(hash_length: number) {
+    public static randomString(hash_length: number) {
         let ar: string[] = Node.a;
         let result = '';
         let length = ar.length;

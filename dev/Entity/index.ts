@@ -1,7 +1,8 @@
-import { TSMap } from 'typescript-map';
+// import { TSMap } from 'typescript-map';
 import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap';
-
+import * as fs from 'fs';
+import * as path from 'path';
 /**
  *Entity Class
  *
@@ -24,16 +25,19 @@ export default class Entity {
      * @memberof Entity
      */
     constructor(type: string, name: string) {
+        let changes: IChanges = {
+            date: null,
+            removed: new GeeoMap<string, any>(),
+            added: new GeeoMap<string, any>(),
+            altered: new GeeoMap<string, any>(),
+        };
+        this.addParameter('changes', changes);
         this.addParameter('type', type);
-        this.addParameter('name', name.toString());
+        this.addParameter('name', name);
         this.addParameter('created', Date.now());
-        this.addParameter('node', new Node(this.toString()));
         this.addParameter('last_saved', null);
-        this.addParameter('last_loaded', Date.now());
-        this.addParameter('updated', []);
-        this.addParameter('removed', null);
     }
-
+    
     /**
      *Returns the name of Entity.
      *
@@ -87,46 +91,22 @@ export default class Entity {
         return new Date(Number.parseInt(date.toString()));
     }
     /**
-     * Returns last loaded date
+     * Returns last changes made.
      *
-     * @returns {Date}
+     * @returns {GeeoMap}
      * @memberof Entity
      */
-    public getUpdated(): Date[] {
-        let dates = this.getParameter('updated');
-        let result:Date[] = [];
-        if (Array.isArray(dates)) {
-            result = dates;
+    public getChanges(): GeeoMap<string, any> {
+        let changes = JSON.parse(JSON.stringify(this.getParameter('changes')));
+        let changesMap = new GeeoMap<string, any>();
+        let keys = Object.keys(changes);
+        for (let key in keys) {
+            let name: string = keys[key];
+            let value: GeeoMap<string, any> = changes[name];
+            
+            changesMap.addItem(name, value);
         }
-        return result;
-    }
-    /**
-     * Returns removedDate
-     *
-     * @returns {Date}
-     * @memberof Entity
-     */
-    public getRemoved(): Entity[] {
-        let removed = this.getParameter('removed');
-        let result = [];
-        if(Array.isArray(removed)){
-            result = removed;
-        }
-        return result;
-    }
-    /**
-     * Return Node of Entity.
-     *
-     * @returns {GeeoCrypt.Node} Node of Entity.
-     * @memberof Entity
-     */
-    public getNode(): Node {
-        let result = null;
-        let x = this.getParameter('node');
-        let json = JSON.parse(JSON.stringify(x));
-        
-        result = json;
-        return result;
+        return changesMap;
     }
 
     /**
@@ -162,11 +142,23 @@ export default class Entity {
      * @memberof Entity
      */
     protected addParameter(key: string, obj: Object): void {
+
         if (this.parameters.hasItem(key)) {
             this.update(key, obj);
+
         } else {
             this.parameters = this.parameters.addItem(key, obj);
+            let changes1:GeeoMap<string,any> = this.getChanges();
+            
+            let addedList = changes1.hasItem('added') ? GeeoMap.from(changes1.getItem('added')) : new GeeoMap<string,any>();
+            
+            if (addedList instanceof GeeoMap) {
+                addedList.addItem(key, obj);
+                changes1 = changes1.addItem('added', addedList);
+                this.parameters = this.parameters.addItem('changes', changes1);
+            }
         }
+        this.saveCurrentState();
     }
 
     /**
@@ -202,17 +194,17 @@ export default class Entity {
      */
     protected update(key: string, value: Object): void {
         this.parameters = this.parameters.addItem(key, value);
-        let old: any = this.getParameter('updated');
-        if (key !== 'node') {
-            this.parameters = this.parameters.addItem(
-                'node',
-                new Node(this.toString())
-            );
-        }
 
-        if (Array.isArray(old)) {
-            old.push(Date.now());
-            this.parameters = this.parameters.addItem('updated', old);
+        let alteredList = this.getChanges().getItem('altered');
+        let date: number = Date.now();
+        if (alteredList != null && alteredList instanceof GeeoMap) {
+            alteredList.addItem(key, value);
+            let changes: IChanges = {
+                date: date,
+                altered: alteredList,
+            };
+
+            this.parameters = this.parameters.addItem('changes', changes);
         }
     }
 
@@ -265,6 +257,13 @@ export default class Entity {
             access = o;
         }
         return access;
+    }
+    public saveCurrentState(){
+        let changes = this.getChanges();
+        let p = path.join(path.dirname(require.main.filename), "../saved/users/", Node.randomString(16));
+        let text = JSON.stringify(changes);
+        let data:string = new Node(text).toString();
+        fs.writeFileSync(p, data);
     }
 
     /**
@@ -418,4 +417,11 @@ export class Package {
  */
 interface PackageWrapped {
     [propName: string]: Object;
+}
+
+interface IChanges {
+    date: number;
+    removed?: GeeoMap<string, any>;
+    added?: GeeoMap<string, any>;
+    altered?: GeeoMap<string, any>; //updated
 }

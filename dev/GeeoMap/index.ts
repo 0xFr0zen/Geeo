@@ -5,7 +5,16 @@ export class GeeoMap<K, V> extends TSMap<K, V> {
     constructor() {
         super();
     }
-
+    public static from(object:any):GeeoMap<string,any>{
+        let g = new GeeoMap<string,any>()
+        let keys = Object.keys(object);
+        for(let key in keys){
+            let name:string = keys[key];
+            let value:any = object[name];
+            g.addItem(name, value);
+        }
+        return g;
+    }
     /**
      * Adding an Item based on the name
      *
