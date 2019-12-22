@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import Safe from '../Safe';
 import Node from '../Crypt';
+import Identity from '../Identity/index';
 
 /**
  * User Class.
@@ -20,18 +21,28 @@ export class User extends Entity {
      */
     constructor(name: string) {
         super('user', name);
-        this.addParameter('settings', '');
+        this.addParameter('settings', '',false);
         this.addParameter('storages', []);
-        this.addSafe(new Safe('documents'));
-        this.addParameter('loggedin', false);
+        this.addParameter('loggedin', false,false);
+        this.addSafe(new Safe(name,'documents'));
+        this.saveCurrentState();
+
     }
-    public static from(name: string): User {
+    public static exists(name:string | Identity){
+        if(name instanceof Identity){
+
+        }else {
+            
+        }
+        return fs.existsSync();
+    }
+    public static from(hash: string): User {
         let u: User = null;
         let p = path.join(
             path.dirname(require.main.filename),
-            '../saved/users/',
-            name.concat('.geeocypher')
+            '../saved/users/', hash
         );
+        let name = "";
         let file = fs.readFileSync(p).toString();
 
         let encJSON = new Node(file);

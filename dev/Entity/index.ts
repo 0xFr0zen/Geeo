@@ -31,13 +31,13 @@ export default class Entity {
             added: new GeeoMap<string, any>(),
             altered: new GeeoMap<string, any>(),
         };
-        this.addParameter('changes', changes);
-        this.addParameter('type', type);
-        this.addParameter('name', name);
-        this.addParameter('created', Date.now());
-        this.addParameter('last_saved', null);
+        this.addParameter('changes', changes, false);
+        this.addParameter('type', type, false);
+        this.addParameter('name', name, false);
+        this.addParameter('created', Date.now(), false);
+        this.addParameter('last_saved', null, false);
     }
-    
+
     /**
      *Returns the name of Entity.
      *
@@ -46,6 +46,7 @@ export default class Entity {
      */
     public getName(): string {
         let name = this.getParameter('name');
+        
         return name.toString();
     }
 
@@ -103,7 +104,7 @@ export default class Entity {
         for (let key in keys) {
             let name: string = keys[key];
             let value: GeeoMap<string, any> = changes[name];
-            
+
             changesMap.addItem(name, value);
         }
         return changesMap;
@@ -141,24 +142,24 @@ export default class Entity {
      * @param {Object} obj Value of property.
      * @memberof Entity
      */
-    protected addParameter(key: string, obj: Object): void {
-
+    protected addParameter(key: string, obj: Object, save = true): void {
         if (this.parameters.hasItem(key)) {
             this.update(key, obj);
-
         } else {
             this.parameters = this.parameters.addItem(key, obj);
-            let changes1:GeeoMap<string,any> = this.getChanges();
-            
-            let addedList = changes1.hasItem('added') ? GeeoMap.from(changes1.getItem('added')) : new GeeoMap<string,any>();
-            
+            let changes1: GeeoMap<string, any> = this.getChanges();
+
+            let addedList = changes1.hasItem('added')
+                ? GeeoMap.from(changes1.getItem('added'))
+                : new GeeoMap<string, any>();
+
             if (addedList instanceof GeeoMap) {
                 addedList.addItem(key, obj);
                 changes1 = changes1.addItem('added', addedList);
                 this.parameters = this.parameters.addItem('changes', changes1);
             }
         }
-        this.saveCurrentState();
+        if (save) this.saveCurrentState();
     }
 
     /**
@@ -206,6 +207,7 @@ export default class Entity {
 
             this.parameters = this.parameters.addItem('changes', changes);
         }
+        this.saveCurrentState();
     }
 
     /**
@@ -258,11 +260,25 @@ export default class Entity {
         }
         return access;
     }
-    public saveCurrentState(){
+    public saveCurrentState() {
+        let type = this.getType();
+        
+        let p1 = path.join(
+            path.dirname(require.main.filename),
+            '../saved/entities/',
+            type
+        );
+        if (!fs.existsSync(p1)) {
+            fs.mkdirSync(p1);
+        }
         let changes = this.getChanges();
-        let p = path.join(path.dirname(require.main.filename), "../saved/users/", Node.randomString(16));
+        let entityFolder = path.join(p1, this.getName());
+        if (!fs.existsSync(entityFolder)) {
+            fs.mkdirSync(entityFolder);
+        }
+        let p = path.join(entityFolder, Node.randomString(16));
         let text = JSON.stringify(changes);
-        let data:string = new Node(text).toString();
+        let data: string = new Node(text).toString();
         fs.writeFileSync(p, data);
     }
 
