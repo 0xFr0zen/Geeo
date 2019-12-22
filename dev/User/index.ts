@@ -30,11 +30,11 @@ export class User extends Entity {
     }
     public static exists(name:string | Identity){
         if(name instanceof Identity){
-
         }else {
-            
+            let p = path.join(path.dirname(require.main.filename),"../saved/entities/", name);
+            return fs.existsSync(p);
         }
-        return fs.existsSync();
+        return 
     }
     public static from(hash: string): User {
         let u: User = null;
