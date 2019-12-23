@@ -259,6 +259,15 @@ export default class Entity {
         }
         return access;
     }
+    protected compare(object:any): Object {
+        let result = {};
+        if(object.type != this.getType()){
+            result = {};
+        }else {
+            result = compareEntities(object, JSON.parse(this.toString()));
+        }
+        return result;
+    }
     /**
      * Returns a readable version of the current state.
      *
@@ -270,7 +279,15 @@ export default class Entity {
         return packager.wrap(this).toString();
     }
 }
-
+function compareEntities(obj1:any, obj2:any):Object {
+    let result:any = {};
+    for(let key in obj1) {
+        if(obj2[key] != obj1[key]) result[key] = obj2[key];
+        if(typeof obj2[key] == 'object' && typeof obj1[key] == 'object') 
+            result[key] = arguments.callee(obj1[key], obj2[key]);
+    }
+    return result;
+}
 /**
  *
  *

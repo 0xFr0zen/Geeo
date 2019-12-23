@@ -174,19 +174,36 @@ export class User extends Entity {
      * @memberof User
      */
     public save(): boolean {
+        let currentTimestamp:string = Date.now().toString();
         let me = this;
         let result: boolean = false;
+        let comparison:Object = {};
+        let snaps = path.join(
+            path.dirname(require.main.filename),
+            '../saved/entities/users/',
+            Buffer.from(this.getName(), 'utf8').toString('hex'),
+            'snapshots/'
+        );
+        let currentSnapPath:string = path.join(snaps, currentTimestamp);
+        let snapsFiles = fs.readdirSync(snaps).sort();
+        let userJSON = null;
+        let latestSnap = null;
+        if(snapsFiles.length > 0){
+            latestSnap = path.join(snaps, snapsFiles[snapsFiles.length - 1]);
+            userJSON = JSON.parse(fs.readFileSync(latestSnap).toString());
+            
+
+        }else {
+            latestSnap = currentSnapPath;
+            userJSON = {};
+        }
+        comparison = this.compare(userJSON);
 
         fs.writeFileSync(
-            path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
-                Buffer.from(this.getName(), 'utf8').toString('hex'),
-                'latest'
-            ),
+            latestSnap,
             (() => {
                 result = true;
-                return this.toString();
+                return JSON.stringify(comparison);
             })()
         );
         return result;

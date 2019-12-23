@@ -25,8 +25,10 @@ export default class Identity {
         let identityObjectPath = path.join(identityRootFolder, 'user');
         if (!fs.existsSync(identityRootFolder)) {
             fs.mkdirSync(identityRootFolder);
-            let identitySafes = path.join(identityRootFolder, 'safes');
+            let identitySafes:string = path.join(identityRootFolder, 'safes');
+            let identitySnapshots:string = path.join(identityRootFolder, 'snapshots');
             if (!fs.existsSync(identitySafes)) fs.mkdirSync(identitySafes);
+            if (!fs.existsSync(identitySnapshots)) fs.mkdirSync(identitySnapshots);
             if (!fs.existsSync(identityObjectPath)) {
                 fs.writeFileSync(identityObjectPath, JSON.stringify(o));
             }
