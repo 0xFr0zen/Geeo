@@ -1,7 +1,7 @@
 import Entity from '../Entity';
 import * as fs from 'fs';
 import * as path from 'path';
-import Safe from '../Safe';
+import Safe from '../Entity/Safe';
 import Node from '../Crypt';
 import Identity from '../Identity/index';
 
@@ -42,7 +42,7 @@ export class User extends Entity {
             let p = path.join(
                 p1,
                 '../saved/entities/users/',
-                name.getPublicKey()
+                name.getPublicKey().toString('hex')
             );
             return fs.existsSync(p);
         } else {

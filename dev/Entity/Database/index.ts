@@ -1,4 +1,4 @@
-import Entity from '../Entity';
+import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mysql from 'mysql';

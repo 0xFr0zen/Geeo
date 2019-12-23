@@ -1,6 +1,6 @@
 import * as express from 'express';
 import User from '../../User';
-import Safe from '../../Safe';
+import Safe from '../../Entity/Safe';
 import { GeeoMap } from '../../GeeoMap/index';
 function UserRouter() {
     let router: express.Router = express.Router({ mergeParams: true });

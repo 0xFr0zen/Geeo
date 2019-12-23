@@ -1,9 +1,9 @@
-import Entity from '../Entity';
+import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
-import { GeeoMap } from '../GeeoMap';
-import Node from '../Crypt';
-import Identity from '../Identity/index';
+import { GeeoMap } from '../../GeeoMap';
+import Node from '../../Crypt';
+import Identity from '../../Identity/index';
 
 export enum StorageType {
     Inventory = 'inventory',
@@ -38,7 +38,13 @@ export default class Safe extends Entity {
         if (!fs.existsSync(p)) {
             fs.mkdirSync(p);
         }
-        this.addParameter('path', path.relative(path.dirname(require.main.filename), p).toString().replace(/\\/g,"/"));
+        this.addParameter(
+            'path',
+            path
+                .relative(path.dirname(require.main.filename), p)
+                .toString()
+                .replace(/\\/g, '/')
+        );
         this.addParameter('user', username);
         this.addParameter('storagetype', storagetype);
         this.addParameter('space', new GeeoMap<string, any>());
@@ -86,7 +92,10 @@ export default class Safe extends Entity {
     public save() {
         let type = this.getType();
         let changes = this.getChanges();
-        let safeFolder = path.join(path.dirname(require.main.filename),this.getPath());
+        let safeFolder = path.join(
+            path.dirname(require.main.filename),
+            this.getPath()
+        );
         let randFilename = Node.randomString(16);
         let text = JSON.stringify(changes);
         let data: string = new Node(text).toString();
