@@ -174,38 +174,45 @@ export class User extends Entity {
      * @memberof User
      */
     public save(): boolean {
-        let currentTimestamp:string = Date.now().toString();
+        let currentTimestamp: string = Date.now().toString();
         let me = this;
         let result: boolean = false;
-        let comparison:Object = {};
+        let comparison: Object = {};
         let snaps = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
             Buffer.from(this.getName(), 'utf8').toString('hex'),
             'snapshots/'
         );
-        let currentSnapPath:string = path.join(snaps, currentTimestamp);
+        let currentSnapPath: string = path.join(snaps, currentTimestamp);
         let snapsFiles = fs.readdirSync(snaps).sort();
         let userJSON = null;
         let latestSnap = null;
-        if(snapsFiles.length > 0){
+        if (snapsFiles.length > 0) {
             latestSnap = path.join(snaps, snapsFiles[snapsFiles.length - 1]);
             userJSON = JSON.parse(fs.readFileSync(latestSnap).toString());
-            
-
-        }else {
+        } else {
             latestSnap = currentSnapPath;
             userJSON = {};
         }
         comparison = this.compare(userJSON);
+        let i = this.getParameter('identity');
+        if (i instanceof Identity) {
+            let pk = Buffer.from(i.getPrivateKey().toString('hex'), 'hex');
+            let puk = i.getPublicKey();
 
-        fs.writeFileSync(
-            latestSnap,
-            (() => {
-                result = true;
-                return JSON.stringify(comparison);
-            })()
-        );
+            fs.writeFileSync(
+                latestSnap,
+                (() => {
+                    result = true;
+                    return new Node(JSON.stringify(comparison), {
+                        privateKey: pk,
+                        publicKey: puk,
+                    }).encryptText();
+                })()
+            );
+        }
+
         return result;
     }
 }

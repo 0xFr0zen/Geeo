@@ -259,13 +259,18 @@ export default class Entity {
         }
         return access;
     }
-    protected compare(object:any): Object {
+    protected compare(object: any): Object {
         let result = {};
-        if(object.type != this.getType()){
-            result = {};
-        }else {
+        if (object.type) {
+            if (object.type !== this.getType()) {
+                result = {};
+            } else {
+                result = compareEntities(object, JSON.parse(this.toString()));
+            }
+        } else {
             result = compareEntities(object, JSON.parse(this.toString()));
         }
+
         return result;
     }
     /**
@@ -279,11 +284,11 @@ export default class Entity {
         return packager.wrap(this).toString();
     }
 }
-function compareEntities(obj1:any, obj2:any):Object {
-    let result:any = {};
-    for(let key in obj1) {
-        if(obj2[key] != obj1[key]) result[key] = obj2[key];
-        if(typeof obj2[key] == 'object' && typeof obj1[key] == 'object') 
+function compareEntities(obj1: any, obj2: any): any {
+    let result: any = {};
+    for (let key in obj2) {
+        if (obj2[key] != obj1[key]) result[key] = obj2[key];
+        if (typeof obj2[key] == 'object' && typeof obj1[key] == 'object')
             result[key] = arguments.callee(obj1[key], obj2[key]);
     }
     return result;
