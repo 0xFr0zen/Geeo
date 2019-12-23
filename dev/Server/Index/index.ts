@@ -5,10 +5,11 @@ import RUser from '../User/';
 import User from '../../User/';
 import Login from '../Login/';
 import Logout from '../Logout';
+import Identity from '../../Identity';
 function RIndex() {
     let router: express.Router = express.Router({mergeParams:true});
     router.use('/$', function(req: express.Request, res: express.Response) {
-        let user:User = User.from('oezguer.isbert');
+        let user:User = User.from(Identity.of("oezguer"));
         if(!user.isLoggedIn()){
             res.redirect("/login");
             return;

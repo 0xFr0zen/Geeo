@@ -2,6 +2,7 @@ import * as express from 'express';
 import User from '../../User';
 import Safe from '../../Entity/Safe';
 import { GeeoMap } from '../../GeeoMap/index';
+import Identity from '../../Identity';
 function UserRouter() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.use('/:name/', UserNormalRouter());
@@ -26,7 +27,7 @@ function UserNormalRouter() {
         if (name === 'me') {
             // user = User.load(name);
         } else {
-            user = User.from(name);
+            user = User.from(Identity.of(name));
         }
         let safes = user.getSafes();
         let showcase_safes: any[] = [];

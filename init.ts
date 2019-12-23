@@ -1,2 +1,3 @@
 import Device from './dev/Device/index';
-Device.createIdentity('admin');
+import User from './dev/User/index';
+User.from(Device.createIdentity('oezguer'));

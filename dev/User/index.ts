@@ -87,39 +87,35 @@ export class User extends Entity {
      * @returns {User}
      * @memberof User
      */
-    public static from(hash: string): User {
+    public static from(ident: Identity): User {
         let u: User = null;
-        let p = path.join(
+        let userpathname = ident.getPublicKey().toString('hex');
+        let p3 = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
-            hash,
-            'latest'
+            userpathname
         );
-        let p2 = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
-            hash,
-            'user'
-        );
+        let p = path.join(p3, 'latest');
+        let p2 = path.join(p3, 'user');
         let name = '';
-        let file = fs.readFileSync(p).toString();
+        if (fs.existsSync(p)) {
+            let file = fs.readFileSync(p).toString();
+            let encJSON = new Node(file, {
+                publicKey: ident.getPublicKey(),
+                privateKey: ident.getPrivateKey(),
+            });
+            let userJSON = JSON.parse(JSON.parse(encJSON.decryptText()).data)
+                .user;
+            u = new User(userJSON.name);
+            let keys = Object.keys(userJSON);
+            keys.forEach(key => {
+                u.addParameter(key, userJSON[key]);
+            });
+            u.addParameter('last_loaded', Date.now());
+        } else {
+            u = new User(ident.getPublicKey().toString('utf8'));
+        }
 
-        let encJSON = new Node(file, {
-            publicKey: Buffer.from(hash, 'hex'),
-            privateKey: Buffer.from(
-                JSON.parse(fs.readFileSync(p2).toString()).private,
-                'hex'
-            ),
-        });
-
-        let userJSON = JSON.parse(JSON.parse(encJSON.decryptText()).data).user;
-        u = new User(userJSON.name);
-        let keys = Object.keys(userJSON);
-
-        keys.forEach(key => {
-            u.addParameter(key, userJSON[key]);
-        });
-        u.addParameter('last_loaded', Date.now());
         return u;
     }
     public setLoggedIn(s: boolean) {

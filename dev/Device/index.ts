@@ -64,9 +64,9 @@ export default abstract class Device {
      * @param {string} name
      * @memberof Device
      */
-    public static createIdentity(name: string) {
-        
-        console.error(`Trying to create Identity '${name}'`);
+    public static createIdentity(name: string):Identity {
+        let i:Identity = null;
+        console.error(`Trying to create Identity '${name}'.`);
         if (!Device.hasIdentity(name)) {
             let s = Device.MAC_ADRESS_HEX;
             let additionalSLength = Math.log2(16 - s.length);
@@ -75,12 +75,16 @@ export default abstract class Device {
                 Buffer.from(randomS, 'utf8').toString('hex')
             );
             let pk = Buffer.from(newS, 'hex');
-            let i = new Identity(name, pk);
+            i = new Identity(name, pk);
             let pk_i: PK_IDENTITY = { pk: pk, ident: i };
             Device.identities = Device.identities.addItem(name, pk_i);
+            console.log(`Created Identity '${name}'.`);
+            
         } else {
             console.error("Identity exists already, aborting.");
         }
+        return i;
+
     }
 
     /**
