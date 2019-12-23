@@ -23,15 +23,15 @@ function UserNormalRouter() {
     ) {
         let user = null;
         let name = req.params.name;
-        if(name === 'me'){
-            user = User.load(name);
-        }else {
+        if (name === 'me') {
+            // user = User.load(name);
+        } else {
             user = User.from(name);
         }
         let safes = user.getSafes();
         let showcase_safes: any[] = [];
         safes.forEach(safe => {
-            let s:Safe = Safe.from(safe);
+            let s: Safe = Safe.from(safe);
             let storage: IStorage = {
                 name: s.getName(),
                 created: s.getCreated(),

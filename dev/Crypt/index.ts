@@ -7,7 +7,6 @@ interface IKeys {
 }
 interface ItoString {
     data: string;
-    keys: IKeys;
 }
 export default class Node {
     private data: string = null;
@@ -60,7 +59,6 @@ export default class Node {
     public toString(): string {
         let obj: ItoString = {
             data: this.encryptText(),
-            keys: { privateKey: this.privatekey, publicKey: this.publickey },
         };
         return JSON.stringify(obj);
     }

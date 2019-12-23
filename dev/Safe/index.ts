@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { GeeoMap } from '../GeeoMap';
 import Node from '../Crypt';
+import Identity from '../Identity/index';
 
 export enum StorageType {
     Inventory = 'inventory',
@@ -30,18 +31,18 @@ export default class Safe extends Entity {
         super('safe', name);
         let p = path.join(
             path.dirname(require.main.filename),
-            '../saved/entities/user/',
-            username,
-            'safes/'
+            '../saved/entities/users/',
+            Buffer.from(username, 'utf8').toString('hex'),
+            'safes'
         );
         if (!fs.existsSync(p)) {
             fs.mkdirSync(p);
         }
-        this.addParameter('path', p,false);
+        this.addParameter('path', path.relative(path.dirname(require.main.filename), p).toString().replace(/\\/g,"/"));
         this.addParameter('user', username);
-        this.addParameter('storagetype', storagetype, false);
-        this.addParameter('space', new GeeoMap<string, any>(), false);
-        this.saveCurrentState();
+        this.addParameter('storagetype', storagetype);
+        this.addParameter('space', new GeeoMap<string, any>());
+        this.save();
     }
     public static from(json: any): Safe {
         json = json.safe;
@@ -77,18 +78,15 @@ export default class Safe extends Entity {
         return this;
     }
     public getPath(): string {
-        let result = this.hasParameter('path') ? this.getParameter('path').toString() : null;
+        let result = this.hasParameter('path')
+            ? this.getParameter('path').toString()
+            : null;
         return result;
     }
-    public saveCurrentState() {
+    public save() {
         let type = this.getType();
-
         let changes = this.getChanges();
-
-        let safeFolder = path.join(this.getPath(), this.getType());
-        if (!fs.existsSync(safeFolder)) {
-            fs.mkdirSync(safeFolder);
-        }
+        let safeFolder = path.join(path.dirname(require.main.filename),this.getPath());
         let randFilename = Node.randomString(16);
         let text = JSON.stringify(changes);
         let data: string = new Node(text).toString();

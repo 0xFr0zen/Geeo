@@ -1,19 +1,22 @@
 import User from './dev/User/index';
-import Node from './dev/Crypt/index';
+import Identity from './dev/Identity/index';
+import Safe from './dev/Safe/index';
 import * as fs from 'fs';
 import * as path from 'path';
-import Safe from './dev/Safe';
-import { StorageType } from './dev/Safe/index';
-import Identity from './dev/Identity/index';
+import Node from './dev/Crypt/index';
 
+if(!User.exists('oezguer')){
+    let oe = new User(new Identity('oezguer'));
+}else {
+    let oe = User.from(Identity.of('oezguer').getPublicKey());
+    
+}
+let f = JSON.parse(fs.readFileSync(path.join(path.dirname(require.main.filename),"../saved/entities/users/6f657a67756572/safes/1495ea1b0a19375e")).toString());
 
-let i = new Identity();
-let prK = i.getPrivateKey();
-let pbK = i.getPrivateKey();
-console.log(prK, pbK);
+let prK = Buffer.from(JSON.parse(fs.readFileSync(path.join(path.dirname(require.main.filename),"../saved/entities/users/6f657a67756572/user")).toString()).private, 'hex');
+let pbK = Buffer.from("1495ea1b0a19375e", 'hex');
+console.log(JSON.parse(new Node(f.data, {privateKey:prK, publicKey:pbK}).decryptText()));
 
-
-// let oe = new User("oezguer");
-// console.log(oe.getChanges().getItem('added'));
+// console.log(Safe.from());
 
 // oe.save();
