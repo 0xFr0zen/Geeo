@@ -18,24 +18,24 @@ export class User extends Entity {
      * @param {string} name
      * @memberof User
      */
-    constructor(name: string | Identity) {
-        super(
-            'user',
-            typeof name === 'string'
-                ? name
-                : Buffer.from(name.getPublicKey(), 'hex').toString('utf8')
-        );
-        let actualname: string =
-            typeof name === 'string'
-                ? name
-                : Buffer.from(name.getPublicKey(), 'hex').toString('utf8');
+    constructor(name: string) {
+        super('user', name);
         this.addParameter('settings', '');
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
-        this.addParameter('identity', Identity.of(actualname));
-        this.addSafe(new Safe(actualname, 'documents'));
+        this.addParameter('identity', Identity.of(name));
+        this.addSafe(new Safe(name, 'documents'));
         this.save();
     }
+
+    /**
+     * Checks if the user Exists
+     *
+     * @static
+     * @param {(string | Identity)} name
+     * @returns {boolean}
+     * @memberof User
+     */
     public static exists(name: string | Identity): boolean {
         let p1 = path.dirname(require.main.filename);
         if (name instanceof Identity) {
@@ -46,28 +46,71 @@ export class User extends Entity {
             );
             return fs.existsSync(p);
         } else {
-            let p = path.join(p1, '../saved/entities/users/', Buffer.from(name,'utf8').toString('hex'));
+            let p = path.join(
+                p1,
+                '../saved/entities/users/',
+                Buffer.from(name, 'utf8').toString('hex')
+            );
             return fs.existsSync(p);
         }
     }
+
+    /**
+     * Creates a User based on name
+     *
+     * @static
+     * @param {string} name
+     * @returns {User}
+     * @memberof User
+     */
+    public static create(name: string): User {
+        let p = path.join(
+            path.dirname(require.main.filename),
+            '../saved/entities/users/',
+            Buffer.from(name, 'utf8').toString('hex')
+        );
+        let user = null;
+        if (!fs.existsSync(p)) {
+            fs.mkdirSync(p);
+            user = new User(name);
+        } else {
+            console.error(`User ${name} already exists.`);
+        }
+        return user;
+    }
+
+    /**
+     *
+     * Loads User based on hash
+     * @static
+     * @param {string} hash
+     * @returns {User}
+     * @memberof User
+     */
     public static from(hash: string): User {
         let u: User = null;
         let p = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
             hash,
-            "latest"
+            'latest'
         );
         let p2 = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
             hash,
-            "user"
+            'user'
         );
         let name = '';
         let file = fs.readFileSync(p).toString();
 
-        let encJSON = new Node(file, {publicKey:Buffer.from(hash,'hex'), privateKey:Buffer.from(JSON.parse(fs.readFileSync(p2).toString()).private,'hex')});
+        let encJSON = new Node(file, {
+            publicKey: Buffer.from(hash, 'hex'),
+            privateKey: Buffer.from(
+                JSON.parse(fs.readFileSync(p2).toString()).private,
+                'hex'
+            ),
+        });
 
         let userJSON = JSON.parse(JSON.parse(encJSON.decryptText()).data).user;
         u = new User(userJSON.name);
