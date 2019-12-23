@@ -19,6 +19,7 @@
 saved/*
 !saved/users/
 saved/users/*
+config/**
 
 .prettierrc
 
