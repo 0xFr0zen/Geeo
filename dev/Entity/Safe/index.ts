@@ -122,7 +122,8 @@ export default class Safe extends Entity {
         let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
         let text = JSON.stringify(this.compare(s));
         let data: string = new Node(text).toString();
+        
         let filepath = path.join(safeFolder, randFilename);
-        fs.writeFileSync(filepath, data);
+        fs.writeFileSync(filepath, JSON.parse(data).data);
     }
 }

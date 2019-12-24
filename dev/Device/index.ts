@@ -101,7 +101,8 @@ export default abstract class Device {
         console.error(`Trying to create Identity '${name}'.`);
         if (!Device.hasIdentity(name)) {
             let s = Device.MAC_ADRESS_HEX;
-            let additionalSLength = Math.log2(16 - s.length);
+            let diff = 32 - s.length;
+            let additionalSLength = Math.ceil(Math.log2(diff)) * 2;
             let randomS = Node.randomString(additionalSLength);
             let newS: string = s.concat(
                 Buffer.from(randomS, 'utf8').toString('hex')

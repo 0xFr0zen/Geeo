@@ -12,7 +12,7 @@ export default class Identity {
         pK: Buffer = Buffer.from(Node.randomString(16), 'utf8')
     ) {
         this.username = username;
-        this.hash = Device.getPublicKey();
+        // this.hash = Device.getPublicKey();
         this.private = pK;
 
         let identityRootFolder = path.join(
@@ -54,7 +54,7 @@ export default class Identity {
         return this.username;
     }
     public getPublicKey(): Buffer {
-        return this.hash;
+        return Device.getPublicKey();
     }
     public static of(username: string): Identity {
         let h = Buffer.from(username, 'utf8').toString('hex');

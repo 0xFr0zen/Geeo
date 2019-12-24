@@ -97,24 +97,32 @@ export class User extends Entity {
      */
     public static from(ident: Identity): User {
         let u: User = null;
-        let userpathname = ident.getPublicKey().toString('hex');
+        let userpathname = Buffer.from(ident.getUsername(), 'utf8').toString(
+            'hex'
+        );
+
         let p3 = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
             userpathname
         );
-        let p = path.join(p3, 'latest');
-        let p2 = path.join(p3, 'user');
-        let name = '';
-        if (fs.existsSync(p)) {
-            let file = fs.readFileSync(p).toString();
+        let p = path.join(p3, 'snapshots/');
+        let snaps = fs.readdirSync(p).sort();
+        if (snaps.length > 0) {
+            let latest = snaps[snaps.length - 1];
+            let latestPath = path.join(p, latest);
+            let p2 = path.join(p3, 'user');
+            let name = '';
+            let file = fs.readFileSync(latestPath).toString();
             let encJSON = new Node(file, {
                 publicKey: ident.getPublicKey(),
                 privateKey: ident.getPrivateKey(),
             });
-            let userJSON = JSON.parse(JSON.parse(encJSON.decryptText()).data)
-                .user;
-            u = new User(userJSON.name);
+            let decryptedData = encJSON.decryptText();
+            console.log(decryptedData);
+
+            let userJSON = JSON.parse(decryptedData).user;
+            u = new User(userJSON.name, true);
             let keys = Object.keys(userJSON);
             keys.forEach(key => {
                 u.addParameter(key, userJSON[key]);
