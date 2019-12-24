@@ -24,6 +24,8 @@ export default class Node {
         this.publickey = keys.publicKey;
         this.privatekey = keys.privateKey;
         this.data = data;
+        console.log(keys, data);
+        
     }
     public getKey(keyname: string): string {
         let result = null;

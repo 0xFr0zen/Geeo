@@ -26,29 +26,52 @@ export default class Safe extends Entity {
     constructor(
         username: string,
         name: string,
-        storagetype: StorageType = StorageType.Inventory
+        storagetype: StorageType = StorageType.Inventory,
+        standalone = false
     ) {
         super('safe', name);
-        let p = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
-            Buffer.from(username, 'utf8').toString('hex'),
-            'safes'
-        );
-        if (!fs.existsSync(p)) {
-            fs.mkdirSync(p);
+        if(!standalone){
+            let p = path.join(
+                path.dirname(require.main.filename),
+                '../saved/entities/users/',
+                Buffer.from(username, 'utf8').toString('hex'),
+                'safes'
+            );
+            if (!fs.existsSync(p)) {
+                fs.mkdirSync(p);
+            }
+            this.addParameter(
+                'path',
+                path
+                    .relative(path.dirname(require.main.filename), p)
+                    .toString()
+                    .replace(/\\/g, '/')
+            );
+            this.addParameter('user', username);
+            this.addParameter('storagetype', storagetype);
+            this.addParameter('space', new GeeoMap<string, any>());
+            this.save();
+        }else {
+            let p = path.join(
+                path.dirname(require.main.filename),
+                '../saved/entities/users/',
+                Buffer.from(username, 'utf8').toString('hex'),
+                'safes'
+            );
+            if (!fs.existsSync(p)) {
+                fs.mkdirSync(p);
+            }
+            this.addParameter(
+                'path',
+                path
+                    .relative(path.dirname(require.main.filename), p)
+                    .toString()
+                    .replace(/\\/g, '/')
+            );
+            this.addParameter('user', username);
+            this.addParameter('storagetype', storagetype);
+            this.addParameter('space', new GeeoMap<string, any>());
         }
-        this.addParameter(
-            'path',
-            path
-                .relative(path.dirname(require.main.filename), p)
-                .toString()
-                .replace(/\\/g, '/')
-        );
-        this.addParameter('user', username);
-        this.addParameter('storagetype', storagetype);
-        this.addParameter('space', new GeeoMap<string, any>());
-        this.save();
     }
     public static from(json: any): Safe {
         json = json.safe;
@@ -91,13 +114,13 @@ export default class Safe extends Entity {
     }
     public save() {
         let type = this.getType();
-        let changes = this.getChanges();
         let safeFolder = path.join(
             path.dirname(require.main.filename),
             this.getPath()
         );
         let randFilename = Node.randomString(16);
-        let text = JSON.stringify(changes);
+        let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
+        let text = JSON.stringify(this.compare(s));
         let data: string = new Node(text).toString();
         let filepath = path.join(safeFolder, randFilename);
         fs.writeFileSync(filepath, data);

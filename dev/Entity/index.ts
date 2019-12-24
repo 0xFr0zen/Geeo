@@ -4,6 +4,7 @@ import { GeeoMap } from '../GeeoMap';
 import * as fs from 'fs';
 import * as path from 'path';
 import Identity from '../Identity/index';
+import compareEntities from './Comparison';
 /**
  *Entity Class
  *
@@ -26,13 +27,7 @@ export default class Entity {
      * @memberof Entity
      */
     constructor(type: string, name: string) {
-        let changes: IChanges = {
-            date: null,
-            removed: new GeeoMap<string, any>(),
-            added: new GeeoMap<string, any>(),
-            altered: new GeeoMap<string, any>(),
-        };
-        this.addParameter('changes', changes);
+        
         this.addParameter('type', type);
         this.addParameter('name', name);
         this.addParameter('created', Date.now());
@@ -92,24 +87,6 @@ export default class Entity {
         let date = this.getParameter('last_saved');
         return new Date(Number.parseInt(date.toString()));
     }
-    /**
-     * Returns last changes made.
-     *
-     * @returns {GeeoMap}
-     * @memberof Entity
-     */
-    public getChanges(): GeeoMap<string, any> {
-        let changes = JSON.parse(JSON.stringify(this.getParameter('changes')));
-        let changesMap = new GeeoMap<string, any>();
-        let keys = Object.keys(changes);
-        for (let key in keys) {
-            let name: string = keys[key];
-            let value: GeeoMap<string, any> = changes[name];
-
-            changesMap.addItem(name, value);
-        }
-        return changesMap;
-    }
 
     /**
      * Returns properties of Entity.
@@ -148,17 +125,6 @@ export default class Entity {
             this.update(key, obj);
         } else {
             this.parameters = this.parameters.addItem(key, obj);
-            let changes1: GeeoMap<string, any> = this.getChanges();
-
-            let addedList = changes1.hasItem('added')
-                ? GeeoMap.from(changes1.getItem('added'))
-                : new GeeoMap<string, any>();
-
-            if (addedList instanceof GeeoMap) {
-                addedList.addItem(key, obj);
-                changes1 = changes1.addItem('added', addedList);
-                this.parameters = this.parameters.addItem('changes', changes1);
-            }
         }
     }
 
@@ -195,18 +161,6 @@ export default class Entity {
      */
     protected update(key: string, value: Object): void {
         this.parameters = this.parameters.addItem(key, value);
-
-        let alteredList = this.getChanges().getItem('altered');
-        let date: number = Date.now();
-        if (alteredList != null && alteredList instanceof GeeoMap) {
-            alteredList.addItem(key, value);
-            let changes: IChanges = {
-                date: date,
-                altered: alteredList,
-            };
-
-            this.parameters = this.parameters.addItem('changes', changes);
-        }
     }
 
     /**
@@ -270,7 +224,6 @@ export default class Entity {
         } else {
             result = compareEntities(object, JSON.parse(this.toString()));
         }
-
         return result;
     }
     /**
@@ -284,15 +237,7 @@ export default class Entity {
         return packager.wrap(this).toString();
     }
 }
-function compareEntities(obj1: any, obj2: any): any {
-    let result: any = {};
-    for (let key in obj2) {
-        if (obj2[key] != obj1[key]) result[key] = obj2[key];
-        if (typeof obj2[key] == 'object' && typeof obj1[key] == 'object')
-            result[key] = arguments.callee(obj1[key], obj2[key]);
-    }
-    return result;
-}
+
 /**
  *
  *

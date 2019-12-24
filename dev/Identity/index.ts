@@ -1,25 +1,24 @@
 import Node from '../Crypt/index';
 import * as path from 'path';
 import * as fs from 'fs';
-interface IKeys {
-    private: string;
-}
+import Device from '../Device';
 export default class Identity {
     private hash: Buffer = null;
     private private: Buffer = null;
+    private username: string = null;
 
     constructor(
         username: string,
-        pK = Buffer.from(Node.randomString(16), 'utf8')
+        pK: Buffer = Buffer.from(Node.randomString(16), 'utf8')
     ) {
-        this.hash = Buffer.from(username, 'utf8');
+        this.username = username;
+        this.hash = Device.getPublicKey();
         this.private = pK;
-        let o: IKeys = { private: this.private.toString('hex') };
 
         let identityRootFolder = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
-            this.hash.toString('hex')
+            Buffer.from(this.username, 'utf8').toString('hex')
         );
 
         let identityObjectPath = path.join(identityRootFolder, 'user');
@@ -34,16 +33,25 @@ export default class Identity {
             if (!fs.existsSync(identitySnapshots))
                 fs.mkdirSync(identitySnapshots);
             if (!fs.existsSync(identityObjectPath)) {
-                fs.writeFileSync(identityObjectPath, JSON.stringify(o));
+                fs.writeFileSync(
+                    identityObjectPath,
+                    this.private.toString('hex')
+                );
             }
         } else {
             if (!fs.existsSync(identityObjectPath)) {
-                fs.writeFileSync(identityObjectPath, JSON.stringify(o));
+                fs.writeFileSync(
+                    identityObjectPath,
+                    this.private.toString('hex')
+                );
             }
         }
     }
     public getPrivateKey(): Buffer {
         return this.private;
+    }
+    public getUsername(): string {
+        return this.username;
     }
     public getPublicKey(): Buffer {
         return this.hash;
@@ -59,10 +67,21 @@ export default class Identity {
         if (fs.existsSync(p)) {
             return new Identity(
                 username,
-                JSON.parse(fs.readFileSync(p).toString()).private
+                Buffer.from(fs.readFileSync(p).toString(), 'hex')
             );
         } else {
             return null;
         }
+    }
+    public toString(): string {
+        let o = {
+            hash: this.hash.toString('hex'),
+            private: this.private.toString('hex'),
+            name: this.username,
+        };
+        return JSON.stringify(o);
+    }
+    public inspect():string {
+        return this.toString();
     }
 }

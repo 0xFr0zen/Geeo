@@ -18,14 +18,19 @@ export class User extends Entity {
      * @param {string} name
      * @memberof User
      */
-    constructor(name: string) {
+    constructor(name: string, standalone = false) {
         super('user', name);
-        this.addParameter('settings', '');
-        this.addParameter('storages', []);
-        this.addParameter('loggedin', false);
-        this.addParameter('identity', Identity.of(name));
-        this.addSafe(new Safe(name, 'documents'));
-        this.save();
+        if (!standalone) {
+            this.addParameter('settings', '');
+            this.addParameter('storages', []);
+            this.addParameter('loggedin', false);
+            this.addParameter('identity', Identity.of(name));
+            this.addSafe(new Safe(name, 'documents'));
+            this.save();
+        } else {
+            this.addParameter('settings', '');
+            this.addParameter('storages', []);
+        }
     }
 
     /**
@@ -78,7 +83,10 @@ export class User extends Entity {
         }
         return user;
     }
-
+    private static standalone(): Entity {
+        let u = new User('standalone', true);
+        return u;
+    }
     /**
      *
      * Loads User based on hash
@@ -113,7 +121,7 @@ export class User extends Entity {
             });
             u.addParameter('last_loaded', Date.now());
         } else {
-            u = new User(ident.getPublicKey().toString('utf8'));
+            u = new User(ident.getUsername());
         }
 
         return u;
@@ -193,9 +201,11 @@ export class User extends Entity {
             userJSON = JSON.parse(fs.readFileSync(latestSnap).toString());
         } else {
             latestSnap = currentSnapPath;
-            userJSON = {};
+            userJSON = JSON.parse(User.standalone().toString());
         }
         comparison = this.compare(userJSON);
+        console.log(comparison);
+
         let i = this.getParameter('identity');
         if (i instanceof Identity) {
             let pk = Buffer.from(i.getPrivateKey().toString('hex'), 'hex');
