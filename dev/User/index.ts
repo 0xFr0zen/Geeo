@@ -119,7 +119,6 @@ export class User extends Entity {
                 privateKey: ident.getPrivateKey(),
             });
             let decryptedData = encJSON.decryptText();
-            console.log(decryptedData);
 
             let userJSON = JSON.parse(decryptedData).user;
             u = new User(userJSON.name, true);
