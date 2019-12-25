@@ -1,9 +1,5 @@
-// import { TSMap } from 'typescript-map';
 import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap';
-import * as fs from 'fs';
-import * as path from 'path';
-import Identity from '../Identity/index';
 import compareEntities from './Comparison';
 /**
  *Entity Class
@@ -27,7 +23,6 @@ export default class Entity {
      * @memberof Entity
      */
     constructor(type: string, name: string) {
-        
         this.addParameter('type', type);
         this.addParameter('name', name);
         this.addParameter('created', Date.now());

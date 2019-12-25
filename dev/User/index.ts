@@ -97,39 +97,45 @@ export class User extends Entity {
      */
     public static from(ident: Identity): User {
         let u: User = null;
-        let userpathname = Buffer.from(ident.getUsername(), 'utf8').toString(
-            'hex'
-        );
-
-        let p3 = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
-            userpathname
-        );
-        let p = path.join(p3, 'snapshots/');
-        let snaps = fs.readdirSync(p).sort();
-        if (snaps.length > 0) {
-            let latest = snaps[snaps.length - 1];
-            let latestPath = path.join(p, latest);
-            let p2 = path.join(p3, 'user');
-            let name = '';
-            let file = fs.readFileSync(latestPath).toString();
-            let encJSON = new Node(file, {
-                publicKey: ident.getPublicKey(),
-                privateKey: ident.getPrivateKey(),
-            });
-            let decryptedData = encJSON.decryptText();
-
-            let userJSON = JSON.parse(decryptedData).user;
-            u = new User(userJSON.name, true);
-            let keys = Object.keys(userJSON);
-            keys.forEach(key => {
-                u.addParameter(key, userJSON[key]);
-            });
-            u.addParameter('last_loaded', Date.now());
-        } else {
-            u = new User(ident.getUsername());
+        if(ident != null){
+            let userpathname = Buffer.from(ident.getUsername(), 'utf8').toString(
+                'hex'
+            );
+    
+            let p3 = path.join(
+                path.dirname(require.main.filename),
+                '../saved/entities/users/',
+                userpathname
+            );
+            let p = path.join(p3, 'snapshots/');
+            let snaps = fs.readdirSync(p).sort();
+            if (snaps.length > 0) {
+                let latest = snaps[snaps.length - 1];
+                let latestPath = path.join(p, latest);
+                let p2 = path.join(p3, 'user');
+                let name = '';
+                let file = fs.readFileSync(latestPath).toString();
+                let encJSON = new Node(file, {
+                    publicKey: ident.getPublicKey(),
+                    privateKey: ident.getPrivateKey(),
+                });
+                let decryptedData = encJSON.decryptText();
+    
+                let userJSON = JSON.parse(decryptedData).user;
+                u = new User(userJSON.name, true);
+                let keys = Object.keys(userJSON);
+                keys.forEach(key => {
+                    u.addParameter(key, userJSON[key]);
+                });
+                u.addParameter('last_loaded', Date.now());
+            } else {
+                u = new User(ident.getUsername());
+            }
+        }else {
+            console.error("No identity given.");
+            
         }
+        
 
         return u;
     }
@@ -153,33 +159,54 @@ export class User extends Entity {
      */
     public addSafe(storage: Safe): boolean {
         let result = false;
-        let storages = this.getParameter('storages');
-        if (storages != null && Array.isArray(storages)) {
-            if (storages.length < storages.push(storage)) {
-                this.update('storages', storages);
-                result = true;
+        if (this.hasParameter('storages')) {
+            let storages = this.getParameter('storages');
+            if (storages != null && Array.isArray(storages)) {
+                if (storages.length < storages.push(storage)) {
+                    this.update('storages', storages);
+                    result = true;
+                }
             }
         }
         return result;
     }
     public getSafe(name: string): Safe {
         let result = null;
-        let storages = this.getParameter('storages');
-        if (storages != null && Array.isArray(storages)) {
-            result = storages.filter((storage: Safe) => {
-                return storage.getName() === name;
-            })[0];
+        if (this.hasParameter('storages')) {
+            let storages = this.getParameter('storages');
+            if (storages != null && Array.isArray(storages)) {
+                result = storages.filter((storage: Safe) => {
+                    return storage.getName() === name;
+                })[0];
+            }
         }
-
+        return result;
+    }
+    public removeSafe(name: string): boolean {
+        let result = false;
+        if (this.hasParameter('storages')) {
+            let storages = this.getParameter('storages');
+            if (storages != null && Array.isArray(storages)) {
+                let safe = null;
+                safe = storages.filter((storage: Safe) => {
+                    return storage.getName() === name;
+                })[0];
+                if (safe != null) {
+                    storages.splice(storages.indexOf(safe), 1);
+                    result = true;
+                }
+            }
+        }
         return result;
     }
     public getSafes(): Array<Safe> {
         let result = null;
-        let storages = this.getParameter('storages');
-        if (storages != null && Array.isArray(storages)) {
-            result = storages;
+        if (this.hasParameter('storages')) {
+            let storages = this.getParameter('storages');
+            if (storages != null && Array.isArray(storages)) {
+                result = storages;
+            }
         }
-
         return result;
     }
     /**
@@ -190,45 +217,57 @@ export class User extends Entity {
      */
     public save(): boolean {
         let currentTimestamp: string = Date.now().toString();
-        let me = this;
+        let keyholder = Identity.of(this.getName());
         let result: boolean = false;
         let comparison: Object = {};
-        let snaps = path.join(
+        let snapsLocation = path.join(
             path.dirname(require.main.filename),
             '../saved/entities/users/',
             Buffer.from(this.getName(), 'utf8').toString('hex'),
             'snapshots/'
         );
-        let currentSnapPath: string = path.join(snaps, currentTimestamp);
-        let snapsFiles = fs.readdirSync(snaps).sort();
+        let currentSnapPath: string = path.join(
+            snapsLocation,
+            currentTimestamp
+        );
+        let snapsFiles = fs.readdirSync(snapsLocation).sort();
         let userJSON = null;
         let latestSnap = null;
         if (snapsFiles.length > 0) {
-            latestSnap = path.join(snaps, snapsFiles[snapsFiles.length - 1]);
-            userJSON = JSON.parse(fs.readFileSync(latestSnap).toString());
+            latestSnap = path.join(
+                snapsLocation,
+                snapsFiles[snapsFiles.length - 1]
+            );
+            let latetUserSnapFile = fs.readFileSync(latestSnap).toString();
+
+            let decrypted: string = new Node(latetUserSnapFile, {
+                privateKey: keyholder.getPrivateKey(),
+                publicKey: keyholder.getPublicKey(),
+            }).decryptText();
+            userJSON = JSON.parse(decrypted);
         } else {
             latestSnap = currentSnapPath;
-            userJSON = JSON.parse(User.standalone().toString());
+            let decrypted: string = new Node(User.standalone().toString(), {
+                privateKey: keyholder.getPrivateKey(),
+                publicKey: keyholder.getPublicKey(),
+            }).decryptText();
+            userJSON = JSON.parse(decrypted);
         }
         comparison = this.compare(userJSON);
-        console.log(comparison);
+        console.log('comparison', comparison);
+        let pk = keyholder.getPrivateKey();
+        let puk = keyholder.getPublicKey();
 
-        let i = this.getParameter('identity');
-        if (i instanceof Identity) {
-            let pk = Buffer.from(i.getPrivateKey().toString('hex'), 'hex');
-            let puk = i.getPublicKey();
-
-            fs.writeFileSync(
-                latestSnap,
-                (() => {
-                    result = true;
-                    return new Node(JSON.stringify(comparison), {
-                        privateKey: pk,
-                        publicKey: puk,
-                    }).encryptText();
-                })()
-            );
-        }
+        fs.writeFileSync(
+            latestSnap,
+            (() => {
+                result = true;
+                return new Node(JSON.stringify(comparison), {
+                    privateKey: pk,
+                    publicKey: puk,
+                }).encryptText();
+            })()
+        );
 
         return result;
     }

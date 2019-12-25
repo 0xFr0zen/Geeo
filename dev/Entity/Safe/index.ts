@@ -75,7 +75,7 @@ export default class Safe extends Entity {
     }
     public static from(json: any): Safe {
         json = json.safe;
-        let safe: Safe = new Safe(json.user.name, json.name);
+        let safe: Safe = new Safe(json.user.name, json.name, StorageType.Inventory, true);
 
         let keys = Object.keys(json);
 
