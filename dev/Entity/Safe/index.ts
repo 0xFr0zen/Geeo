@@ -30,47 +30,28 @@ export default class Safe extends Entity {
         standalone = false
     ) {
         super('safe', name);
+        let p = path.join(
+            path.dirname(require.main.filename),
+            '../saved/entities/users/',
+            Buffer.from(username, 'utf8').toString('hex'),
+            'safes'
+        );
+        if (!fs.existsSync(p)) {
+            fs.mkdirSync(p);
+        }
+        this.addParameter(
+            'path',
+            path
+                .relative(path.dirname(require.main.filename), p)
+                .toString()
+                .replace(/\\/g, '/')
+        );
+        this.addParameter('user', username);
+        this.addParameter('storagetype', storagetype);
+        this.addParameter('space', new GeeoMap<string, any>());
         if(!standalone){
-            let p = path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
-                Buffer.from(username, 'utf8').toString('hex'),
-                'safes'
-            );
-            if (!fs.existsSync(p)) {
-                fs.mkdirSync(p);
-            }
-            this.addParameter(
-                'path',
-                path
-                    .relative(path.dirname(require.main.filename), p)
-                    .toString()
-                    .replace(/\\/g, '/')
-            );
-            this.addParameter('user', username);
-            this.addParameter('storagetype', storagetype);
-            this.addParameter('space', new GeeoMap<string, any>());
             this.save();
         }else {
-            let p = path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
-                Buffer.from(username, 'utf8').toString('hex'),
-                'safes'
-            );
-            if (!fs.existsSync(p)) {
-                fs.mkdirSync(p);
-            }
-            this.addParameter(
-                'path',
-                path
-                    .relative(path.dirname(require.main.filename), p)
-                    .toString()
-                    .replace(/\\/g, '/')
-            );
-            this.addParameter('user', username);
-            this.addParameter('storagetype', storagetype);
-            this.addParameter('space', new GeeoMap<string, any>());
         }
     }
     public static from(json: any): Safe {
@@ -113,12 +94,11 @@ export default class Safe extends Entity {
         return result;
     }
     public save() {
-        let type = this.getType();
         let safeFolder = path.join(
             path.dirname(require.main.filename),
             this.getPath()
         );
-        let randFilename = Node.randomString(16);
+        let randFilename = Date.now().toString();
         let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
         let text = JSON.stringify(this.compare(s));
         let data: string = new Node(text).toString();

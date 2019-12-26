@@ -21,7 +21,8 @@
     "test": "tsc && node ./output/index.js",
     "init": "tsc && node ./output/init.js",
     "db_test": "tsc && node ./output/db_test.js",
-    "test_area": "tsc && node ./output/test_area.js"
+    "test_area": "tsc && node ./output/test_area.js",
+    "reset" : "tsc && node ./output/reset.js"
   },
   "keywords": [],
   "author": "",

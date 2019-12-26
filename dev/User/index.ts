@@ -4,6 +4,7 @@ import * as path from 'path';
 import Safe from '../Entity/Safe';
 import Node from '../Crypt';
 import Identity from '../Identity/index';
+import Device from '../Device/index';
 
 /**
  * User Class.
@@ -20,16 +21,14 @@ export class User extends Entity {
      */
     constructor(name: string, standalone = false) {
         super('user', name);
+        this.addParameter('settings', '');
+        this.addParameter('storages', []);
+        this.addParameter('loggedin', false);
         if (!standalone) {
-            this.addParameter('settings', '');
-            this.addParameter('storages', []);
-            this.addParameter('loggedin', false);
             this.addParameter('identity', Identity.of(name));
             this.addSafe(new Safe(name, 'documents'));
             this.save();
         } else {
-            this.addParameter('settings', '');
-            this.addParameter('storages', []);
         }
     }
 
@@ -47,7 +46,7 @@ export class User extends Entity {
             let p = path.join(
                 p1,
                 '../saved/entities/users/',
-                name.getPublicKey().toString('hex')
+                Buffer.from(name.getUsername(), 'utf8').toString('hex')
             );
             return fs.existsSync(p);
         } else {
@@ -97,11 +96,12 @@ export class User extends Entity {
      */
     public static from(ident: Identity): User {
         let u: User = null;
-        if(ident != null){
-            let userpathname = Buffer.from(ident.getUsername(), 'utf8').toString(
-                'hex'
-            );
-    
+        if (ident != null) {
+            let userpathname = Buffer.from(
+                ident.getUsername(),
+                'utf8'
+            ).toString('hex');
+
             let p3 = path.join(
                 path.dirname(require.main.filename),
                 '../saved/entities/users/',
@@ -120,7 +120,7 @@ export class User extends Entity {
                     privateKey: ident.getPrivateKey(),
                 });
                 let decryptedData = encJSON.decryptText();
-    
+
                 let userJSON = JSON.parse(decryptedData).user;
                 u = new User(userJSON.name, true);
                 let keys = Object.keys(userJSON);
@@ -131,11 +131,9 @@ export class User extends Entity {
             } else {
                 u = new User(ident.getUsername());
             }
-        }else {
-            console.error("No identity given.");
-            
+        } else {
+            console.error('No identity given.');
         }
-        
 
         return u;
     }
@@ -242,7 +240,7 @@ export class User extends Entity {
 
             let decrypted: string = new Node(latetUserSnapFile, {
                 privateKey: keyholder.getPrivateKey(),
-                publicKey: keyholder.getPublicKey(),
+                publicKey: Device.getPublicKey(),
             }).decryptText();
             userJSON = JSON.parse(decrypted);
         } else {
