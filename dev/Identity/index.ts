@@ -1,9 +1,7 @@
 import Node from '../Crypt/index';
 import * as path from 'path';
 import * as fs from 'fs';
-import Device from '../Device';
 export default class Identity {
-    private hash: Buffer = null;
     private private: Buffer = null;
     private username: string = null;
 
@@ -12,7 +10,6 @@ export default class Identity {
         pK: Buffer = Buffer.from(Node.randomString(16), 'utf8')
     ) {
         this.username = username;
-        // this.hash = Device.getPublicKey();
         this.private = pK;
 
         let identityRootFolder = path.join(
@@ -53,9 +50,6 @@ export default class Identity {
     public getUsername(): string {
         return this.username;
     }
-    public getPublicKey(): Buffer {
-        return Device.getPublicKey();
-    }
     public static of(username: string): Identity {
         let h = Buffer.from(username, 'utf8').toString('hex');
         let p = path.join(
@@ -75,7 +69,6 @@ export default class Identity {
     }
     public toString(): string {
         let o = {
-            hash: this.hash.toString('hex'),
             private: this.private.toString('hex'),
             name: this.username,
         };

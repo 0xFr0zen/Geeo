@@ -55,6 +55,8 @@ export default class Safe extends Entity {
         }
     }
     public static from(json: any): Safe {
+        console.log("SAFE JSON", json);
+        
         json = json.safe;
         let safe: Safe = new Safe(json.user.name, json.name, StorageType.Inventory, true);
 
@@ -93,6 +95,9 @@ export default class Safe extends Entity {
             : null;
         return result;
     }
+    public getUsername():string {
+        return this.getParameter('user').toString()
+    }
     public save() {
         let safeFolder = path.join(
             path.dirname(require.main.filename),
@@ -101,7 +106,7 @@ export default class Safe extends Entity {
         let randFilename = Date.now().toString();
         let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
         let text = JSON.stringify(this.compare(s));
-        let data: string = new Node(text).toString();
+        let data: string = new Node(text, {privateKey:Identity.of(this.getUsername()).getPrivateKey()}).toString();
         
         let filepath = path.join(safeFolder, randFilename);
         fs.writeFileSync(filepath, JSON.parse(data).data);

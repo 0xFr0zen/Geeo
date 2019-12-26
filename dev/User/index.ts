@@ -102,21 +102,20 @@ export class User extends Entity {
                 'utf8'
             ).toString('hex');
 
-            let p3 = path.join(
+            let userPath = path.join(
                 path.dirname(require.main.filename),
                 '../saved/entities/users/',
                 userpathname
             );
-            let p = path.join(p3, 'snapshots/');
+            let p = path.join(userPath, 'snapshots/');
             let snaps = fs.readdirSync(p).sort();
             if (snaps.length > 0) {
                 let latest = snaps[snaps.length - 1];
                 let latestPath = path.join(p, latest);
-                let p2 = path.join(p3, 'user');
+                let p2 = path.join(userPath, 'user');
                 let name = '';
                 let file = fs.readFileSync(latestPath).toString();
                 let encJSON = new Node(file, {
-                    publicKey: ident.getPublicKey(),
                     privateKey: ident.getPrivateKey(),
                 });
                 let decryptedData = encJSON.decryptText();
@@ -131,6 +130,22 @@ export class User extends Entity {
             } else {
                 u = new User(ident.getUsername());
             }
+            let safesnap = path.join(userPath, "safes");
+            let safessnaps = fs.readdirSync(p).sort();
+            if (safessnaps.length > 0) {
+                let latest = safessnaps[safessnaps.length - 1];
+                let latestPath = path.join(p, latest);
+
+                let file = fs.readFileSync(latestPath).toString();
+                let encJSON = new Node(file, {
+                    privateKey: ident.getPrivateKey(),
+                });
+                let decryptedData = encJSON.decryptText();
+                let safe = Safe.from(JSON.parse(decryptedData));
+                u.addSafe(safe);
+            }
+
+
         } else {
             console.error('No identity given.');
         }
@@ -236,33 +251,29 @@ export class User extends Entity {
                 snapsLocation,
                 snapsFiles[snapsFiles.length - 1]
             );
-            let latetUserSnapFile = fs.readFileSync(latestSnap).toString();
+            let latestUserSnapFile = fs.readFileSync(latestSnap).toString();
 
-            let decrypted: string = new Node(latetUserSnapFile, {
+            let decrypted: string = new Node(latestUserSnapFile, {
                 privateKey: keyholder.getPrivateKey(),
-                publicKey: Device.getPublicKey(),
             }).decryptText();
             userJSON = JSON.parse(decrypted);
         } else {
             latestSnap = currentSnapPath;
-            let decrypted: string = new Node(User.standalone().toString(), {
-                privateKey: keyholder.getPrivateKey(),
-                publicKey: keyholder.getPublicKey(),
-            }).decryptText();
-            userJSON = JSON.parse(decrypted);
+            userJSON = JSON.parse(User.standalone().toString());
         }
+        
+        
         comparison = this.compare(userJSON);
+        console.log(userJSON, comparison);
         console.log('comparison', comparison);
         let pk = keyholder.getPrivateKey();
-        let puk = keyholder.getPublicKey();
 
         fs.writeFileSync(
             latestSnap,
             (() => {
                 result = true;
                 return new Node(JSON.stringify(comparison), {
-                    privateKey: pk,
-                    publicKey: puk,
+                    privateKey: keyholder.getPrivateKey(),
                 }).encryptText();
             })()
         );

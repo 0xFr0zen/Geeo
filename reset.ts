@@ -1,19 +1,21 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-//reset
-let rootpath = path.join(path.dirname(require.main.filename), '../');
-let paths: any = {
-    device: path.join(rootpath, 'saved/device/'),
-    entities: path.join(rootpath, 'saved/entities/users/'),
-};
+(() => {
+    //reset
+    let rootpath = path.join(path.dirname(require.main.filename), '../');
+    let paths: any = {
+        device: path.join(rootpath, 'saved/device/'),
+        entities: path.join(rootpath, 'saved/entities/users/'),
+    };
 
-for (let key in paths) {
-    let folder = paths[key];
-    emptyFolder(folder)
+    for (let key in paths) {
+        let folder = paths[key];
+        emptyFolder(folder);
+    }
+    console.log("Resetted all.");
     
-}
-
+})();
 function emptyFolder(p: string, alsoremoveFolder = false) {
     let files = fs.readdirSync(p);
 
@@ -25,7 +27,7 @@ function emptyFolder(p: string, alsoremoveFolder = false) {
             fs.unlinkSync(file);
         }
     });
-    if(alsoremoveFolder){
+    if (alsoremoveFolder) {
         fs.rmdirSync(p);
     }
 }
