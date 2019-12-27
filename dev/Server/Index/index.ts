@@ -9,7 +9,7 @@ import Identity from '../../Identity';
 function RIndex() {
     let router: express.Router = express.Router({mergeParams:true});
     router.use('/$', function(req: express.Request, res: express.Response) {
-        let user:User = User.from(Identity.of("oezguer"));
+        let user:User = User.from(Identity.of("admin"));
         if(!user.isLoggedIn()){
             res.redirect("/login");
             return;
@@ -27,7 +27,7 @@ function RIndex() {
     ) {
         let p = path.join(
             process.cwd(),
-            './output/dev/Server/Web/Themes/',
+            './dev/Server/Web/Themes/',
             req.params.file
         );
         res.setHeader('Content-Type', 'text/css');
@@ -45,7 +45,7 @@ function RIndex() {
     ) {
         let p = path.join(
             process.cwd(),
-            './output/dev/Server/Web/Scripts/',
+            './dev/Server/Web/Scripts/',
             req.params.file
         );
         res.setHeader('Content-Type', 'application/javascript');
@@ -68,7 +68,7 @@ function RIndex() {
             let fname = file[1];
             p = path.join(
                 process.cwd(),
-                './output/dev/Server/Web/Images/',
+                './dev/Server/Web/Images/',
                 type,
                 fname
             );
@@ -77,7 +77,7 @@ function RIndex() {
             let fname = file[1];
             p = path.join(
                 process.cwd(),
-                './output/dev/Server/Web/Images/default/',
+                './dev/Server/Web/Images/default/',
                 req.params.file
             );
         }

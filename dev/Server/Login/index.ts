@@ -8,7 +8,7 @@ function RLogin() {
     });
     router.post('/$', function(req:express.Request, res:express.Response){
         let queries = req.query;
-        let user = User.from(Identity.of("oezguer"));
+        let user = User.from(Identity.of("admin"));
         user.setLoggedIn(true);
         if(user.save()){
             res.send("OK");

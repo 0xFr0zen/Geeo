@@ -8,25 +8,40 @@ import Server from '../Server';
 import getMAC from 'getmac';
 import Node from '../Crypt/index';
 import { reset } from '../../reset';
+import { app, BrowserWindow } from 'electron';
 export default class System extends Entity {
     private static device: Device = new Device();
     private ADMIN: Identity = null;
     private server: Server = null;
-
+    private mainWindow: BrowserWindow = null;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
         reset();
         this.createFolders();
-        this.addParameter('admin',this.createIdentity(env.ADMIN_USERNAME))
-        console.log("Admin added");
+        this.addParameter('admin', this.createIdentity(env.ADMIN_USERNAME));
         System.device.initialize();
         this.server = new Server();
         this.server.start();
+        let me = this;
+        app.on('ready', function() {
+            me.mainWindow = new BrowserWindow({
+                darkTheme: true,
+                center: true,
+                title: 'Geeo',
+                webPreferences: {
+                    nodeIntegration: true,
+                    javascript: true,
+                },
+                width: 1280,
+                height: 720,
+            });
+            me.mainWindow.loadURL('http://localhost/');
+        });
     }
-    public static getDevice():Device{
+    public static getDevice(): Device {
         return this.device;
     }
-    
+
     /**
      *
      * Creates Identity and stores it.
@@ -61,10 +76,12 @@ export default class System extends Entity {
         }
         return i;
     }
-    private createFolders(){
+    private createFolders() {
         let rootpath = path.join(process.cwd());
         let MAC_ADRESS_HEX = Buffer.from(
-            getMAC().split(':').join(''),
+            getMAC()
+                .split(':')
+                .join(''),
             'hex'
         ).toString('hex');
         let paths: any = {

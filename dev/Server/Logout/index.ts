@@ -4,7 +4,7 @@ import Identity from '../../Identity';
 function RLogout() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.get('/$', function(req:express.Request, res:express.Response){
-        let user = User.from(Identity.of("oezguer"));
+        let user = User.from(Identity.of("admin"));
         user.setLoggedIn(false);
         if(user.save()){
 
