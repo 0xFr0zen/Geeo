@@ -1,7 +1,7 @@
 import Identity from '../Identity';
 import { GeeoMap } from '../GeeoMap';
 import getMAC from 'getmac';
-import User from '../User';
+import User from '../Entity/User';
 import Node from '../Crypt';
 import * as fs from 'fs';
 import * as path from 'path';

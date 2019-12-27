@@ -1,5 +1,5 @@
-import Device from './dev/Device/index';
-import User from './dev/User/index';
+import Device from './dev/Device';
+import User from './dev/Entity/User';
 import decryptText from './dev/Crypt/decrypt';
 let i = Device.createIdentity('oezguer');
 // let text = "";

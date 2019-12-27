@@ -98,17 +98,17 @@ export default class Safe extends Entity {
     public getUsername():string {
         return this.getParameter('user').toString()
     }
-    public save() {
-        let safeFolder = path.join(
-            path.dirname(require.main.filename),
-            this.getPath()
-        );
-        let randFilename = Date.now().toString();
-        let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
-        let text = JSON.stringify(this.compare(s));
-        let data: string = new Node(text, {privateKey:Identity.of(this.getUsername()).getPrivateKey()}).toString();
+    // public save() {
+    //     let safeFolder = path.join(
+    //         path.dirname(require.main.filename),
+    //         this.getPath()
+    //     );
+    //     let randFilename = Date.now().toString();
+    //     let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
+    //     let text = JSON.stringify(this.compare(s));
+    //     let data: string = new Node(text, {privateKey:Identity.of(this.getUsername()).getPrivateKey()}).toString();
         
-        let filepath = path.join(safeFolder, randFilename);
-        fs.writeFileSync(filepath, JSON.parse(data).data);
-    }
+    //     let filepath = path.join(safeFolder, randFilename);
+    //     fs.writeFileSync(filepath, JSON.parse(data).data);
+    // }
 }

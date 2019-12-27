@@ -1,10 +1,10 @@
-import Entity from '../Entity';
+import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
-import Safe from '../Entity/Safe';
-import Node from '../Crypt';
-import Identity from '../Identity/index';
-import Device from '../Device/index';
+import Safe from '../Safe';
+import Node from '../../Crypt';
+import Identity from '../../Identity/index';
+import Device from '../../Device/index';
 
 /**
  * User Class.
@@ -222,64 +222,64 @@ export class User extends Entity {
         }
         return result;
     }
-    /**
-     * Stores the User to a file in root folder.
-     *
-     * @returns {boolean} Success of saved state.
-     * @memberof User
-     */
-    public save(): boolean {
-        let currentTimestamp: string = Date.now().toString();
-        let keyholder = Identity.of(this.getName());
-        let result: boolean = false;
-        let comparison: Object = {};
-        let snapsLocation = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
-            Buffer.from(this.getName(), 'utf8').toString('hex'),
-            'snapshots/'
-        );
-        let currentSnapPath: string = path.join(
-            snapsLocation,
-            currentTimestamp
-        );
-        let snapsFiles = fs.readdirSync(snapsLocation).sort();
-        let userJSON = null;
-        let latestSnap = null;
-        if (snapsFiles.length > 0) {
-            latestSnap = path.join(
-                snapsLocation,
-                snapsFiles[snapsFiles.length - 1]
-            );
-            let latestUserSnapFile = fs.readFileSync(latestSnap).toString();
+    // /**
+    //  * Stores the User to a file in root folder.
+    //  *
+    //  * @returns {boolean} Success of saved state.
+    //  * @memberof User
+    //  */
+    // public save(): boolean {
+    //     let currentTimestamp: string = Date.now().toString();
+    //     let keyholder = Identity.of(this.getName());
+    //     let result: boolean = false;
+    //     let comparison: Object = {};
+    //     let snapsLocation = path.join(
+    //         path.dirname(require.main.filename),
+    //         '../saved/entities/users/',
+    //         Buffer.from(this.getName(), 'utf8').toString('hex'),
+    //         'snapshots/'
+    //     );
+    //     let currentSnapPath: string = path.join(
+    //         snapsLocation,
+    //         currentTimestamp
+    //     );
+    //     let snapsFiles = fs.readdirSync(snapsLocation).sort();
+    //     let userJSON = null;
+    //     let latestSnap = null;
+    //     if (snapsFiles.length > 0) {
+    //         latestSnap = path.join(
+    //             snapsLocation,
+    //             snapsFiles[snapsFiles.length - 1]
+    //         );
+    //         let latestUserSnapFile = fs.readFileSync(latestSnap).toString();
 
-            let decrypted: string = new Node(latestUserSnapFile, {
-                privateKey: keyholder.getPrivateKey(),
-            }).decryptText();
-            userJSON = JSON.parse(decrypted);
-        } else {
-            latestSnap = currentSnapPath;
-            userJSON = JSON.parse(User.standalone().toString());
-        }
+    //         let decrypted: string = new Node(latestUserSnapFile, {
+    //             privateKey: keyholder.getPrivateKey(),
+    //         }).decryptText();
+    //         userJSON = JSON.parse(decrypted);
+    //     } else {
+    //         latestSnap = currentSnapPath;
+    //         userJSON = JSON.parse(User.standalone().toString());
+    //     }
         
         
-        comparison = this.compare(userJSON);
-        console.log(userJSON, comparison);
-        console.log('comparison', comparison);
-        let pk = keyholder.getPrivateKey();
+    //     comparison = this.compare(userJSON);
+    //     console.log(userJSON, comparison);
+    //     console.log('comparison', comparison);
+    //     let pk = keyholder.getPrivateKey();
 
-        fs.writeFileSync(
-            latestSnap,
-            (() => {
-                result = true;
-                return new Node(JSON.stringify(comparison), {
-                    privateKey: keyholder.getPrivateKey(),
-                }).encryptText();
-            })()
-        );
+    //     fs.writeFileSync(
+    //         latestSnap,
+    //         (() => {
+    //             result = true;
+    //             return new Node(JSON.stringify(comparison), {
+    //                 privateKey: keyholder.getPrivateKey(),
+    //             }).encryptText();
+    //         })()
+    //     );
 
-        return result;
-    }
+    //     return result;
+    // }
 }
 
 export default User;

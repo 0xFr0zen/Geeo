@@ -1,5 +1,5 @@
 import * as express from 'express';
-import User from '../../User';
+import User from '../../Entity/User';
 import Safe from '../../Entity/Safe';
 import { GeeoMap } from '../../GeeoMap/index';
 import Identity from '../../Identity';

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import User from '../../User';
+import User from '../../Entity/User';
 import Identity from '../../Identity';
 function RLogin() {
     let router: express.Router = express.Router({ mergeParams: true });

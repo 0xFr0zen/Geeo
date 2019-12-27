@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 (() => {
+    let result = false;
     //reset
     let rootpath = path.join(path.dirname(require.main.filename), '../');
     let paths: any = {
@@ -11,8 +12,12 @@ import * as fs from 'fs';
 
     for (let key in paths) {
         let folder = paths[key];
-        emptyFolder(folder);
+        if(fs.existsSync(folder)){
+            emptyFolder(folder, true);
+        }
+        fs.mkdirSync(folder);
     }
+    
     console.log("Resetted all.");
     
 })();

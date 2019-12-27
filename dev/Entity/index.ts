@@ -1,6 +1,27 @@
 import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap';
 import compareEntities from './Comparison';
+import Device from '../Device/index';
+import * as fs from 'fs';
+import * as path from 'path';
+
+class ENTITY_PATHS {
+    static USER: Function = (username: string) => {
+        return `entities/users/${Buffer.from(username, 'utf8').toString('hex')}`;
+    };
+    static SAFE: Function = (username: string, safename: string) => {
+        return `entities/users/${Buffer.from(username, 'utf8').toString('hex')}/safes/${Buffer.from(safename, 'utf8').toString('hex')}`;
+    };
+    static DEVICE: Function = (mac_hex: string) => {
+        return `device/${mac_hex}/`;
+    };
+    static DATABASE: Function = (name: string) => {
+        return `device/${Buffer.from(name, 'utf8').toString('hex')}/`;
+    };
+    static DEFAULT: Function = (name:string) => {
+        return `enities/${Buffer.from(name, 'utf8').toString('hex')}/`;
+    };
+}
 /**
  *Entity Class
  *
@@ -16,6 +37,7 @@ export default class Entity {
      * @memberof Entity
      */
     private parameters: GeeoMap<string, Object> = new GeeoMap<string, Object>();
+
     /**
      *Creates an instance of Entity.
      * @param {string} type "type" of Entity
@@ -230,6 +252,53 @@ export default class Entity {
     public toString(): string {
         let packager = new Package();
         return packager.wrap(this).toString();
+    }
+    public save(): boolean {
+        let result = false;
+        let type = this.getType();
+        let entity_path: string = ENTITY_PATHS.DEFAULT(this.getName());
+        switch (type) {
+            case 'user':
+                entity_path = ENTITY_PATHS.USER(
+                    this.getParameter('name').toString()
+                );
+                break;
+            case 'safe':
+                entity_path = ENTITY_PATHS.SAFE(
+                    this.getParameter('user').toString(),
+                    this.getName()
+                );
+                break;
+            case 'database':
+                entity_path = ENTITY_PATHS.DATABASE(this.getName());
+                break;
+            case 'device':
+                entity_path = ENTITY_PATHS.DEVICE(this.getName());
+                break;
+            default:
+                entity_path = ENTITY_PATHS.DEFAULT(this.getName());
+                break;
+        }
+        entity_path = entity_path;
+
+        console.log(entity_path);
+
+        try {
+            let encrypted = new Node(this.toString(), {
+                privateKey: Device.getPrivateKey('admin'),
+            }).encryptText();
+            fs.writeFileSync(
+                (() => {
+                    result = true;
+                    return encrypted;
+                })(),
+                path.join(path.dirname(require.main.filename), entity_path)
+            );
+        } catch (error) {
+            console.error(error);
+        }
+
+        return result;
     }
 }
 
