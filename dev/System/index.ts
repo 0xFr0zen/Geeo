@@ -30,7 +30,7 @@ export default class System extends Entity {
                 title: 'Geeo',
                 show:false,
                 webPreferences: {
-                    nodeIntegration: true,
+                    contextIsolation: true,
                     javascript: true,
                 },
                 width: 1280,
