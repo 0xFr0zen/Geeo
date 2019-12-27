@@ -5,8 +5,8 @@ import * as mysql from 'mysql';
 
 export default class Database extends Entity {
     public static readonly GeeoDatabaseRoot = path.join(
-        path.dirname(require.main.filename),
-        '../config/db/'
+        process.cwd(),
+        './config/db/'
     );
     public static readonly GeeoCypherFile = path.join(
         Database.GeeoDatabaseRoot,

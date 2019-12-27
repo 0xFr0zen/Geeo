@@ -31,8 +31,8 @@ export default class Safe extends Entity {
     ) {
         super('safe', name);
         let p = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
+            process.cwd(),
+            './saved/entities/users/',
             Buffer.from(username, 'utf8').toString('hex'),
             'safes'
         );

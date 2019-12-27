@@ -13,8 +13,8 @@ export default class Identity {
         this.private = pK;
 
         let identityRootFolder = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
+            process.cwd(),
+            './saved/entities/users/',
             Buffer.from(this.username, 'utf8').toString('hex')
         );
 
@@ -53,8 +53,8 @@ export default class Identity {
     public static of(username: string): Identity {
         let h = Buffer.from(username, 'utf8').toString('hex');
         let p = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
+            process.cwd(),
+            './saved/entities/users/',
             h,
             'user'
         );

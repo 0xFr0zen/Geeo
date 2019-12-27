@@ -1,15 +1,16 @@
 import Identity from '../Identity';
 import { GeeoMap } from '../GeeoMap';
 import getMAC from 'getmac';
-import User from '../Entity/User';
 import Node from '../Crypt';
 import * as fs from 'fs';
 import * as path from 'path';
+import Entity from '../Entity';
 interface PK_IDENTITY {
     pk: Buffer;
     ident: Identity;
 }
-export default abstract class Device {
+export default class Device extends Entity {
+    private static ENTITY: Device = null;
     private static identities: GeeoMap<
         string,
         PK_IDENTITY
@@ -20,7 +21,19 @@ export default abstract class Device {
         Device.MAC_ADRESS.split(':').join(''),
         'hex'
     ).toString('hex');
-
+    private static CURRENT: Device = Device.ENTITY;
+    constructor() {
+        super('device', Device.MAC_ADRESS_HEX);
+        if (Device.ENTITY == null) {
+            Device.ENTITY = this;
+            this.save();
+        } else {
+            throw new Error('ONLY ONE DEVICE CAN BE STORED. (so far)');
+        }
+    }
+    public static current(){
+        return Device.ENTITY;
+    }
     /**
      * Checks if Identity exists
      *
@@ -29,14 +42,14 @@ export default abstract class Device {
      * @returns
      * @memberof Device
      */
-    public static hasIdentity(name: string) {
+    public hasIdentity(name: string) {
         return Device.identities.hasItem(name);
     }
     private static loadIdentities(): GeeoMap<string, PK_IDENTITY> {
         let result = new GeeoMap<string, PK_IDENTITY>();
         let rootUsers = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/'
+            process.cwd(),
+            './saved/entities/users/'
         );
         let f = fs.readdirSync(rootUsers);
         f.filter((v: string, index: number) => {
@@ -57,8 +70,8 @@ export default abstract class Device {
     private static loadPublicKey(): Buffer {
         let s = Node.randomString(16);
         let path2 = path.join(
-            path.dirname(require.main.filename),
-            '../saved/device/k'
+            process.cwd(),
+            './saved/device/k'
         );
         if (fs.existsSync(path2)) {
             let sstring = fs.readFileSync(path2).toString();
@@ -73,7 +86,7 @@ export default abstract class Device {
         let b = Buffer.from(s, 'utf8');
         return b;
     }
-    public static getPublicKey(): Buffer {
+    public getPublicKey(): Buffer {
         return Device.PUBLIC_KEY;
     }
     /**
@@ -84,8 +97,8 @@ export default abstract class Device {
      * @returns
      * @memberof Device
      */
-    public static getIdentity(name: string): Identity {
-        return Device.hasIdentity(name)
+    public getIdentity(name: string): Identity {
+        return this.hasIdentity(name)
             ? Device.identities.getItem(name).ident
             : null;
     }
@@ -96,10 +109,10 @@ export default abstract class Device {
      * @param {string} name
      * @memberof Device
      */
-    public static createIdentity(name: string): Identity {
+    public createIdentity(name: string): Identity {
         let i: Identity = null;
         console.error(`Trying to create Identity '${name}'.`);
-        if (!Device.hasIdentity(name)) {
+        if (!this.hasIdentity(name)) {
             let s = Device.MAC_ADRESS_HEX;
             let diff = 32 - s.length;
             let additionalSLength = Math.ceil(Math.log2(diff)) * 2;
@@ -126,7 +139,7 @@ export default abstract class Device {
      * @returns {Buffer}
      * @memberof Device
      */
-    public static getPrivateKey(name: string): Buffer {
+    public getPrivateKey(name: string): Buffer {
         return Device.identities.getItem(name).pk;
     }
 }

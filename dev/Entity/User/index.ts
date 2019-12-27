@@ -41,18 +41,18 @@ export class User extends Entity {
      * @memberof User
      */
     public static exists(name: string | Identity): boolean {
-        let p1 = path.dirname(require.main.filename);
+        let p1 = process.cwd();
         if (name instanceof Identity) {
             let p = path.join(
                 p1,
-                '../saved/entities/users/',
+                './saved/entities/users/',
                 Buffer.from(name.getUsername(), 'utf8').toString('hex')
             );
             return fs.existsSync(p);
         } else {
             let p = path.join(
                 p1,
-                '../saved/entities/users/',
+                './saved/entities/users/',
                 Buffer.from(name, 'utf8').toString('hex')
             );
             return fs.existsSync(p);
@@ -69,8 +69,8 @@ export class User extends Entity {
      */
     public static create(name: string): User {
         let p = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/',
+            process.cwd(),
+            './saved/entities/users/',
             Buffer.from(name, 'utf8').toString('hex')
         );
         let user = null;
@@ -103,8 +103,8 @@ export class User extends Entity {
             ).toString('hex');
 
             let userPath = path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
+                process.cwd(),
+                './saved/entities/users/',
                 userpathname
             );
             let p = path.join(userPath, 'snapshots/');

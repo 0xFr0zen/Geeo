@@ -285,14 +285,14 @@ export default class Entity {
 
         try {
             let encrypted = new Node(this.toString(), {
-                privateKey: Device.getPrivateKey('admin'),
+                privateKey: Device.current().getPrivateKey('admin'),
             }).encryptText();
             fs.writeFileSync(
                 (() => {
                     result = true;
                     return encrypted;
                 })(),
-                path.join(path.dirname(require.main.filename), entity_path)
+                path.join(process.cwd(), entity_path)
             );
         } catch (error) {
             console.error(error);

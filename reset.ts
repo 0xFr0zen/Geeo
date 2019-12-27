@@ -4,7 +4,7 @@ import * as fs from 'fs';
 (() => {
     let result = false;
     //reset
-    let rootpath = path.join(path.dirname(require.main.filename), '../');
+    let rootpath = path.join(process.cwd(), './');
     let paths: any = {
         device: path.join(rootpath, 'saved/device/'),
         entities: path.join(rootpath, 'saved/entities/users/'),
@@ -15,7 +15,7 @@ import * as fs from 'fs';
         if(fs.existsSync(folder)){
             emptyFolder(folder, true);
         }
-        fs.mkdirSync(folder);
+        // fs.mkdirSync(folder);
     }
     
     console.log("Resetted all.");

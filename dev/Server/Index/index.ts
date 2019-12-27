@@ -26,8 +26,8 @@ function RIndex() {
         res: express.Response
     ) {
         let p = path.join(
-            path.dirname(require.main.filename),
-            './dev/Server/Web/Themes/',
+            process.cwd(),
+            './output/dev/Server/Web/Themes/',
             req.params.file
         );
         res.setHeader('Content-Type', 'text/css');
@@ -44,8 +44,8 @@ function RIndex() {
         res: express.Response
     ) {
         let p = path.join(
-            path.dirname(require.main.filename),
-            './dev/Server/Web/Scripts/',
+            process.cwd(),
+            './output/dev/Server/Web/Scripts/',
             req.params.file
         );
         res.setHeader('Content-Type', 'application/javascript');
@@ -67,8 +67,8 @@ function RIndex() {
             let type = file[0];
             let fname = file[1];
             p = path.join(
-                path.dirname(require.main.filename),
-                './dev/Server/Web/Images/',
+                process.cwd(),
+                './output/dev/Server/Web/Images/',
                 type,
                 fname
             );
@@ -76,8 +76,8 @@ function RIndex() {
             let type = file[0];
             let fname = file[1];
             p = path.join(
-                path.dirname(require.main.filename),
-                './dev/Server/Web/Images/default/',
+                process.cwd(),
+                './output/dev/Server/Web/Images/default/',
                 req.params.file
             );
         }
