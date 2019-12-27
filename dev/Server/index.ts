@@ -16,7 +16,7 @@ export default class Server {
             'views',
             path.join(
                 process.cwd(),
-                './output/dev/Server/Web/Templates/'
+                './dev/Server/Web/Templates/'
             )
         );
         this.router.use('/', index);

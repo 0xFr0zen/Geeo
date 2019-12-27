@@ -10,10 +10,8 @@
 // user.save();
 
 // import {DatabaseUser} from './dev/Database';
-import Server from './dev/Server';
+import System from './dev/System';
 
 // let dbuser = new DatabaseUser('geeo_admin_penetrator');
 // console.log(dbuser);
-
-let server: Server = new Server();
-server.start();
+let system:System = new System();

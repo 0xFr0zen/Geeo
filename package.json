@@ -20,8 +20,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "tsc && node ./output/index.js",
-    "start": "tsc && node ./output/dev/System/index.js",
+    "test": "tsc && node ./output/test.js",
+    "start": "tsc && node ./output/index.js",
     "reset": "tsc && node ./output/reset.js"
   },
   "keywords": [],

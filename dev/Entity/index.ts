@@ -4,21 +4,26 @@ import compareEntities from './Comparison';
 import Device from '../Device/index';
 import * as fs from 'fs';
 import * as path from 'path';
+import System from '../System/index';
 
 class ENTITY_PATHS {
     static USER: Function = (username: string) => {
-        return `entities/users/${Buffer.from(username, 'utf8').toString('hex')}`;
+        return `entities/users/${Buffer.from(username, 'utf8').toString(
+            'hex'
+        )}`;
     };
     static SAFE: Function = (username: string, safename: string) => {
-        return `entities/users/${Buffer.from(username, 'utf8').toString('hex')}/safes/${Buffer.from(safename, 'utf8').toString('hex')}`;
+        return `entities/users/${Buffer.from(username, 'utf8').toString(
+            'hex'
+        )}/safes/${Buffer.from(safename, 'utf8').toString('hex')}`;
     };
     static DEVICE: Function = (mac_hex: string) => {
         return `device/${mac_hex}/`;
     };
     static DATABASE: Function = (name: string) => {
-        return `device/${Buffer.from(name, 'utf8').toString('hex')}/`;
+        return `database/${Buffer.from(name, 'utf8').toString('hex')}/`;
     };
-    static DEFAULT: Function = (name:string) => {
+    static DEFAULT: Function = (name: string) => {
         return `enities/${Buffer.from(name, 'utf8').toString('hex')}/`;
     };
 }
@@ -276,6 +281,7 @@ export default class Entity {
                 entity_path = ENTITY_PATHS.DEVICE(this.getName());
                 break;
             default:
+                console.log("taking default path");
                 entity_path = ENTITY_PATHS.DEFAULT(this.getName());
                 break;
         }
@@ -285,7 +291,7 @@ export default class Entity {
 
         try {
             let encrypted = new Node(this.toString(), {
-                privateKey: Device.current().getPrivateKey('admin'),
+                privateKey: System.getDevice().getPrivateKey('admin'),
             }).encryptText();
             fs.writeFileSync(
                 (() => {

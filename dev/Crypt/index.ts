@@ -2,6 +2,7 @@ import encryptText from './encrypt';
 import decryptText from './decrypt';
 import * as crypto from 'crypto';
 import Device from '../Device/index';
+import System from '../System/index';
 interface IKeys {
     privateKey: Buffer;
 }
@@ -30,7 +31,7 @@ export default class Node {
                 result = this.privatekey.toString('utf8');
                 break;
             case 'public':
-                result = Device.current().getPublicKey().toString('utf8');
+                result = System.getDevice().getPublicKey().toString('utf8');
                 break;
             default:
                 break;
@@ -38,10 +39,10 @@ export default class Node {
         return result;
     }
     public encryptText(): string {
-        return encryptText(this.data, Device.current().getPublicKey(), this.privatekey);
+        return encryptText(this.data, System.getDevice().getPublicKey(), this.privatekey);
     }
     public decryptText(): string {
-        return decryptText(this.data, Device.current().getPublicKey(), this.privatekey);
+        return decryptText(this.data, System.getDevice().getPublicKey(), this.privatekey);
     }
     public static randomString(hash_length: number) {
         let ar: string[] = Node.a;
