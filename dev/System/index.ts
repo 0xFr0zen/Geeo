@@ -28,6 +28,7 @@ export default class System extends Entity {
                 darkTheme: true,
                 center: true,
                 title: 'Geeo',
+                show:false,
                 webPreferences: {
                     nodeIntegration: true,
                     javascript: true,
@@ -35,6 +36,9 @@ export default class System extends Entity {
                 width: 1280,
                 height: 720,
             });
+            me.mainWindow.on('ready-to-show', function(){
+                me.mainWindow.show();
+            })
             me.mainWindow.loadURL('http://localhost/');
         });
     }

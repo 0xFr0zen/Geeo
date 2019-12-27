@@ -6,8 +6,11 @@
 <html lang="en">
 <head>
     <title>Geeo</title>
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="/scripts/jquery.js"></script>
     <script src="/scripts/main.js"></script>
+    <script>if (window.module) module = window.module;</script>
     <link rel="stylesheet" href="/themes/main.css">
 </head>
 <body>
