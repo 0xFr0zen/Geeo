@@ -1,30 +1,45 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap';
 import compareEntities from './Comparison';
-import Device from '../Device/index';
-import * as fs from 'fs';
-import * as path from 'path';
-import System from '../System/index';
+import Device from '../Device';
+import System from '../System';
 
 class ENTITY_PATHS {
     static USER: Function = (username: string) => {
-        return `entities/users/${Buffer.from(username, 'utf8').toString(
-            'hex'
-        )}`;
+        let p = path.join(
+            process.cwd(),
+            `saved/entities/users/${Buffer.from(username, 'utf8').toString(
+                'hex'
+            )}`
+        );
+        return p;
     };
     static SAFE: Function = (username: string, safename: string) => {
-        return `entities/users/${Buffer.from(username, 'utf8').toString(
-            'hex'
-        )}/safes/${Buffer.from(safename, 'utf8').toString('hex')}`;
+        return path.join(
+            process.cwd(),
+            `saved/entities/users/${Buffer.from(username, 'utf8').toString(
+                'hex'
+            )}/safes/${Buffer.from(safename, 'utf8').toString('hex')}`
+        );
     };
     static DEVICE: Function = (mac_hex: string) => {
-        return `device/${mac_hex}/`;
+        return path.join(process.cwd(), `saved/device/${mac_hex}/`);
     };
     static DATABASE: Function = (name: string) => {
-        return `database/${Buffer.from(name, 'utf8').toString('hex')}/`;
+        return path.join(
+            process.cwd(),
+            `saved/database/${Buffer.from(name, 'utf8').toString('hex')}/`
+        );
     };
     static DEFAULT: Function = (name: string) => {
-        return `enities/${Buffer.from(name, 'utf8').toString('hex')}/`;
+        return path.join(
+            process.cwd(),
+            `saved/enities/unknown/${Buffer.from(name, 'utf8').toString(
+                'hex'
+            )}/`
+        );
     };
 }
 /**
@@ -281,27 +296,39 @@ export default class Entity {
                 entity_path = ENTITY_PATHS.DEVICE(this.getName());
                 break;
             default:
-                console.log("taking default path");
+                console.log('taking default path');
                 entity_path = ENTITY_PATHS.DEFAULT(this.getName());
                 break;
         }
-        entity_path = entity_path;
 
-        console.log(entity_path);
-
-        try {
-            let encrypted = new Node(this.toString(), {
-                privateKey: System.getDevice().getPrivateKey('admin'),
-            }).encryptText();
-            fs.writeFileSync(
-                (() => {
-                    result = true;
-                    return encrypted;
-                })(),
-                path.join(process.cwd(), entity_path)
-            );
-        } catch (error) {
-            console.error(error);
+        if (!fs.existsSync(entity_path)) {
+            fs.mkdirSync(entity_path);
+            let snaps_folder = path.join(entity_path, 'snapshots/');
+            if (!fs.existsSync(snaps_folder)) {
+                fs.mkdirSync(snaps_folder);
+                let final_E_path = path.join(
+                    entity_path,
+                    'snapshots/',
+                    Date.now().toString()
+                );
+                let dev: Device = System.getDevice();
+                let pk = dev.getPrivateKey('admin');
+                let me = this;
+                try {
+                    fs.writeFileSync(
+                        final_E_path,
+                        (() => {
+                            result = true;
+                            let encrypted = new Node(me.toString(), {
+                                privateKey: pk,
+                            }).encryptText();
+                            return encrypted;
+                        })()
+                    );
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
 
         return result;

@@ -7,7 +7,9 @@ export default class Server {
     private static DEFAULT_HOSTNAME: string = 'geeo';
     private router: express.Router = null;
     private application: express.Application = null;
+    private listen: import("http").Server = null;
     constructor() {
+        let me = this;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
         this.router = express.Router({mergeParams:true});
@@ -26,9 +28,11 @@ export default class Server {
     public start(): void {
         if (this.application) {
             let me = this;
-            this.application.listen(Server.DEFAULT_PORT, function() {
+            this.listen = this.application.listen(Server.DEFAULT_PORT, function() {
                 console.log(`runs on port ${Server.DEFAULT_PORT}`, arguments);
+                
             });
+            
         }
     }
 }

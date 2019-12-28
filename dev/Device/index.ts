@@ -38,7 +38,7 @@ export default class Device extends Entity {
             );
             this.addParameter('mac', getMAC());
 
-            this.save();
+            // this.save();
         } else {
             throw new Error('ONLY ONE DEVICE CAN BE STORED. (so far)');
         }
@@ -61,6 +61,8 @@ export default class Device extends Entity {
     public initialize(){
         this.addParameter('public_key', this.loadPublicKey());
         this.addParameter('private_key', this.getPrivateKey('admin'));
+        console.log("initialized device");
+        
     }
     /**
      *  loads saved Identies into memory
@@ -101,7 +103,7 @@ export default class Device extends Entity {
      * @memberof Device
      */
     private loadPublicKey(): Buffer {
-        let s = Node.randomString(16);
+        let s = Node.randomString(32);
         let MAC_ADRESS_HEX = Buffer.from(
             getMAC()
                 .split(':')
@@ -125,8 +127,16 @@ export default class Device extends Entity {
         let b = Buffer.from(s, 'utf8');
         return b;
     }
+
+    /**
+     * Returns Public Key of device
+     *
+     * @returns {Buffer} Buffered "Array" of public key
+     * @memberof Device
+     */
     public getPublicKey(): Buffer {
-        return Buffer.from(this.getParameter('public_key').toString(), 'hex');
+        let pubk = this.getParameter('public_key').toString();
+        return Buffer.from(pubk, 'hex');
     }
     /**
      *
@@ -142,7 +152,6 @@ export default class Device extends Entity {
             : null;
     }
 
-
     /**
      *
      * Gives private key of Device.
@@ -151,6 +160,7 @@ export default class Device extends Entity {
      * @memberof Device
      */
     public getPrivateKey(name: string): Buffer {
-        return this.identities.getItem(name).pk;
+        
+        return this.hasIdentity(name) ? this.identities.getItem(name).pk : null;
     }
 }

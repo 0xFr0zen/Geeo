@@ -28,7 +28,7 @@ export default class System extends Entity {
                 darkTheme: true,
                 center: true,
                 title: 'Geeo',
-                show:false,
+                show: false,
                 webPreferences: {
                     contextIsolation: true,
                     javascript: true,
@@ -36,9 +36,9 @@ export default class System extends Entity {
                 width: 1280,
                 height: 720,
             });
-            me.mainWindow.on('ready-to-show', function(){
+            me.mainWindow.on('ready-to-show', function() {
                 me.mainWindow.show();
-            })
+            });
             me.mainWindow.loadURL('http://localhost/');
         });
     }
@@ -92,6 +92,11 @@ export default class System extends Entity {
             device1: path.join(rootpath, `saved/device/`),
             device2: path.join(rootpath, `saved/device/${MAC_ADRESS_HEX}/`),
             entities: path.join(rootpath, 'saved/entities/'),
+            default_entities: path.join(rootpath, 'saved/entities/unknown/'),
+            default_entitie_snapshots: path.join(
+                rootpath,
+                'saved/entities/unknown/snapshots'
+            ),
             users: path.join(rootpath, 'saved/entities/users/'),
         };
 
