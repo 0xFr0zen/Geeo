@@ -306,31 +306,36 @@ export default class Entity {
             let snaps_folder = path.join(entity_path, 'snapshots/');
             if (!fs.existsSync(snaps_folder)) {
                 fs.mkdirSync(snaps_folder);
-                let final_E_path = path.join(
-                    entity_path,
-                    'snapshots/',
-                    Date.now().toString()
-                );
-                let dev: Device = System.getDevice();
-                let pk = dev.getPrivateKey('admin');
-                let me = this;
-                try {
-                    fs.writeFileSync(
-                        final_E_path,
-                        (() => {
-                            result = true;
-                            let encrypted = new Node(me.toString(), {
-                                privateKey: pk,
-                            }).encryptText();
-                            return encrypted;
-                        })()
-                    );
-                } catch (error) {
-                    console.error(error);
-                }
             }
         }
+        let final_E_path = path.join(
+            entity_path,
+            'snapshots/',
+            Date.now().toString()
+        );
+        let dev: Device = System.getDevice();
+        let pk = dev.getPrivateKey('admin');
 
+        if (this.getType() === 'user') {
+            pk = dev.getPrivateKey(this.getName());
+        } else if (this.getType() === 'safe') {
+            pk = dev.getPrivateKey(this.getParameter('user').toString());
+        }
+        let me = this;
+        try {
+            fs.writeFileSync(
+                final_E_path,
+                (() => {
+                    result = true;
+                    let encrypted = new Node(me.toString(), {
+                        privateKey: pk,
+                    }).encryptText();
+                    return encrypted;
+                })()
+            );
+        } catch (error) {
+            console.error(error);
+        }
         return result;
     }
 }

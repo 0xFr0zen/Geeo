@@ -48,10 +48,10 @@ export default class Safe extends Entity {
         }
     }
     public static from(json: any): Safe {
-        console.log("SAFE JSON", json);
+        // console.log("SAFE JSON", json);
         
         json = json.safe;
-        let safe: Safe = new Safe(json.user.name, json.name, StorageType.Inventory, true);
+        let safe: Safe = new Safe(json.user, json.name, json.storagetype, true);
 
         let keys = Object.keys(json);
 

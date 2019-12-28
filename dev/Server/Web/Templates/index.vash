@@ -1,6 +1,5 @@
 @{
-    var user = model.user;
-    var safes = user.getSafes();
+    var safes = model.safes;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -23,9 +22,10 @@
                         <span class="name">default</span>
                     </div>
                     
-                        @safes.forEach(function(safe){
+                        @safes.forEach(function(safe){  
+                            var safename = safe.name;
                             <div class="inventory">
-                                <span class="name" invname="@safe.safe.name">@safe.safe.name</span>
+                                <span class="name" invname="@safe.name">@safe.name</span>
                             </div>
                         })
                     <div id="add" class="inventory">+</div>

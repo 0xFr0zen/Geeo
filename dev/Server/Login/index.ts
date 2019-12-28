@@ -10,7 +10,6 @@ function RLogin() {
         let queries = req.query;
         let user = User.from(Identity.of("admin"));
         user.setLoggedIn(true);
-        console.log(user.toString())
         if(user.save()){
             res.send("OK");
         }else {

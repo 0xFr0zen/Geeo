@@ -29,7 +29,7 @@ export default class Server {
         if (this.application) {
             let me = this;
             this.listen = this.application.listen(Server.DEFAULT_PORT, function() {
-                console.log(`runs on port ${Server.DEFAULT_PORT}`, arguments);
+                console.log(`Server runs on port ${Server.DEFAULT_PORT}`);
                 
             });
             

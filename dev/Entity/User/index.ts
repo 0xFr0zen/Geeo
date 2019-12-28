@@ -26,7 +26,6 @@ export class User extends Entity {
         this.addParameter('loggedin', false);
         if (!standalone) {
             this.addParameter('identity', Identity.of(name));
-            this.addSafe(new Safe(name, 'documents'));
             this.save();
         } else {
         }
@@ -134,14 +133,15 @@ export class User extends Entity {
             let safes = fs.readdirSync(safesnap);
             for (const safestring in safes) {
                 let safename = safes[safestring];
-                console.log(safename);
-                
+                let safesnapspath  =path.join(safesnap, safename, "./snapshots/");
                 let safessnaps = fs
-                    .readdirSync(path.join(safesnap, safename, "./snapshots/"))
+                    .readdirSync(safesnapspath)
                     .sort();
+                    
+                // console.log(safessnaps);
                 if (safessnaps.length > 0) {
                     let latest = safessnaps[safessnaps.length - 1];
-                    let latestPath = path.join(p, latest);
+                    let latestPath = path.join(safesnapspath, latest);
 
                     let file = fs.readFileSync(latestPath).toString();
                     let encJSON = new Node(file, {
@@ -153,7 +153,6 @@ export class User extends Entity {
                 }
             }
         } else {
-            console.error('No identity given.');
         }
 
         return u;
@@ -211,18 +210,21 @@ export class User extends Entity {
                     return storage.getName() === name;
                 })[0];
                 if (safe != null) {
-                    storages.splice(storages.indexOf(safe), 1);
+                    storages = storages.splice(storages.indexOf(safe), 1);
+                    this.update('storages', storages);
                     result = true;
                 }
             }
         }
         return result;
     }
-    public getSafes(): Array<Safe> {
+    public getSafes(): Safe[] {
         let result = null;
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {
+                console.log(storages);
+                
                 result = storages;
             }
         }

@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 
 function loadInventory(name) {
-    $.getJSON("/user/oezguer.isbert/storages").then(function (storages) {
+    $.getJSON("/user/admin/storages").then(function (storages) {
         storages = storages.filter((storage) => {
             return storage.name === name;
         });

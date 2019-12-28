@@ -24,22 +24,22 @@ function UserNormalRouter() {
     ) {
         let user = null;
         let name = req.params.name;
-        if (name === 'me') {
-            // user = User.load(name);
-        } else {
-            user = User.from(Identity.of(name));
-        }
-        let safes = user.getSafes();
+        user = User.from(Identity.of(name));
+        
         let showcase_safes: any[] = [];
-        safes.forEach(safe => {
-            let s: Safe = Safe.from(safe);
-            let storage: IStorage = {
-                name: s.getName(),
-                created: s.getCreated(),
-                space: s.getSpace(),
-            };
-            showcase_safes.push(storage);
-        });
+        if(user != null){
+            let safes = user.getSafes();
+            safes.forEach(safe => {
+                let s: Safe = Safe.from(safe);
+                let storage: IStorage = {
+                    name: s.getName(),
+                    created: s.getCreated(),
+                    space: s.getSpace(),
+                };
+                showcase_safes.push(storage);
+            });
+        }
+        
         res.json(showcase_safes);
     });
     return router;
