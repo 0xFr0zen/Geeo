@@ -1,7 +1,7 @@
 import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
-import Safe from '../Safe';
+import Safe, { StorageType } from '../Safe';
 import Node from '../../Crypt';
 import Identity from '../../Identity/index';
 
@@ -25,7 +25,14 @@ export class User extends Entity {
         this.addParameter('loggedin', false);
         if (!standalone) {
             this.addParameter('identity', Identity.of(name));
-            this.addSafe(new Safe(name,'default'));
+            let defaultSafe: Safe = new Safe(
+                name,
+                'default',
+                StorageType.Inventory,
+                true
+            );
+            defaultSafe.save();
+            this.addSafe(defaultSafe);
             this.save();
         } else {
         }
@@ -110,6 +117,7 @@ export class User extends Entity {
             let snaps = fs.readdirSync(p).sort();
             if (snaps.length > 0) {
                 let latest = snaps[snaps.length - 1];
+
                 let latestPath = path.join(p, latest);
                 let p2 = path.join(userPath, 'user');
                 let name = '';
@@ -122,35 +130,54 @@ export class User extends Entity {
                 let userJSON = JSON.parse(decryptedData).user;
                 u = new User(userJSON.name, true);
                 let keys = Object.keys(userJSON);
+                // console.log(keys);
+
                 keys.forEach(key => {
-                    u.addParameter(key, userJSON[key]);
+                    let value = userJSON[key];
+                    if(key === 'storages'){
+                        let storagesHolder:Safe[] = [];
+                        let storages = value;
+                        storages.forEach((storage:any) => {
+                            
+                            
+                            let safe = Safe.from(storage);
+                            storagesHolder.push(safe);
+                        });
+                        u.addParameter('storages', storagesHolder);
+                        
+                    }else {
+                        u.addParameter(key, value);
+
+                    }
                 });
                 u.addParameter('last_loaded', Date.now());
+                // let safesnap = path.join(userPath, 'safes');
+                // let safes = fs.readdirSync(safesnap);
+                // for (const safestring in safes) {
+                //     let safename = safes[safestring];
+                //     let safesnapspath = path.join(
+                //         safesnap,
+                //         safename,
+                //         './snapshots/'
+                //     );
+                //     let safessnaps = fs.readdirSync(safesnapspath).sort();
+
+                //     // console.log(safessnaps);
+                //     if (safessnaps.length > 0) {
+                //         let latest = safessnaps[safessnaps.length - 1];
+                //         let latestPath = path.join(safesnapspath, latest);
+
+                //         let file = fs.readFileSync(latestPath).toString();
+                //         let encJSON = new Node(file, {
+                //             privateKey: ident.getPrivateKey(),
+                //         });
+                //         let decryptedData = encJSON.decryptText();
+                //         let safe = Safe.from(JSON.parse(decryptedData));
+                //         u.addSafe(safe);
+                //     }
+                // }
             } else {
                 u = new User(ident.getUsername());
-            }
-            let safesnap = path.join(userPath, 'safes');
-            let safes = fs.readdirSync(safesnap);
-            for (const safestring in safes) {
-                let safename = safes[safestring];
-                let safesnapspath  =path.join(safesnap, safename, "./snapshots/");
-                let safessnaps = fs
-                    .readdirSync(safesnapspath)
-                    .sort();
-                    
-                // console.log(safessnaps);
-                if (safessnaps.length > 0) {
-                    let latest = safessnaps[safessnaps.length - 1];
-                    let latestPath = path.join(safesnapspath, latest);
-
-                    let file = fs.readFileSync(latestPath).toString();
-                    let encJSON = new Node(file, {
-                        privateKey: ident.getPrivateKey(),
-                    });
-                    let decryptedData = encJSON.decryptText();
-                    let safe = Safe.from(JSON.parse(decryptedData));
-                    u.addSafe(safe);
-                }
             }
         } else {
         }
@@ -223,8 +250,8 @@ export class User extends Entity {
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {
-                console.log(storages);
-                
+                // console.log(storages);
+
                 result = storages;
             }
         }

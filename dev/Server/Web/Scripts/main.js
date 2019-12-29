@@ -5,7 +5,6 @@ $(document).ready(function () {
         if (id !== 'add') {
             $(inventory_button).on('click', function (e) {
                 var name = $(this).children(".name").attr('invname');
-
                 loadInventory(username, name);
             });
         } else {
@@ -35,6 +34,8 @@ function createInventory(username, inventoryname) {
 }
 function loadInventory(username, name) {
     $.getJSON(`/user/${username}/storage/${name}`).then(function (storage) {
+        console.log(storage);
+        
         let space = storage.space;
         let keys = Object.keys(space);
         let outerD = document.createElement('div');

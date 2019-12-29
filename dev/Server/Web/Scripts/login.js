@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $("#form > input[name='username']").focus();
     $("#form").on("submit", function(e){
         e.preventDefault();
         let data = $(this).serialize();

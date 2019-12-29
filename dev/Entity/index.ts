@@ -121,8 +121,13 @@ export default class Entity {
      * @memberof Entity
      */
     public getLastLoaded(): Date {
-        let date = this.getParameter('last_saved');
-        return new Date(Number.parseInt(date.toString()));
+        if(this.hasParameter('last_loaded')){
+            let date = this.getParameter('last_loaded');
+            return new Date(Number.parseInt(date.toString()));
+        }else {
+            return null;
+        }
+        
     }
 
     /**
@@ -322,6 +327,7 @@ export default class Entity {
             pk = dev.getPrivateKey(this.getParameter('user').toString());
         }
         let me = this;
+        this.addParameter('last_saved', Date.now());
         try {
             fs.writeFileSync(
                 final_E_path,

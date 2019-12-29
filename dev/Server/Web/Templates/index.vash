@@ -21,13 +21,14 @@
                 <div id="inventories">
 
                     <div id="default" class="inventory">
-                        <span class="name">default</span>
+                        <span invname="default" class="name">default</span>
                     </div>
                     
-                        @safes.forEach(function(safe){  
+                        @safes.filter((safe)=>{return safe.getName() !== "default";}).forEach(function(safe){
+                              
                             var safename = safe.name;
                             <div class="inventory">
-                                <span class="name" invname="@safe.name">@safe.name</span>
+                                <span class="name" invname="@safe.name">@safe.getName()</span>
                             </div>
                         })
                     <div id="add" class="inventory">+</div>
