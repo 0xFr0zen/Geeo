@@ -1,5 +1,6 @@
 @{
     var safes = model.safes;
+    var username = model.username
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -8,6 +9,7 @@
     <!-- Insert this line above script imports  -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="/scripts/jquery.js"></script>
+    <script>var username = "@username";</script>
     <script src="/scripts/main.js"></script>
     <script>if (window.module) module = window.module;</script>
     <link rel="stylesheet" href="/themes/main.css">

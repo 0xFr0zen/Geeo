@@ -1,50 +1,64 @@
 $(document).ready(function () {
-    loadInventory("friends");
-    $("#menu #inventories .inventory").each((index, ínventory_button) => {
-        $(ínventory_button).on('click', function (e) {
-            var name = $(this).children(".name").attr('invname');
-            console.log(name);
+    loadInventory(username, "default");
+    $("#menu #inventories .inventory").each((index, inventory_button) => {
+        let id = $(inventory_button).attr('id');
+        if (id !== 'add') {
+            $(inventory_button).on('click', function (e) {
+                var name = $(this).children(".name").attr('invname');
 
-            loadInventory(name);
-        });
+                loadInventory(username, name);
+            });
+        } else {
+            $(inventory_button).on('click', function (e) {
+                var name = prompt("Storage name?", "newStorage");
+                createInventory(username, name);
+            });
+        }
+
     });
     $("#menu #user #profile").on('click', function () {
         document.location.href = "/logout";
     })
 });
+function prompt(question, defaultanswer){
+    let result = defaultanswer;
+    return result;
+}
+function createInventory(username, inventoryname) {
+    $.post(`user/${username}/storages/add`, { name: inventoryname }, function (data) {
+        data = JSON.parse(data);
+        let name = data.name;
+        let hash = data.hash;
 
-function loadInventory(name) {
-    $.getJSON("/user/admin/storages").then(function (storages) {
-        storages = storages.filter((storage) => {
-            return storage.name === name;
-        });
-        if (storages.length > 0) {
-            let storage = storages[0];
-            let space = storage.space;
-            let keys = Object.keys(space);
-            let outerD = document.createElement('div');
-            for (key in keys) {
-                let item = space[keys[key]];
-                let keys2 = Object.keys(item);
 
-                let d = document.createElement('div');
-                d.className = "item";
+    });
+}
+function loadInventory(username, name) {
+    $.getJSON(`/user/${username}/storage/${name}`).then(function (storage) {
+        let space = storage.space;
+        let keys = Object.keys(space);
+        let outerD = document.createElement('div');
+        for (key in keys) {
+            let item = space[keys[key]];
+            let keys2 = Object.keys(item);
 
-                let x = document.createElement('span');
-                x.className = "name";
-                $(x).text(keys2[0]);
+            let d = document.createElement('div');
+            d.className = "item";
 
-                let y = document.createElement('span');
-                y.className = "amount";
-                $(y).text(keys2.length);
-                $(d).append(x);
-                $(d).append(y);
-                $(outerD).append(d);
-            }
-            $("#content #inventory").empty();
+            let x = document.createElement('span');
+            x.className = "name";
+            $(x).text(keys2[0]);
 
-            $("#content #inventory").append(outerD);
+            let y = document.createElement('span');
+            y.className = "amount";
+            $(y).text(keys2.length);
+            $(d).append(x);
+            $(d).append(y);
+            $(outerD).append(d);
         }
+        $("#content #inventory").empty();
+
+        $("#content #inventory").append(outerD);
 
 
     });

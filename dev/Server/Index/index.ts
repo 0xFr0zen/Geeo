@@ -19,7 +19,7 @@ function RIndex() {
                 let usersafes = user.getSafes();
                 console.log('safes of user =>', usersafes);
 
-                res.render('index', { safes: usersafes });
+                res.render('index', { username: user.getName(), safes: usersafes });
             }
         } else {
             res.status(404);

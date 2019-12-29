@@ -42,6 +42,25 @@ function UserNormalRouter() {
         
         res.json(showcase_safes);
     });
+    router.use('/storage/:name', function(
+        req: express.Request,
+        res: express.Response
+    ) {
+        let user = null;
+        let name = req.params.name;
+        user = User.from(Identity.of(name));
+        let result:Safe = null;
+        if(user != null){
+            let safes = user.getSafes();
+            safes.filter((safe:Safe)=>{
+                return safe.getName() === req.params.name;
+            });
+
+            result = safes[0];
+        }
+        
+        res.json(JSON.parse(result.toString()));
+    });
     return router;
 }
 interface IStorage {

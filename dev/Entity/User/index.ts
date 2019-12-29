@@ -4,7 +4,6 @@ import * as path from 'path';
 import Safe from '../Safe';
 import Node from '../../Crypt';
 import Identity from '../../Identity/index';
-import Device from '../../Device/index';
 
 /**
  * User Class.
@@ -26,6 +25,7 @@ export class User extends Entity {
         this.addParameter('loggedin', false);
         if (!standalone) {
             this.addParameter('identity', Identity.of(name));
+            this.addSafe(new Safe(name,'default'));
             this.save();
         } else {
         }
