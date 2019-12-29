@@ -45,18 +45,19 @@ function UserNormalRouter() {
 
         res.json(showcase_safes);
     });
-    router.use('/storage/:name', function(
+    router.use('/storage/:invname', function(
         req: express.Request,
         res: express.Response
     ) {
         let user = null;
         let name = req.params.name;
+        let invname = req.params.invname;
         user = User.from(Identity.of(name));
         let result: Safe = null;
         if (user != null) {
             let safes = user.getSafes();
             safes.filter((safe: Safe) => {
-                return safe.getName() === req.params.name;
+                return safe.getName() === invname;
             });
 
             result = safes[0];
