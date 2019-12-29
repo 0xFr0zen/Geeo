@@ -34,7 +34,6 @@ function createInventory(username, inventoryname) {
 }
 function loadInventory(username, name) {
     $.getJSON(`/user/${username}/storage/${name}`).then(function (storage) {
-        console.log(storage);
         
         let space = storage.space;
         let keys = Object.keys(space);
