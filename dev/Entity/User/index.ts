@@ -31,6 +31,11 @@ export class User extends Entity {
                 StorageType.Inventory,
                 true
             );
+            defaultSafe.addItem('testitem_json', {
+                test: 'lol',
+                numbered: 1,
+                booled: false,
+            });
             defaultSafe.save();
             this.addSafe(defaultSafe);
             this.save();
@@ -84,7 +89,7 @@ export class User extends Entity {
             fs.mkdirSync(p);
             user = new User(name);
         } else {
-            console.error(`User ${name} already exists.`);
+            user = User.from(Identity.of(name));
         }
         return user;
     }
@@ -134,48 +139,19 @@ export class User extends Entity {
 
                 keys.forEach(key => {
                     let value = userJSON[key];
-                    if(key === 'storages'){
-                        let storagesHolder:Safe[] = [];
+                    if (key === 'storages') {
+                        let storagesHolder: Safe[] = [];
                         let storages = value;
-                        storages.forEach((storage:any) => {
-                            
-                            
+                        storages.forEach((storage: any) => {
                             let safe = Safe.from(storage);
                             storagesHolder.push(safe);
                         });
                         u.addParameter('storages', storagesHolder);
-                        
-                    }else {
+                    } else {
                         u.addParameter(key, value);
-
                     }
                 });
                 u.addParameter('last_loaded', Date.now());
-                // let safesnap = path.join(userPath, 'safes');
-                // let safes = fs.readdirSync(safesnap);
-                // for (const safestring in safes) {
-                //     let safename = safes[safestring];
-                //     let safesnapspath = path.join(
-                //         safesnap,
-                //         safename,
-                //         './snapshots/'
-                //     );
-                //     let safessnaps = fs.readdirSync(safesnapspath).sort();
-
-                //     // console.log(safessnaps);
-                //     if (safessnaps.length > 0) {
-                //         let latest = safessnaps[safessnaps.length - 1];
-                //         let latestPath = path.join(safesnapspath, latest);
-
-                //         let file = fs.readFileSync(latestPath).toString();
-                //         let encJSON = new Node(file, {
-                //             privateKey: ident.getPrivateKey(),
-                //         });
-                //         let decryptedData = encJSON.decryptText();
-                //         let safe = Safe.from(JSON.parse(decryptedData));
-                //         u.addSafe(safe);
-                //     }
-                // }
             } else {
                 u = new User(ident.getUsername());
             }

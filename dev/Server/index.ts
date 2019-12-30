@@ -1,10 +1,13 @@
 import * as express from 'express';
 import index from './Index/';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
 import bodyParser = require('body-parser');
+
 export default class Server {
     private static DEFAULT_PORT: number = 80;
     private static DEFAULT_HOSTNAME: string = 'geeo';
+    private static DEFAULT_VIEW_ENGINE:string = 'vash';
     private router: express.Router = null;
     private application: express.Application = null;
     private listen: import("http").Server = null;
@@ -13,12 +16,16 @@ export default class Server {
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
         this.router = express.Router({mergeParams:true});
-        this.application.set('view engine', 'vash');
+        let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
+        this.application.set('view engine', view_engine);
+        console.log(`View engine: ${view_engine}`);
+
         this.application.set(
             'views',
             path.join(
                 process.cwd(),
-                './dev/Server/Web/Templates/'
+                `./dev/Server/Web/Templates/${view_engine}/`,
+                
             )
         );
         this.router.use('/', index);

@@ -44,11 +44,9 @@ function loadInventory(username, name) {
 
             let d = document.createElement('div');
             d.className = "item";
-
             let x = document.createElement('span');
             x.className = "name";
             $(x).text(keys2[0]);
-
             let y = document.createElement('span');
             y.className = "amount";
             $(y).text(keys2.length);

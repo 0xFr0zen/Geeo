@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/firacode/v7/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_D1sJVD7Mw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/firacode/v7/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_ONrJVD7Mw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/firacode/v7/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_NprJVD7Mw.ttf) format('truetype');
+}
 * {
   box-sizing: border-box;
   font-family: 'Fira Code', monospace;
@@ -38,7 +59,7 @@ body {
   background: #333;
   padding: 10px;
   margin-bottom: 20px;
-  border-radius: 40px;
+  border-radius: 5px;
 }
 #main #main_inner #menu #inventories {
   float: left;
@@ -127,7 +148,7 @@ body {
   min-height: 400px;
   background-color: #ddd;
   padding: 30px;
-  border-radius: 40px;
+  border-radius: 5px;
 }
 #main #main_inner #content #inventory {
   float: left;
@@ -136,10 +157,12 @@ body {
   float: left;
   width: 120px;
   height: 30px;
-  padding: 5px;
+  padding: 4px 7px;
   background-color: white;
   margin-right: 5px;
   margin-bottom: 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 #main #main_inner #content #inventory .item .name {
   font-size: medium;

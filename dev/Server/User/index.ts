@@ -59,11 +59,10 @@ function UserNormalRouter() {
             safes.filter((safe: Safe) => {
                 return safe.getName() === invname;
             });
-
             result = safes[0];
         }
         if (result != null) {
-            res.json(JSON.parse(result.toString()));
+            res.json(JSON.parse(result.toString()).safe);
         } else {
             res.status(404).send(`Storage '${name}' not found`);
         }
