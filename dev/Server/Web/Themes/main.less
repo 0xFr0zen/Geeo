@@ -2,6 +2,8 @@
 * {
     box-sizing: border-box;
     font-family: 'Fira Code', monospace;
+}
+.disablehighlighting {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
@@ -9,9 +11,10 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
+@background: #222;
 body {
     margin: 0px;
-    background: #eee;
+    background: @background;
 }
 #main {
     position: fixed;
@@ -25,6 +28,7 @@ body {
         width: 100%;
         height: auto;
         #menu {
+            .disablehighlighting();
             position: relative;
             float: left;
             width: 100%;
@@ -122,7 +126,7 @@ body {
             min-height: 400px;
             background-color: #ddd;
             padding: 30px;
-            border-radius:5px;
+            border-radius: 5px;
             #inventory {
                 float: left;
                 .item {
@@ -134,7 +138,7 @@ body {
                     margin-right: 5px;
                     margin-bottom: 5px;
                     border-radius: 3px;
-                    border:1px solid rgba(0,0,0,0.2);
+                    border: 1px solid rgba(0, 0, 0, 0.2);
 
                     .name {
                         font-size: medium;
@@ -202,5 +206,54 @@ body {
                 }
             }
         }
+    }
+}
+#prompter {
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: @background;
+    display: none;
+    #input {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-left:-100px;
+        width: 200px;
+        height: 40px;
+        padding: 10px;
+        background: white;
+        border: none;
+        border-radius:5px;
+        outline: none;
+    }
+    #o {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        width: 90px;
+        margin-left:-100px;
+        height: 40px;
+        padding: 10px;
+        background: green;
+        border: none;
+        border-radius:5px;
+        cursor: pointer;
+    }
+    #c {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        margin-left:10px;
+        width: 90px;
+        height: 40px;
+        padding: 10px;
+        background: red;
+        border: none;
+        border-radius:5px;
+        cursor: pointer;
     }
 }
