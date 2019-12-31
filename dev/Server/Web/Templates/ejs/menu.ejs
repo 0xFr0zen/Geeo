@@ -5,8 +5,9 @@
         </div>
         <% safelist = safes.filter((safe)=>{return safe.getName() !== "default";});%>
         <% safelist.forEach(function(safe){ %>
+        <% safename = safe.getName(); %>
             <div class="inventory">
-                <span class="name" invname="<%-safe.name%>"><%-safe.name%></span>
+                <span class="name" invname="<%- safename %>"><%- safename %></span>
             </div>
         <% }); %>
         <div id="add" class="inventory">+</div>

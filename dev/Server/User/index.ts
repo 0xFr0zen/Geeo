@@ -1,6 +1,6 @@
 import * as express from 'express';
 import User from '../../Entity/User';
-import Safe from '../../Entity/Safe';
+import Safe, { StorageType } from '../../Entity/Safe';
 import { GeeoMap } from '../../GeeoMap/index';
 import Identity from '../../Identity';
 function UserRouter() {
@@ -18,7 +18,7 @@ function UserNormalRouter() {
     router.use('/$', function(req: express.Request, res: express.Response) {
         res.render('user', { username: req.params.name });
     });
-    router.use('/storages', function(
+    router.use('/storages$', function(
         req: express.Request,
         res: express.Response
     ) {
@@ -56,7 +56,7 @@ function UserNormalRouter() {
         let result: Safe = null;
         if (user != null) {
             let safes = user.getSafes();
-            safes.filter((safe: Safe) => {
+            safes.find((safe: Safe) => {
                 return safe.getName() === invname;
             });
             result = safes[0];
@@ -66,6 +66,26 @@ function UserNormalRouter() {
         } else {
             res.status(404).send(`Storage '${name}' not found`);
         }
+    });
+    router.post('/storages/add/:invname', function(
+        req: express.Request,
+        res: express.Response
+    ) {
+        console.log("trying to add inventory");
+        
+        let user:User = null;
+        let name:string = req.params.name;
+        let invname:string = req.params.invname;
+        
+        user = User.from(Identity.of(name));
+        let result: boolean = false;
+        if (user != null) {
+            user.addSafe(invname);
+            user.save();
+            result = true;
+        }
+        res.json({added:result});
+
     });
     return router;
 }

@@ -178,15 +178,25 @@ export class User extends Entity {
      * @private
      * @memberof User
      */
-    public addSafe(storage: Safe): boolean {
+    public addSafe(storage: Safe | string): boolean {
         let result = false;
+        
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {
-                if (storages.length < storages.push(storage)) {
-                    this.update('storages', storages);
-                    result = true;
+                if(storage instanceof Safe) {
+                    if (storages.length < storages.push(storage)) {
+                        this.update('storages', storages);
+                        result = true;
+                    }
+                }else {
+                    let s = new Safe(this.getName(), storage, StorageType.Inventory);
+                    if (storages.length < storages.push(s)) {
+                        this.update('storages', storages);
+                        result = true;
+                    }
                 }
+                
             }
         }
         return result;

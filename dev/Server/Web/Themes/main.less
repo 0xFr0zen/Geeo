@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Fira+Code:400,600,700&display=swap');
+//@import url('https://fonts.googleapis.com/css?family=Fira+Code:400,600,700&display=swap');
 * {
     box-sizing: border-box;
     font-family: 'Fira Code', monospace;
@@ -11,7 +11,10 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
-@background: #222;
+@dark:#222;
+@light:#fff;
+@mode:@light;
+@background: @mode;
 body {
     margin: 0px;
     background: @background;
@@ -50,6 +53,7 @@ body {
                     margin-right: 10px;
                     padding: 10px;
                     color: white;
+                    background:rgba(255,255,255,.05);
                     text-align: center;
                     border-radius: 40px;
                     cursor: pointer;
@@ -226,7 +230,7 @@ body {
         height: 40px;
         padding: 10px;
         background: white;
-        border: none;
+        border: 1px solid rgba(0,0,0,.1);
         border-radius:5px;
         outline: none;
     }
