@@ -9,6 +9,7 @@ import getMAC from 'getmac';
 import Node from '../Crypt/index';
 import { reset } from '../../reset';
 import { app, BrowserWindow } from 'electron';
+import ConsoleIO from '../ConsoleIO';
 export default class System extends Entity {
     private static device: Device = new Device();
     private ADMIN: Identity = null;
@@ -23,6 +24,7 @@ export default class System extends Entity {
         this.server = new Server();
         this.server.start();
         let me = this;
+        let consoleParser:ConsoleIO = new ConsoleIO(System.device);
         app.on('ready', function() {
             me.mainWindow = new BrowserWindow({
                 darkTheme: true,

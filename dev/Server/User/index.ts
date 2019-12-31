@@ -67,25 +67,44 @@ function UserNormalRouter() {
             res.status(404).send(`Storage '${name}' not found`);
         }
     });
-    router.post('/storages/add/:invname', function(
+
+    router.post('/storages/:operation/:invname', function(
         req: express.Request,
         res: express.Response
     ) {
-        console.log("trying to add inventory");
-        
-        let user:User = null;
-        let name:string = req.params.name;
-        let invname:string = req.params.invname;
-        
-        user = User.from(Identity.of(name));
+        let user: User = null;
         let result: boolean = false;
-        if (user != null) {
-            user.addSafe(invname);
-            user.save();
-            result = true;
-        }
-        res.json({added:result});
+        let name: string = req.params.name;
+        let invname: string = req.params.invname;
 
+        user = User.from(Identity.of(name));
+
+        if (user != null) {
+            switch (req.params.operation) {
+                case 'add':
+                    console.log(`trying to add inventory '${invname}'.`);
+                    user.addSafe(invname);
+                    result = user.save();
+
+                    break;
+                case 'remove':
+                    console.log(`trying to remove inventory '${invname}'.`);
+                    
+                    user.removeSafe(invname);
+                    result = user.save();
+                    break;
+                case 'edit':
+                    console.log('trying to edit inventory');
+                    let safe:Safe = user.getSafe(invname);
+                    // safe.addItem()
+                    result = user.save();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        res.json({ added: result });
     });
     return router;
 }
