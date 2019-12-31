@@ -11,7 +11,7 @@ $(document).ready(function() {
             });
         } else {
             $(inventory_button).on('click', function(e) {
-                var name = prompt('Storage name?', 'newStorage');
+                var name = prompter('Storage name?', 'newStorage');
                 createInventory(username, name);
             });
         }
@@ -25,7 +25,7 @@ $(document).ready(function() {
         }
     });
 });
-function prompt(question, defaultanswer) {
+function prompter(question, defaultanswer) {
     
     $('#prompter').empty();
     let input = document.createElement('input');

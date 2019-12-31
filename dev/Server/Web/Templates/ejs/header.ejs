@@ -12,9 +12,11 @@
     <script>
         var username = '<%-username%>';
     </script>
-    <% } %> <% scripts.forEach(function(script){ %>
+    <% } %> <% if(scripts) { %>
+        <% scripts.forEach(function(script){ %>
     <script src="/scripts/<%= script %>.js"></script>
     <% }); %>
+    <% } %>
     <script>
         if (window.module) module = window.module;
     </script>
