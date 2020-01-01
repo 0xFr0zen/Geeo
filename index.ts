@@ -11,7 +11,10 @@
 
 // import {DatabaseUser} from './dev/Database';
 import System from './dev/System';
+import ConsoleIO from './dev/ConsoleIO';
 
 // let dbuser = new DatabaseUser('geeo_admin_penetrator');
 // console.log(dbuser);
+let consoleIO:ConsoleIO = new ConsoleIO();
+consoleIO.exec("GET",[["user"], ["admin"]])
 let system:System = new System();
