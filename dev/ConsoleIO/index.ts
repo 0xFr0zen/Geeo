@@ -3,16 +3,13 @@ import * as readline from 'readline';
 import * as inquirer from 'inquirer';
 
 export default class ConsoleIO {
-    private handler: NodeJS.Timeout = null;
     private interface: readline.Interface = null;
     constructor() {
         // let stdin = process.openStdin();
-        this.interface = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
+        this.interface = readline.createInterface(process.stdin, process.stdout,null,true);
+        // console.log(this.interface);
         // stdin.addListener("data", (d)=>{this.parse(d.toString().trim())});
-        this.interface.question("Hey, whats up?",(answer)=>{console.log(answer)});
+        // this.interface.question("Hey, whats up?",(answer)=>{console.log(answer)});
         this.interface.on('line', this.parse);
         
     }

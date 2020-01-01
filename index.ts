@@ -1,20 +1,8 @@
-// import User from './dev/User';
-// import Safe from './dev/Safe';
-
-// let user = new User('oezguerisbert');
-// let ks: Safe = new Safe('ks')
-//     .addItem('products', ['Coca Cola', 'Fanta', 'Smirnoff'])
-//     .removeItem('products');
-// user.addSafe(ks);
-// user.getSafe('documents').addItem('loans', [990.00]);
-// user.save();
-
-// import {DatabaseUser} from './dev/Database';
 import System from './dev/System';
 import ConsoleIO from './dev/ConsoleIO';
 
-// let dbuser = new DatabaseUser('geeo_admin_penetrator');
-// console.log(dbuser);
-let consoleIO:ConsoleIO = new ConsoleIO();
-consoleIO.exec("GET",[["user"], ["admin"]])
+
 let system:System = new System();
+system.on('ready', function(){
+    let consoleIO:ConsoleIO = new ConsoleIO();
+})
