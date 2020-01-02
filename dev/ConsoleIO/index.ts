@@ -2,6 +2,7 @@ import System from '../System';
 import * as readline from 'readline';
 import * as inquirer from 'inquirer';
 import RegExpParser from './RegExpParser';
+import Command from './commands/index';
 export interface ICommand {
     name: string;
     regex: RegExp;
@@ -12,6 +13,10 @@ export default class ConsoleIO {
         {
             name: 'say_text',
             regex: RegExpParser('say <text:any>'),
+        },
+        {
+            name: 'get',
+            regex: RegExpParser('get <text:text> <filter:array>'),
         },
     ];
     constructor() {
@@ -35,28 +40,28 @@ export default class ConsoleIO {
                 return command.regex.test(message);
             });
             if (command != null) {
-                console.log(command.regex);
-                
-                let m:RegExpExecArray = null;
-                while ((m = command.regex.exec(message)) !== null) {
-                    console.log(m);
-                    
+                let x = message.match(command.regex)[1]; // initializer somehow, DO NOT ERASE. PROGRAM CRASHES IF YOU DELETE.
+                let m: any = command.regex.exec(message);
+                let params = m[1] || null;
+                let optionals = m[2] || null;
+                if (params != null || optionals != null) {
+                    this.exec(command.name, [params, optionals]);
+                } else {
+                    this.exec(command.name);
                 }
-                console.log(m);
-            }else {
-                console.log("Couldnt find the command you typed.");
+            } else {
+                console.log('Couldnt find the command you typed.');
             }
         }
     }
-    public exec(command: string, parameters?: any[][]): void {
-        let output: string = '';
+    public exec(command: string, parameters?: any[]): void {
         if (parameters) {
             let params = parameters[0];
             let optional = parameters[1];
-            output = `command: '${command}'\nparameters:\n\tparam:${parameters[0]}\n\toptional:${parameters[1]}`;
+            let com = require(`./commands/${command}/`);
+            let comJS = new com.default();            
+            comJS.run(params, optional);
         } else {
-            output = `command: '${command}'`;
         }
-        console.log(output);
     }
 }
