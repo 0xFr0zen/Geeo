@@ -6,5 +6,9 @@
     {
         "name":"get",
         "regex":"get <text> <json>"
+    },
+    {
+        "name":"update",
+        "regex":"update <any>"
     }
 ]
