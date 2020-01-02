@@ -14,7 +14,7 @@ export default class ConsoleIO {
         let x = JSON.parse(
             fs
                 .readFileSync(
-                    path.join(process.cwd(), './config/cds/list.json')
+                    path.join(process.cwd(), './dev/ConsoleIO/commands/list.json')
                 )
                 .toString()
         );

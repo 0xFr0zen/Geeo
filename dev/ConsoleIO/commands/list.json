@@ -1,0 +1,10 @@
+[
+    {
+        "name":"say",
+        "regex":"say <text>"
+    },
+    {
+        "name":"get",
+        "regex":"get <text> <json>"
+    }
+]
