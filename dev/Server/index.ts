@@ -12,7 +12,6 @@ export default class Server {
     private application: express.Application = null;
     private listen: import("http").Server = null;
     constructor() {
-        let me = this;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
         this.router = express.Router({mergeParams:true});
@@ -34,10 +33,8 @@ export default class Server {
     }
     public start(): void {
         if (this.application) {
-            let me = this;
-            this.listen = this.application.listen(Server.DEFAULT_PORT, function() {
+            this.listen = this.application.listen(Server.DEFAULT_PORT, () => {
                 console.log(`Server runs on port ${Server.DEFAULT_PORT}`);
-                
             });
             
         }

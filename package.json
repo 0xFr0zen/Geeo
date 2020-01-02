@@ -20,6 +20,7 @@
     "jquery": "^3.4.1",
     "mysql": "^2.17.1",
     "path": "^0.12.7",
+    "stream": "0.0.2",
     "typescript": "^3.7.3",
     "typescript-map": "0.0.7",
     "vash": "^0.12.9"

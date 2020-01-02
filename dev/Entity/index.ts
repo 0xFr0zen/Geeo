@@ -326,14 +326,13 @@ export default class Entity {
         } else if (this.getType() === 'safe') {
             pk = dev.getPrivateKey(this.getParameter('user').toString());
         }
-        let me = this;
         this.addParameter('last_saved', Date.now());
         try {
             fs.writeFileSync(
                 final_E_path,
                 (() => {
                     result = true;
-                    let encrypted = new Node(me.toString(), {
+                    let encrypted = new Node(this.toString(), {
                         privateKey: pk,
                     }).encryptText();
                     return encrypted;
@@ -361,7 +360,6 @@ export class Package {
      */
     public geeomapWrap(gm: GeeoMap<any, any>): string {
         let result = '';
-        let me = this;
         let keys = gm.keys();
 
         if (keys.length > 0) {
@@ -373,7 +371,7 @@ export class Package {
                 } else {
                     if (value instanceof GeeoMap) {
                         if (value.length > 0) {
-                            re += me.geeomapWrap(value);
+                            re += this.geeomapWrap(value);
                         } else {
                             re += '{}';
                         }
@@ -386,7 +384,7 @@ export class Package {
                             re += m;
                         }
                     } else {
-                        let wrappedCorrect = me.otherWrap(value);
+                        let wrappedCorrect = this.otherWrap(value);
                         re += wrappedCorrect;
                     }
                 }
@@ -413,7 +411,6 @@ export class Package {
      */
     private otherWrap(value: any): string {
         let result = '';
-        let me = this;
 
         switch (typeof value) {
             case 'string':
@@ -429,15 +426,15 @@ export class Package {
                 if (value instanceof Array && Array.isArray(value)) {
                     let ree = '';
                     value.forEach(element => {
-                        let see = me.otherWrap(element);
+                        let see = this.otherWrap(element);
                         ree = ree.concat(see).concat(',');
                     });
                     ree = ree.substr(0, ree.length - 1);
                     result += `[${ree}]`;
                 } else if (value instanceof GeeoMap) {
-                    result += `${me.geeomapWrap(value)}`;
+                    result += `${this.geeomapWrap(value)}`;
                 } else if (value instanceof Entity) {
-                    result += `${me.wrap(value)}`;
+                    result += `${this.wrap(value)}`;
                 } else if (value instanceof Node) {
                     result += `${value.toString()}`;
                 } else {
@@ -463,7 +460,6 @@ export class Package {
      * @memberof Package
      */
     public wrap(entity: Entity): string {
-        let me = this;
         if (entity == null) {
             return 'null';
         } else {

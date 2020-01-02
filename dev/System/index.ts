@@ -22,9 +22,8 @@ export default class System extends Entity {
         System.device.initialize();
         this.server = new Server();
         this.server.start();
-        let me = this;
-        app.on('ready', function() {
-            me.mainWindow = new BrowserWindow({
+        app.on('ready', () => {
+            this.mainWindow = new BrowserWindow({
                 darkTheme: true,
                 center: true,
                 title: 'Geeo',
@@ -36,10 +35,10 @@ export default class System extends Entity {
                 width: 1280,
                 height: 720,
             });
-            me.mainWindow.on('ready-to-show', function() {
-                me.mainWindow.show();
+            this.mainWindow.on('ready-to-show', () => {
+                this.mainWindow.show();
             });
-            me.mainWindow.loadURL('http://localhost/');
+            this.mainWindow.loadURL('http://localhost/');
         });
     }
     public static getDevice(): Device {
