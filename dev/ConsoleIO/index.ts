@@ -8,26 +8,28 @@ export interface ICommand {
     regex: RegExp;
 }
 export default class ConsoleIO {
-    private interface: readline.Interface = null;
+    private static interface: readline.Interface = null;
     private commands: ICommand[] = [
         {
-            name: 'say_text',
-            regex: RegExpParser('say <text:any>'),
+            name: 'say',
+            regex: RegExpParser('say <text>'),
         },
         {
             name: 'get',
-            regex: RegExpParser('get <text:text> <filter:array>'),
+            regex: RegExpParser('get <text> <json>'),
         },
     ];
     constructor() {
-        this.interface = readline.createInterface({
-            input: process.openStdin(),
+        ConsoleIO.interface = readline.createInterface({
+            input: process.stdin,
             output: process.stdout,
+            removeHistoryDuplicates: true,
+            historySize: 100,
             terminal: true,
         });
         let me = this;
-        // this.interface.question("Hey, whats up?",(answer)=>{console.log(answer)});
-        this.interface = this.interface.addListener('line', function(
+
+        ConsoleIO.interface = ConsoleIO.interface.addListener('line', function(
             message: string
         ) {
             me.parse(message.trim());
@@ -36,10 +38,12 @@ export default class ConsoleIO {
     private parse(message: string): void {
         if (message.length == 0) {
         } else {
-            let command = this.commands.find((command: ICommand) => {
-                return command.regex.test(message);
-            });
-            if (command != null) {
+            if (message === 'clear') {
+                ConsoleIO.clear();
+            }
+
+            let command: ICommand = null;
+            while ((command = this.getCommand(message)) !== null) {
                 let x = message.match(command.regex)[1]; // initializer somehow, DO NOT ERASE. PROGRAM CRASHES IF YOU DELETE.
                 let m: any = command.regex.exec(message);
                 let params = m[1] || null;
@@ -49,8 +53,6 @@ export default class ConsoleIO {
                 } else {
                     this.exec(command.name);
                 }
-            } else {
-                console.log('Couldnt find the command you typed.');
             }
         }
     }
@@ -59,9 +61,30 @@ export default class ConsoleIO {
             let params = parameters[0];
             let optional = parameters[1];
             let com = require(`./commands/${command}/`);
-            let comJS = new com.default();            
+            let comJS = new com.default();
             comJS.run(params, optional);
         } else {
         }
+    }
+    private getCommand(message: string) {
+        let res: ICommand = null;
+        this.commands.forEach(element => {
+            if (element.regex.test(message)) {
+                res = element;
+            }
+        });
+        return res;
+    }
+    public static error(text: string) {
+        ConsoleIO.log(text);
+    }
+    public static info(text: string) {
+        ConsoleIO.log(text);
+    }
+    public static clear() {
+        console.clear();
+    }
+    public static log(text: string) {
+        ConsoleIO.interface.write(text);
     }
 }

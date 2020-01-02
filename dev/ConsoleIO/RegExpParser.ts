@@ -8,16 +8,15 @@ export default function RegExpParser(s: string): RegExp {
         splitted.forEach((item: string) => {
             if (item.startsWith('<') && item.endsWith('>')) {
                 let match = item.substring(1, item.length - 1).split(':');
-                let group_name = match[0];
-                let type = match[1];
+                let type = match[0];
                 let length = '+';
-                if (match.length == 3) {
-                    length = match[2];
+                if (match.length == 2) {
+                    length = match[1];
                 }
                 let typer = '';
                 switch (type) {
                     case 'any':
-                        typer = '\.*';
+                        typer = '.*';
                         length = '';
                         break;
                     case 'number':
@@ -28,6 +27,9 @@ export default function RegExpParser(s: string): RegExp {
                         break;
                     case 'text':
                         typer = '\\w+';
+                        break;
+                    case 'json':
+                        typer = '\\{.*\\}';
                         break;
                     default:
                         break;
@@ -41,7 +43,7 @@ export default function RegExpParser(s: string): RegExp {
             }
         });
         res = res.substring(0, res.length - 3);
-        res = res.concat("$");
+        res = res.concat('$');
         result = new RegExp(res, 'gi');
     }
 
