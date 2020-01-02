@@ -6,7 +6,7 @@ export default class GET implements CommandInterface {
         let jsonString = filter.toString();
         if(this.isJson(jsonString)){
             let userJSON = JSON.parse(jsonString);
-            // console.log(searchTag, userJSON);
+            console.log(searchTag, userJSON);
         }else {
             ConsoleIO.error("Syntax Error, JSON is not compatible.");
         }

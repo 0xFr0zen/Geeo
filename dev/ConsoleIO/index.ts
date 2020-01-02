@@ -2,22 +2,31 @@ import System from '../System';
 import * as readline from 'readline';
 import * as inquirer from 'inquirer';
 import Command from './commands/index';
+import * as fs from 'fs';
+import * as path from 'path';
 export interface ICommand {
     name: string;
     regex: RegExp;
 }
 export default class ConsoleIO {
+    private static loadCommands(): ICommand[] {
+        let result: ICommand[] = [];
+        let x = JSON.parse(
+            fs
+                .readFileSync(
+                    path.join(process.cwd(), './config/cds/list.json')
+                )
+                .toString()
+        );
+        for (const key in x) {
+            const element = x[key];
+            let c:ICommand = {name:element.name,regex:ConsoleIO.RegExpParser(element.regex)};
+            result.push(c);
+        }
+        return result;
+    }
     private static interface: readline.Interface = null;
-    private commands: ICommand[] = [
-        {
-            name: 'say',
-            regex: this.RegExpParser('say <text>'),
-        },
-        {
-            name: 'get',
-            regex: this.RegExpParser('get <text> <json>'),
-        },
-    ];
+    private commands: ICommand[] = ConsoleIO.loadCommands();
     constructor() {
         ConsoleIO.interface = readline.createInterface({
             input: process.stdin,
@@ -86,7 +95,7 @@ export default class ConsoleIO {
     public static log(text: string) {
         ConsoleIO.interface.write(text);
     }
-    private RegExpParser(s: string): RegExp {
+    private static  RegExpParser(s: string): RegExp {
         let result: RegExp;
         let res: string = '^';
         let splitted = s.split(' ');
@@ -134,8 +143,7 @@ export default class ConsoleIO {
             res = res.concat('$');
             result = new RegExp(res, 'gi');
         }
-    
+
         return result;
     }
-    
 }
