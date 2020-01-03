@@ -8,12 +8,14 @@ import Server from '../Server';
 import getMAC from 'getmac';
 import Node from '../Crypt/index';
 import { reset } from '../../reset';
-import { app, BrowserWindow } from 'electron';
+import * as child_process from 'child_process';
+
 export default class System extends Entity {
     private static device: Device = new Device();
     private ADMIN: Identity = null;
     private server: Server = null;
-    private mainWindow: BrowserWindow = null;
+    gui_process: child_process.ChildProcess;
+
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
         reset();
@@ -22,24 +24,34 @@ export default class System extends Entity {
         System.device.initialize();
         this.server = new Server();
         this.server.start();
-        app.on('ready', () => {
-            this.mainWindow = new BrowserWindow({
-                darkTheme: true,
-                center: true,
-                title: 'Geeo',
-                show: false,
-                webPreferences: {
-                    contextIsolation: true,
-                    javascript: true,
-                },
-                width: 1280,
-                height: 720,
-            });
-            this.mainWindow.on('ready-to-show', () => {
-                this.mainWindow.show();
-            });
-            this.mainWindow.loadURL('http://localhost/');
-        });
+        try {
+            this.gui_process = child_process.fork(
+                `${path.join(
+                    process.cwd(),
+                    './node_modules/electron/cli.js'
+                )}`,
+                [path.join(
+                    process.cwd(),
+                    './output/dev/GUI/index.js'
+                )],
+                { stdio: 'inherit'}
+            );
+            this.gui_process.on(
+                'exit',
+                (code: number, signal: NodeJS.Signals) => {
+                    console.log('GUI EXITED');
+                }
+            );
+            
+            this.gui_process.on(
+                'error',
+                (error:Error) => {
+                    console.log('GUI ERROR', error);
+                }
+            );
+        } catch (e) {
+            console.error(e);
+        }
     }
     public static getDevice(): Device {
         return this.device;

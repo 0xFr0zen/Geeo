@@ -36,7 +36,13 @@ export default class ConsoleIO {
             terminal: true,
         });
         let me = this;
-
+        
+        ConsoleIO.interface = ConsoleIO.interface.addListener('SIGINT', function(
+            message: string
+        ) {
+            process.exit(0);
+        });
+    
         ConsoleIO.interface = ConsoleIO.interface.addListener('line', function(
             message: string
         ) {

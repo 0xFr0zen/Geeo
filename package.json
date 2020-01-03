@@ -28,7 +28,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "tsc && node ./output/test.js",
-    "start": "tsc && electron ./output/index.js",
+    "start": "tsc && node ./output/index.js",
     "reset": "tsc && node ./output/reset.js"
   },
   "keywords": [],
