@@ -1,7 +1,7 @@
 import System from '../System';
 import * as readline from 'readline';
 import * as inquirer from 'inquirer';
-import Command from './commands/index';
+import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
 export interface ICommand {
@@ -14,20 +14,28 @@ export default class ConsoleIO {
         let x = JSON.parse(
             fs
                 .readFileSync(
-                    path.join(process.cwd(), './dev/ConsoleIO/commands/list.json')
+                    path.join(
+                        process.cwd(),
+                        './dev/ConsoleIO/commands/list.json'
+                    )
                 )
                 .toString()
         );
         for (const key in x) {
             const element = x[key];
-            let c:ICommand = {name:element.name,regex:ConsoleIO.RegExpParser(element.regex)};
+            let c: ICommand = {
+                name: element.name,
+                regex: ConsoleIO.RegExpParser(element.regex),
+            };
             result.push(c);
         }
         return result;
     }
     private static interface: readline.Interface = null;
     private commands: ICommand[] = ConsoleIO.loadCommands();
-    constructor() {
+    private static system: System = null;
+    constructor(system: System) {
+        ConsoleIO.system = system;
         ConsoleIO.interface = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
@@ -36,13 +44,14 @@ export default class ConsoleIO {
             terminal: true,
         });
         let me = this;
-        
-        ConsoleIO.interface = ConsoleIO.interface.addListener('SIGINT', function(
-            message: string
-        ) {
-            process.exit(0);
-        });
-    
+
+        ConsoleIO.interface = ConsoleIO.interface.addListener(
+            'SIGINT',
+            function(message: string) {
+                process.exit(0);
+            }
+        );
+
         ConsoleIO.interface = ConsoleIO.interface.addListener('line', function(
             message: string
         ) {
@@ -70,7 +79,7 @@ export default class ConsoleIO {
             }
         }
     }
-    public exec(command: string, parameters?: any[]): void {
+    private exec(command: string, parameters?: any[]): void {
         if (parameters) {
             let params = parameters[0];
             let optional = parameters[1];
@@ -79,6 +88,9 @@ export default class ConsoleIO {
             comJS.run(params, optional);
         } else {
         }
+    }
+    public static getSystem(): System {
+        return ConsoleIO.system;
     }
     private getCommand(message: string) {
         let res: ICommand = null;
@@ -101,7 +113,7 @@ export default class ConsoleIO {
     public static log(text: string) {
         ConsoleIO.interface.write(text);
     }
-    private static  RegExpParser(s: string): RegExp {
+    private static RegExpParser(s: string): RegExp {
         let result: RegExp;
         let res: string = '^';
         let splitted = s.split(' ');
@@ -109,10 +121,18 @@ export default class ConsoleIO {
             result = null;
         } else {
             splitted.forEach((item: string) => {
+                let isOptional = item.includes('?');
+                let stringAdd = '';
                 if (item.startsWith('<') && item.endsWith('>')) {
                     let match = item.substring(1, item.length - 1).split(':');
                     let type = match[0];
-                    let length = '+';
+
+                    if (isOptional) {
+                        let spl = type.split('?');
+                        type = spl[1];
+                    }
+
+                    let length = '';
                     if (match.length == 2) {
                         length = match[1];
                     }
@@ -120,7 +140,6 @@ export default class ConsoleIO {
                     switch (type) {
                         case 'any':
                             typer = '.*';
-                            length = '';
                             break;
                         case 'number':
                             typer = '\\d+';
@@ -137,15 +156,27 @@ export default class ConsoleIO {
                         default:
                             break;
                     }
-                    res = res.concat(`(${typer})${length}`);
+                    stringAdd = `${isOptional ? '(?:' : ''}(${typer})${length}${
+                        isOptional ? ')?' : ''
+                    }`;
+
                 } else {
-                    res = res.concat(`(?:${item}\\s+)`);
+                    stringAdd = `(?:${item}\\s+)`;
                 }
-                if (res.substring(res.length - 4, res.length - 1) !== '\\s+') {
-                    res = res.concat('\\s+');
+                if(splitted.indexOf(item) == 0){
+
+                }else if (splitted.indexOf(item) != splitted.length - 1) {
+                    stringAdd = stringAdd + '\\s+';
+                } else if (isOptional) {
+                    res = res.substring(0, res.length - 3);
+                    let sA = stringAdd.split(':');
+                    stringAdd = sA[0].concat(':\\s+').concat(sA[1]);
+                    
+                } else {
+                    //last item
                 }
+                res = res.concat(stringAdd);
             });
-            res = res.substring(0, res.length - 3);
             res = res.concat('$');
             result = new RegExp(res, 'gi');
         }

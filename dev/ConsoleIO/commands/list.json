@@ -1,14 +1,15 @@
 [
     {
-        "name":"say",
-        "regex":"say <text>"
+        "name": "say",
+        "regex": "say <text>"
     },
     {
-        "name":"get",
-        "regex":"get <text> <json>"
+        "name": "get",
+        "regex": "get <text> <json>"
     },
     {
-        "name":"update",
-        "regex":"update <any>"
-    }
+        "name": "update",
+        "regex": "update <any>"
+    },
+    { "name": "gui", "regex": "gui <text> <?text>" }
 ]

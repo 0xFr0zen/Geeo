@@ -8,14 +8,15 @@ import Server from '../Server';
 import getMAC from 'getmac';
 import Node from '../Crypt/index';
 import { reset } from '../../reset';
-import * as child_process from 'child_process';
+import ConsoleIO from '../ConsoleIO';
+import GUI from '../GUI';
 
 export default class System extends Entity {
     private static device: Device = new Device();
     private ADMIN: Identity = null;
     private server: Server = null;
-    gui_process: child_process.ChildProcess;
-
+    private gui:GUI = null;
+    private consoleIO: ConsoleIO = null;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
         reset();
@@ -24,39 +25,20 @@ export default class System extends Entity {
         System.device.initialize();
         this.server = new Server();
         this.server.start();
-        try {
-            this.gui_process = child_process.fork(
-                `${path.join(
-                    process.cwd(),
-                    './node_modules/electron/cli.js'
-                )}`,
-                [path.join(
-                    process.cwd(),
-                    './output/dev/GUI/index.js'
-                )],
-                { stdio: 'inherit'}
-            );
-            this.gui_process.on(
-                'exit',
-                (code: number, signal: NodeJS.Signals) => {
-                    console.log('GUI EXITED');
-                }
-            );
-            
-            this.gui_process.on(
-                'error',
-                (error:Error) => {
-                    console.log('GUI ERROR', error);
-                }
-            );
-        } catch (e) {
-            console.error(e);
-        }
+        this.gui = new GUI();
+        this.consoleIO = new ConsoleIO(this);
     }
     public static getDevice(): Device {
         return this.device;
     }
-
+    public showWindow(){
+        this.gui.show();
+    }
+    public hideWindow(){
+        this.gui.hide();
+        
+    }
+    
     /**
      *
      * Creates Identity and stores it.
@@ -84,7 +66,7 @@ export default class System extends Entity {
             i = new Identity(name, pk);
             let pk_i: PK_IDENTITY = { pk: pk, ident: i };
             System.device.addIdentity(name, pk_i);
-            console.log(`Created Identity '${name}'.`);
+            // console.log(`Created Identity '${name}'.`);
         } else {
             console.error('Identity exists already, aborting.');
             i = System.device.getIdentity(name);
@@ -115,7 +97,7 @@ export default class System extends Entity {
             let folder = paths[key];
             if (!fs.existsSync(folder)) {
                 fs.mkdirSync(folder);
-                console.log(`created '${key}' folder`);
+                // console.log(`created '${key}' folder`);
             }
         }
     }
