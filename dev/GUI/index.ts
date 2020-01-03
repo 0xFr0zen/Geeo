@@ -1,34 +1,36 @@
-import * as child_process from 'child_process';
-import * as path from 'path';
+import {app, BrowserWindow} from 'electron';
+import * as dotenv from 'dotenv';
+
 export default class GUI {
-    private gui_process: child_process.ChildProcess = null;
+    private mainWindow:BrowserWindow = null;
     constructor() {
-        try {
-            this.gui_process = child_process.fork(
-                `${path.join(process.cwd(), './node_modules/electron/cli.js')}`,
-                [`${path.join(process.cwd(), './output/dev/GUI/app.js')}`],
-                { stdio: 'inherit' }
-            );
-            this.gui_process.on(
-                'exit',
-                (code: number, signal: NodeJS.Signals) => {
-                    console.log('GUI EXITED');
-                }
-            );
-            this.gui_process.on('error', (error: Error) => {
-                console.log('GUI ERROR', error);
-                this.gui_process = null;
+        app.on('ready', () => {
+            this.mainWindow = new BrowserWindow({
+                darkTheme: true,
+                center: true,
+                title: dotenv.config().parsed.windowtitle || "Geeo",
+                show: false,
+                webPreferences: {
+                    contextIsolation: true,
+                    javascript: true,
+                },
+                width: 1280,
+                height: 720,
             });
-        } catch (e) {
-            console.error(e);
-        }
+            this.mainWindow.on('ready-to-show', () => {
+                this.mainWindow.show();
+            });
+            this.mainWindow.loadURL('http://localhost/');
+            
+        });
+
     }
+    
     public show() {
-        if(this.gui_process != null) this.gui_process.send({ visible: true });
-        
+        app.show();
     }
 
     public hide() {
-        if(this.gui_process != null) this.gui_process.send({ visible: false });
+        app.hide();
     }
 }
