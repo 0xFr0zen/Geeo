@@ -27,9 +27,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "tsc && node ./output/test.js",
+    "test": "npm install . && tsc && node ./output/test.js",
+    "prestart": "npm install .",
     "start": "tsc && node ./output/index.js",
-    "reset": "tsc && node ./output/reset.js"
+    "reset": "npm install . && tsc && node ./output/reset.js"
   },
   "keywords": [],
   "author": "",
