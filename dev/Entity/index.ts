@@ -71,7 +71,7 @@ export default class Entity extends EventEmitter {
         this.addParameter('name', name);
         this.addParameter('created', Date.now());
         this.addParameter('last_saved', null);
-        this.on('update', this.save);
+        // this.on('update', this.save);
     }
 
     /**
