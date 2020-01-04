@@ -1,9 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-if (dotenv.config().parsed.mode === 'debug') {
-    reset();
-}
+
 export function reset() {
     let result = false;
     //reset
@@ -18,10 +16,8 @@ export function reset() {
         if (fs.existsSync(folder)) {
             emptyFolder(folder, true);
         }
-        // fs.mkdirSync(folder);
     }
 
-    console.log('Resetted all.');
 }
 function emptyFolder(p: string, alsoremoveFolder = false) {
     let files = fs.readdirSync(p);

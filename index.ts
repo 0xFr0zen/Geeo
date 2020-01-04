@@ -1,5 +1,10 @@
 import System from './dev/System';
-import ConsoleIO from './dev/ConsoleIO';
+import GUI from './dev/GUI';
 
 
 let system:System = new System();
+system.on('ready', () => {
+    console.log("System running.");
+
+});
+system.run();

@@ -135,7 +135,6 @@ export class User extends Entity {
                 let userJSON = JSON.parse(decryptedData).user;
                 u = new User(userJSON.name, true);
                 let keys = Object.keys(userJSON);
-                // console.log(keys);
 
                 keys.forEach(key => {
                     let value = userJSON[key];
@@ -236,8 +235,6 @@ export class User extends Entity {
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {
-                // console.log(storages);
-
                 result = storages;
             }
         }

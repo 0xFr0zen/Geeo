@@ -61,7 +61,6 @@ export default class Device extends Entity {
     public initialize(){
         this.addParameter('public_key', this.loadPublicKey());
         this.addParameter('private_key', this.getPrivateKey('admin'));
-        console.log("initialized device");
         
     }
     /**

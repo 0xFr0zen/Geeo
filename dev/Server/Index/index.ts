@@ -9,7 +9,6 @@ import Identity from '../../Identity';
 function RIndex() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.use('/$', function(req: express.Request, res: express.Response) {
-        // console.log(req.query);
         let user: User = User.from(Identity.of('admin'));
         if (user != null) {
             if (!user.isLoggedIn()) {

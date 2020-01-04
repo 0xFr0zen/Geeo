@@ -2,6 +2,7 @@ import * as express from 'express';
 import index from './Index/';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
+import System from '../System/index';
 import bodyParser = require('body-parser');
 
 export default class Server {
@@ -11,13 +12,14 @@ export default class Server {
     private router: express.Router = null;
     private application: express.Application = null;
     private listen: import("http").Server = null;
-    constructor() {
+    private system:System = null;
+    constructor(system:System) {
+        this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
         this.router = express.Router({mergeParams:true});
         let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
         this.application.set('view engine', view_engine);
-        console.log(`View engine: ${view_engine}`);
 
         this.application.set(
             'views',
@@ -34,7 +36,7 @@ export default class Server {
     public start(): void {
         if (this.application) {
             this.listen = this.application.listen(Server.DEFAULT_PORT, () => {
-                console.log(`Server runs on port ${Server.DEFAULT_PORT}`);
+                this.system.emit('ready');
             });
             
         }

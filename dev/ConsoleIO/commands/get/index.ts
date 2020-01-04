@@ -1,7 +1,7 @@
 import { CommandInterface } from '../index';
 import ConsoleIO from '../..';
 export default class GET implements CommandInterface {
-    run(type: any, filter?: any[]) {
+    run(type: any, filter?: any) {
         let searchTag = type.toString();
         let jsonString = filter.toString();
         if(this.isJson(jsonString)){

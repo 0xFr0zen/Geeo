@@ -9,13 +9,11 @@ import getMAC from 'getmac';
 import Node from '../Crypt/index';
 import { reset } from '../../reset';
 import ConsoleIO from '../ConsoleIO';
-import GUI from '../GUI';
 
 export default class System extends Entity {
     private static device: Device = new Device();
     private ADMIN: Identity = null;
     private server: Server = null;
-    private gui:GUI = null;
     private consoleIO: ConsoleIO = null;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
@@ -23,20 +21,14 @@ export default class System extends Entity {
         this.createFolders();
         this.addParameter('admin', this.createIdentity(env.ADMIN_USERNAME));
         System.device.initialize();
-        this.server = new Server();
-        this.server.start();
-        this.gui = new GUI();
+        this.server = new Server(this);
         this.consoleIO = new ConsoleIO(this);
+    }
+    public run(){
+        this.server.start();
     }
     public static getDevice(): Device {
         return this.device;
-    }
-    public showWindow(){
-        this.gui.show();
-    }
-    public hideWindow(){
-        this.gui.hide();
-        
     }
     
     /**
@@ -47,7 +39,7 @@ export default class System extends Entity {
      */
     public createIdentity(name: string): Identity {
         let i: Identity = null;
-        console.error(`Trying to create Identity '${name}'.`);
+        // console.error(`Trying to create Identity '${name}'.`);
         if (!System.device.hasIdentity(name)) {
             let mac_hex = Buffer.from(
                 getMAC()
@@ -66,9 +58,7 @@ export default class System extends Entity {
             i = new Identity(name, pk);
             let pk_i: PK_IDENTITY = { pk: pk, ident: i };
             System.device.addIdentity(name, pk_i);
-            // console.log(`Created Identity '${name}'.`);
         } else {
-            console.error('Identity exists already, aborting.');
             i = System.device.getIdentity(name);
         }
         return i;
@@ -97,7 +87,6 @@ export default class System extends Entity {
             let folder = paths[key];
             if (!fs.existsSync(folder)) {
                 fs.mkdirSync(folder);
-                // console.log(`created '${key}' folder`);
             }
         }
     }

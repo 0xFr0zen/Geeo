@@ -82,19 +82,16 @@ function UserNormalRouter() {
         if (user != null) {
             switch (req.params.operation) {
                 case 'add':
-                    console.log(`trying to add inventory '${invname}'.`);
                     user.addSafe(invname);
                     result = user.save();
 
                     break;
                 case 'remove':
-                    console.log(`trying to remove inventory '${invname}'.`);
                     
                     user.removeSafe(invname);
                     result = user.save();
                     break;
                 case 'edit':
-                    console.log('trying to edit inventory');
                     let safe:Safe = user.getSafe(invname);
                     // safe.addItem()
                     result = user.save();

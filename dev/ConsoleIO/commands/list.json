@@ -11,5 +11,6 @@
         "name": "update",
         "regex": "update <any>"
     },
-    { "name": "gui", "regex": "gui <text> <?text>" }
+    { "name": "user", "regex": "user <text> <?any>" },
+    { "name": "gui", "regex": "gui <text>" }
 ]

@@ -5,6 +5,7 @@ import { GeeoMap } from '../GeeoMap';
 import compareEntities from './Comparison';
 import Device from '../Device';
 import System from '../System';
+import { EventEmitter } from 'events';
 
 class ENTITY_PATHS {
     static USER: Function = (username: string) => {
@@ -48,7 +49,7 @@ class ENTITY_PATHS {
  * @export
  * @class Entity
  */
-export default class Entity {
+export default class Entity extends EventEmitter {
     /**
      * All the properties are stored here.
      *
@@ -65,6 +66,7 @@ export default class Entity {
      * @memberof Entity
      */
     constructor(type: string, name: string) {
+        super();
         this.addParameter('type', type);
         this.addParameter('name', name);
         this.addParameter('created', Date.now());
@@ -301,7 +303,6 @@ export default class Entity {
                 entity_path = ENTITY_PATHS.DEVICE(this.getName());
                 break;
             default:
-                console.log('taking default path');
                 entity_path = ENTITY_PATHS.DEFAULT(this.getName());
                 break;
         }
