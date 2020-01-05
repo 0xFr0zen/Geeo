@@ -4,9 +4,13 @@ import * as inquirer from 'inquirer';
 import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
+interface ICommandRegExp {
+    start:number;
+    exp:RegExp;
+}
 export interface ICommand {
     name: string;
-    regex: RegExp;
+    regex: ICommandRegExp;
 }
 export default class ConsoleIO {
     private static loadCommands(): ICommand[] {
@@ -67,10 +71,12 @@ export default class ConsoleIO {
 
             let command: ICommand = null;
             while ((command = this.getCommand(message)) !== null) {
-                let x = message.match(command.regex)[1]; // initializer somehow, DO NOT ERASE. PROGRAM CRASHES IF YOU DELETE.
-                let m: any = command.regex.exec(message);
-                let params = m[1] || null;
-                let optionals = m[2] || null;
+                let x = message.match(command.regex.exp)[1]; // initializer somehow, DO NOT ERASE. PROGRAM CRASHES IF YOU DELETE.
+                let m: any = command.regex.exp.exec(message);
+                let starter = command.regex.start;
+                console.log(starter)
+                let params = m[starter] || null;
+                let optionals = m[starter] || null;
                 if (params != null || optionals != null) {
                     this.exec(command.name, [params, optionals]);
                 } else {
@@ -100,7 +106,7 @@ export default class ConsoleIO {
     private getCommand(message: string) {
         let res: ICommand = null;
         this.commands.forEach(element => {
-            if (element.regex.test(message)) {
+            if (element.regex.exp.test(message)) {
                 res = element;
             }
         });
@@ -118,13 +124,14 @@ export default class ConsoleIO {
     public static log(text: string) {
         ConsoleIO.interface.write(text);
     }
-    private static RegExpParser(s: string): RegExp {
-        let result: RegExp;
+    private static RegExpParser(s: string): ICommandRegExp {
+        let result: ICommandRegExp;
         let res: string = '^';
         let splitted = s.split(' ');
         if (splitted.length == 0) {
             result = null;
         } else {
+            let starter = 2;
             splitted.forEach((item: string) => {
                 let isOptional = item.includes('?');
                 let stringAdd = '';
@@ -153,7 +160,8 @@ export default class ConsoleIO {
                             typer = '\\d+[\\.\\,]\\d+';
                             break;
                         case 'text':
-                            typer = '(?:[\\\'\\"])?(\\b\\w+)(?:[\\\'\\"])?';
+                            typer = '([\"\'])((?:\\\\1|.)*?)\\1';
+                            starter = 3;
                             break;
                         case 'json':
                             typer = '\\{.*\\}';
@@ -180,7 +188,7 @@ export default class ConsoleIO {
                 res = res.concat(stringAdd);
             });
             res = res.concat('$');
-            result = new RegExp(res, 'gi');
+            result = {start: starter, exp:new RegExp(res, 'gi')};
         }
 
         return result;
