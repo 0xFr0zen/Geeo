@@ -11,6 +11,7 @@
     "@types/mysql": "^2.15.8",
     "@types/node": "^12.12.17",
     "body-parser": "^1.19.0",
+    "del": "^5.1.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "electron": "^7.1.7",
@@ -19,8 +20,10 @@
     "inquirer": "^7.0.1",
     "jquery": "^3.4.1",
     "mysql": "^2.17.1",
+    "nodemon": "^2.0.2",
     "path": "^0.12.7",
     "stream": "0.0.2",
+    "ts-node": "^8.5.4",
     "typescript": "^3.7.3",
     "typescript-map": "0.0.7",
     "vash": "^0.12.9"
@@ -29,7 +32,8 @@
   "scripts": {
     "test": "npm install . && tsc && node ./output/test.js",
     "prestart": "npm install .",
-    "start": "tsc && node ./output/index.js",
+    "start": "nodemon --exec ts-node ./index.ts",
+    "compile": "tsc",
     "reset": "npm install . && tsc && node ./output/reset.js"
   },
   "keywords": [],

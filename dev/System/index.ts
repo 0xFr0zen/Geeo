@@ -17,15 +17,17 @@ export default class System extends Entity {
     private consoleIO: ConsoleIO = null;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
-        reset();
-        this.createFolders();
-        this.addParameter('admin', this.createIdentity(env.ADMIN_USERNAME));
-        System.device.initialize();
-        this.server = new Server(this);
-        this.consoleIO = new ConsoleIO(this);
-    }
-    public run(){
-        this.server.start();
+        reset().then((folders)=>{
+            this.createFolders();
+            this.addParameter('admin', this.createIdentity(env.ADMIN_USERNAME));
+            System.device.initialize();
+            this.server = new Server(this);
+            this.consoleIO = new ConsoleIO(this);
+            this.server.start();
+        }).catch(()=> {
+
+        });
+        
     }
     public static getDevice(): Device {
         return this.device;
@@ -72,6 +74,7 @@ export default class System extends Entity {
             'hex'
         ).toString('hex');
         let paths: any = {
+            saved: path.join(rootpath, `saved/`),
             device1: path.join(rootpath, `saved/device/`),
             device2: path.join(rootpath, `saved/device/${MAC_ADRESS_HEX}/`),
             entities: path.join(rootpath, 'saved/entities/'),

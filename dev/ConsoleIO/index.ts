@@ -57,26 +57,29 @@ export default class ConsoleIO extends EventEmitter {
             'SIGINT',
             (message: string) => {
                 clearInterval(this.updateInterval);
-                console.log("Closing programm, see you next time!");
+                console.log('Closing programm, see you next time!');
                 process.exit(0);
             }
         );
 
-        ConsoleIO.interface = ConsoleIO.interface.addListener('line', (
-            message: string
-        ) => {
-            this.parse(message.trim());
-        });
+        ConsoleIO.interface = ConsoleIO.interface.addListener(
+            'line',
+            (message: string) => {
+                this.parse(message.trim());
+            }
+        );
         this.on('update', this.updater);
-        this.updateInterval = setInterval(()=>this.emit('update'), ConsoleIO.DEFAULT_UPDATE_INTERVAL);
-        
+        this.updateInterval = setInterval(
+            () => this.emit('update'),
+            ConsoleIO.DEFAULT_UPDATE_INTERVAL
+        );
     }
-    private updater(){
-        console.log("updating commands...");
+    private updater() {
         let nC = ConsoleIO.loadCommands();
-        if(this.commands !== nC) this.commands = nC;
-        console.log("updated.")
-        
+        if (this.commands !== nC) {
+            this.commands = nC;
+            console.log('updated command.');
+        }
     }
     private parse(message: string): void {
         if (message.length == 0) {

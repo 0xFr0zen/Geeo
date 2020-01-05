@@ -58,7 +58,7 @@ export default class Entity extends EventEmitter {
      * @memberof Entity
      */
     private parameters: GeeoMap<string, Object> = new GeeoMap<string, Object>();
-    private static entities:Entity[] = [];
+    private static entities: Entity[] = [];
     /**
      *Creates an instance of Entity.
      * @param {string} type "type" of Entity
@@ -72,19 +72,23 @@ export default class Entity extends EventEmitter {
         this.addParameter('name', name);
         this.addParameter('created', Date.now());
         this.addParameter('last_saved', null);
-        this.on('update', () => {console.log(`entity '${this.getName()}' got updated.`)});
+        this.on('update', () => {
+            // console.log(`entity '${this.getName()}' got updated.`);
+        });
     }
-    public static getEntities():string[] {
-        let result:string[] = [];
+    public static getEntities(): string[] {
+        let result: string[] = [];
         let es = Entity.entities;
-        for(let k in es){
+        for (let k in es) {
             let ent = es[k];
             result.push(ent.getName());
         }
         return result;
     }
-    public static getEntity(ename:string):Entity {
-        return Entity.entities.find((e:Entity)=>{return e.getName() === ename});
+    public static getEntity(ename: string): Entity {
+        return Entity.entities.find((e: Entity) => {
+            return e.getName() === ename;
+        });
     }
     /**
      *Returns the name of Entity.
@@ -136,13 +140,12 @@ export default class Entity extends EventEmitter {
      * @memberof Entity
      */
     public getLastLoaded(): Date {
-        if(this.hasParameter('last_loaded')){
+        if (this.hasParameter('last_loaded')) {
             let date = this.getParameter('last_loaded');
             return new Date(Number.parseInt(date.toString()));
-        }else {
+        } else {
             return null;
         }
-        
     }
 
     /**

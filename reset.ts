@@ -1,36 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as dotenv from 'dotenv';
+import * as del from 'del';
 
-export function reset() {
-    let result = false;
+export async function reset(): Promise<string[]> {
     //reset
-    let rootpath = path.join(process.cwd(), './');
-    let paths: any = {
-        device: path.join(rootpath, 'saved/device/'),
-        entities: path.join(rootpath, 'saved/entities/users/'),
-    };
-
-    for (let key in paths) {
-        let folder = paths[key];
-        if (fs.existsSync(folder)) {
-            emptyFolder(folder, true);
-        }
-    }
-
-}
-function emptyFolder(p: string, alsoremoveFolder = false) {
-    let files = fs.readdirSync(p);
-
-    files.forEach(value => {
-        let file = path.join(p, value);
-        if (fs.statSync(file).isDirectory()) {
-            emptyFolder(file, true);
-        } else {
-            fs.unlinkSync(file);
-        }
-    });
-    if (alsoremoveFolder) {
-        fs.rmdirSync(p);
-    }
+    let rootpath = process.cwd();
+    return del([path.join(rootpath, 'saved/')]);
 }
