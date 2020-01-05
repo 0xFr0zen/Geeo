@@ -5,8 +5,8 @@ import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
 interface ICommandRegExp {
-    start:number;
-    exp:RegExp;
+    start: number;
+    exp: RegExp;
 }
 export interface ICommand {
     name: string;
@@ -74,7 +74,6 @@ export default class ConsoleIO {
                 let x = message.match(command.regex.exp)[1]; // initializer somehow, DO NOT ERASE. PROGRAM CRASHES IF YOU DELETE.
                 let m: any = command.regex.exp.exec(message);
                 let starter = command.regex.start;
-                console.log(starter)
                 let params = m[starter] || null;
                 let optionals = m[starter] || null;
                 if (params != null || optionals != null) {
@@ -94,8 +93,8 @@ export default class ConsoleIO {
             comJS.on('done', () => {
                 // console.log(`executed command '${command}'`);
             });
-            comJS.run(params, optional).then((obj) => {
-                console.log(obj);
+            comJS.run(params, optional).then(obj => {
+                // console.log(obj);
             });
         } else {
         }
@@ -131,7 +130,7 @@ export default class ConsoleIO {
         if (splitted.length == 0) {
             result = null;
         } else {
-            let starter = 2;
+            let starter = 1;
             splitted.forEach((item: string) => {
                 let isOptional = item.includes('?');
                 let stringAdd = '';
@@ -160,8 +159,8 @@ export default class ConsoleIO {
                             typer = '\\d+[\\.\\,]\\d+';
                             break;
                         case 'text':
-                            typer = '([\"\'])((?:\\\\1|.)*?)\\1';
-                            starter = 3;
+                            typer = '(["])((?:.)*?)\\1';
+                            starter = 2;
                             break;
                         case 'json':
                             typer = '\\{.*\\}';
@@ -169,7 +168,9 @@ export default class ConsoleIO {
                         default:
                             break;
                     }
-                    stringAdd = `${isOptional ? '(?:' : ''}(${typer})${length}${
+                    stringAdd = `${isOptional ? '(?:' : ''}(${
+                        type === 'text' ? '?:' : ''
+                    }${typer})${type === 'text' ? '+' : ''}${length}${
                         isOptional ? ')?' : ''
                     }`;
                 } else {
@@ -188,7 +189,7 @@ export default class ConsoleIO {
                 res = res.concat(stringAdd);
             });
             res = res.concat('$');
-            result = {start: starter, exp:new RegExp(res, 'gi')};
+            result = { start: starter, exp: new RegExp(res, 'gi') };
         }
 
         return result;
