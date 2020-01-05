@@ -2,7 +2,7 @@ import encryptText from './encrypt';
 import decryptText from './decrypt';
 import * as crypto from 'crypto';
 import Device from '../Device/index';
-import System from '../';
+import System from '..';
 interface IKeys {
     privateKey: Buffer;
 }

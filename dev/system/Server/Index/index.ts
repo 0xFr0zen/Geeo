@@ -1,9 +1,9 @@
 import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import RUser from '../User/';
+import RUser from '../User';
 import User from '../../Entity/User';
-import Login from '../Login/';
+import Login from '../Login';
 import Logout from '../Logout';
 import Identity from '../../Identity';
 function RIndex() {
