@@ -24,8 +24,8 @@ export default class System extends Entity {
             this.server = new Server(this);
             this.consoleIO = new ConsoleIO(this);
             this.server.start();
-        }).catch(()=> {
-
+        }).catch((e)=> {
+            console.error(e);
         });
         
     }

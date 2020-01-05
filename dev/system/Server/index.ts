@@ -25,7 +25,7 @@ export default class Server {
             'views',
             path.join(
                 process.cwd(),
-                `./dev/Server/Web/Templates/${view_engine}/`,
+                `./dev/system/Server/Web/Templates/${view_engine}/`,
                 
             )
         );

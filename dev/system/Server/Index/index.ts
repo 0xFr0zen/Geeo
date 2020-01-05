@@ -32,7 +32,7 @@ function RIndex() {
     ) {
         let p = path.join(
             process.cwd(),
-            './dev/Server/Web/Themes/',
+            './dev/system/Server/Web/Themes/',
             req.params.file
         );
         res.setHeader('Content-Type', 'text/css');
@@ -50,7 +50,7 @@ function RIndex() {
     ) {
         let p = path.join(
             process.cwd(),
-            './dev/Server/Web/Scripts/',
+            './dev/system/Server/Web/Scripts/',
             req.params.file
         );
         res.setHeader('Content-Type', 'application/javascript');
@@ -73,7 +73,7 @@ function RIndex() {
             let fname = file[1];
             p = path.join(
                 process.cwd(),
-                './dev/Server/Web/Images/',
+                './dev/system/Server/Web/Images/',
                 type,
                 fname
             );
@@ -82,7 +82,7 @@ function RIndex() {
             let fname = file[1];
             p = path.join(
                 process.cwd(),
-                './dev/Server/Web/Images/default/',
+                './dev/system/Server/Web/Images/default/',
                 req.params.file
             );
         }

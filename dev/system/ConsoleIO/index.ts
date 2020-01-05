@@ -70,7 +70,7 @@ export default class ConsoleIO extends EventEmitter {
                 .readFileSync(
                     path.join(
                         process.cwd(),
-                        './dev/ConsoleIO/commands/list.json'
+                        './dev/system/ConsoleIO/commands/list.json'
                     )
                 )
                 .toString()

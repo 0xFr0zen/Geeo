@@ -1,8 +1,10 @@
-import System from './dev/system';
-import GUI from './dev/system/GUI';
+import System from './dev/system/index';
 
 
-let system:System = new System();
-system.on('ready', () => {
-    console.log("System running.");
-});
+(async ()=>{
+    console.log("hello");
+    let system:System = new System();
+    system.on('ready', () => {
+        console.log("System running.");
+    });
+})();
