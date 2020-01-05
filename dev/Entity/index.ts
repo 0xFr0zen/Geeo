@@ -58,7 +58,7 @@ export default class Entity extends EventEmitter {
      * @memberof Entity
      */
     private parameters: GeeoMap<string, Object> = new GeeoMap<string, Object>();
-
+    private static entities:Entity[] = [];
     /**
      *Creates an instance of Entity.
      * @param {string} type "type" of Entity
@@ -67,13 +67,25 @@ export default class Entity extends EventEmitter {
      */
     constructor(type: string, name: string) {
         super();
+        Entity.entities.push(this);
         this.addParameter('type', type);
         this.addParameter('name', name);
         this.addParameter('created', Date.now());
         this.addParameter('last_saved', null);
-        // this.on('update', this.save);
+        this.on('update', () => {console.log(`entity '${this.getName()}' got updated.`)});
     }
-
+    public static getEntities():string[] {
+        let result:string[] = [];
+        let es = Entity.entities;
+        for(let k in es){
+            let ent = es[k];
+            result.push(ent.getName());
+        }
+        return result;
+    }
+    public static getEntity(ename:string):Entity {
+        return Entity.entities.find((e:Entity)=>{return e.getName() === ename});
+    }
     /**
      *Returns the name of Entity.
      *

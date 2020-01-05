@@ -1,12 +1,7 @@
-[
-    {
-        "name": "say",
-        "regex": "say <text>"
-    },
-    {
-        "name": "update",
-        "regex": "update <any>"
-    },
-    { "name": "user", "regex": "user <text> <?any>" },
-    { "name": "gui", "regex": "gui <text>" }
-]
+{
+    "say": "say <text>",
+    "update": "update <any>",
+    "user": "user <text> <?any>",
+    "gui": "gui <text>",
+    "entities": "entities <any> <text>"
+}

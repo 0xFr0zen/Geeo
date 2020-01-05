@@ -4,6 +4,7 @@ import * as inquirer from 'inquirer';
 import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
+import { EventEmitter } from 'events';
 interface ICommandRegExp {
     start: number;
     exp: RegExp;
@@ -12,7 +13,8 @@ export interface ICommand {
     name: string;
     regex: ICommandRegExp;
 }
-export default class ConsoleIO {
+export default class ConsoleIO extends EventEmitter {
+    private updateInterval: NodeJS.Timeout;
     private static loadCommands(): ICommand[] {
         let result: ICommand[] = [];
         let x = JSON.parse(
@@ -28,8 +30,8 @@ export default class ConsoleIO {
         for (const key in x) {
             const element = x[key];
             let c: ICommand = {
-                name: element.name,
-                regex: ConsoleIO.RegExpParser(element.regex),
+                name: key,
+                regex: ConsoleIO.RegExpParser(element),
             };
             result.push(c);
         }
@@ -38,7 +40,9 @@ export default class ConsoleIO {
     private static interface: readline.Interface = null;
     private commands: ICommand[] = ConsoleIO.loadCommands();
     private static system: System = null;
+    private static DEFAULT_UPDATE_INTERVAL = 60000;
     constructor(system: System) {
+        super();
         ConsoleIO.system = system;
         ConsoleIO.interface = readline.createInterface({
             input: process.stdin,
@@ -51,16 +55,28 @@ export default class ConsoleIO {
 
         ConsoleIO.interface = ConsoleIO.interface.addListener(
             'SIGINT',
-            function(message: string) {
+            (message: string) => {
+                clearInterval(this.updateInterval);
+                console.log("Closing programm, see you next time!");
                 process.exit(0);
             }
         );
 
-        ConsoleIO.interface = ConsoleIO.interface.addListener('line', function(
+        ConsoleIO.interface = ConsoleIO.interface.addListener('line', (
             message: string
-        ) {
-            me.parse(message.trim());
+        ) => {
+            this.parse(message.trim());
         });
+        this.on('update', this.updater);
+        this.updateInterval = setInterval(()=>this.emit('update'), ConsoleIO.DEFAULT_UPDATE_INTERVAL);
+        
+    }
+    private updater(){
+        console.log("updating commands...");
+        let nC = ConsoleIO.loadCommands();
+        if(this.commands !== nC) this.commands = nC;
+        console.log("updated.")
+        
     }
     private parse(message: string): void {
         if (message.length == 0) {
