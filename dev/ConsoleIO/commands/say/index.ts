@@ -1,7 +1,9 @@
-import { CommandInterface } from '../index';
-export default class Say_Text implements CommandInterface {
-    run(parameter: any, optionals?: any[]) {
-        console.log(parameter);
+import Command from '../index';
+export default class Say_Text extends Command<any> {
+    run(message: any, optionals?: any[]): Promise<any> {
+        return new Promise((resolve, reject) => {
+            console.log(message);
+            resolve({message:message});
+        });
     }
-    
 }

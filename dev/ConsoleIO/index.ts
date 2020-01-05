@@ -84,8 +84,13 @@ export default class ConsoleIO {
             let params = parameters[0];
             let optional = parameters[1];
             let com = require(`./commands/${command}/`);
-            let comJS = new com.default();
-            comJS.run(params, optional);
+            let comJS: Command<any> = new com.default();
+            comJS.on('done', () => {
+                // console.log(`executed command '${command}'`);
+            });
+            comJS.run(params, optional).then((obj) => {
+                console.log(obj);
+            });
         } else {
         }
     }
@@ -148,7 +153,7 @@ export default class ConsoleIO {
                             typer = '\\d+[\\.\\,]\\d+';
                             break;
                         case 'text':
-                            typer = '\\w+';
+                            typer = '(?:[\\\'\\"])?(\\b\\w+)(?:[\\\'\\"])?';
                             break;
                         case 'json':
                             typer = '\\{.*\\}';
@@ -159,19 +164,16 @@ export default class ConsoleIO {
                     stringAdd = `${isOptional ? '(?:' : ''}(${typer})${length}${
                         isOptional ? ')?' : ''
                     }`;
-
                 } else {
                     stringAdd = `(?:${item}\\s+)`;
                 }
-                if(splitted.indexOf(item) == 0){
-
-                }else if (splitted.indexOf(item) != splitted.length - 1) {
+                if (splitted.indexOf(item) == 0) {
+                } else if (splitted.indexOf(item) != splitted.length - 1) {
                     stringAdd = stringAdd + '\\s+';
                 } else if (isOptional) {
                     res = res.substring(0, res.length - 3);
                     let sA = stringAdd.split(':');
                     stringAdd = sA[0].concat(':\\s+').concat(sA[1]);
-                    
                 } else {
                     //last item
                 }

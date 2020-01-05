@@ -1,11 +1,15 @@
-export interface CommandInterface {
-    run(parameter:any, optionals?:any):void;
+import { EventEmitter } from 'events';
+export interface CommandInterface<T> {
+    run(parameter: any, optionals?: any): Promise<T>;
 }
-export default class Command implements CommandInterface {
+export default class Command<T> extends EventEmitter
+    implements CommandInterface<T> {
     constructor() {
-        
+        super();
     }
-    run(parameter: any, optionals: any): void {
-        
+    run(parameter: any, optionals: any): Promise<T> {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
     }
 }
