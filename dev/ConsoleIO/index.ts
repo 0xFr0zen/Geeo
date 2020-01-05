@@ -5,6 +5,8 @@ import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EventEmitter } from 'events';
+import * as dotenv from 'dotenv';
+import equal = require('deep-equal');
 interface ICommandRegExp {
     start: number;
     exp: RegExp;
@@ -15,32 +17,11 @@ export interface ICommand {
 }
 export default class ConsoleIO extends EventEmitter {
     private updateInterval: NodeJS.Timeout;
-    private static loadCommands(): ICommand[] {
-        let result: ICommand[] = [];
-        let x = JSON.parse(
-            fs
-                .readFileSync(
-                    path.join(
-                        process.cwd(),
-                        './dev/ConsoleIO/commands/list.json'
-                    )
-                )
-                .toString()
-        );
-        for (const key in x) {
-            const element = x[key];
-            let c: ICommand = {
-                name: key,
-                regex: ConsoleIO.RegExpParser(element),
-            };
-            result.push(c);
-        }
-        return result;
-    }
+    
     private static interface: readline.Interface = null;
     private commands: ICommand[] = ConsoleIO.loadCommands();
     private static system: System = null;
-    private static DEFAULT_UPDATE_INTERVAL = 60000;
+    private static DEFAULT_UPDATE_INTERVAL = (parseInt(dotenv.config().parsed.COMMAND_UPDATE_INTERVAL) * 1000) || 60000;
     constructor(system: System) {
         super();
         ConsoleIO.system = system;
@@ -76,10 +57,33 @@ export default class ConsoleIO extends EventEmitter {
     }
     private updater() {
         let nC = ConsoleIO.loadCommands();
-        if (this.commands !== nC) {
+        
+        if (!equal(this.commands, nC)) {
             this.commands = nC;
             console.log('updated command.');
         }
+    }
+    private static loadCommands(): ICommand[] {
+        let result: ICommand[] = [];
+        let x = JSON.parse(
+            fs
+                .readFileSync(
+                    path.join(
+                        process.cwd(),
+                        './dev/ConsoleIO/commands/list.json'
+                    )
+                )
+                .toString()
+        );
+        for (const key in x) {
+            const element = x[key];
+            let c: ICommand = {
+                name: key,
+                regex: ConsoleIO.RegExpParser(element),
+            };
+            result.push(c);
+        }
+        return result;
     }
     private parse(message: string): void {
         if (message.length == 0) {

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "@types/deep-equal": "^1.0.1",
     "@types/dotenv": "^8.2.0",
     "@types/ejs": "^3.0.0",
     "@types/electron": "^1.6.10",
@@ -11,6 +12,7 @@
     "@types/mysql": "^2.15.8",
     "@types/node": "^12.12.17",
     "body-parser": "^1.19.0",
+    "deep-equal": "^2.0.1",
     "del": "^5.1.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
