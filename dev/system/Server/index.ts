@@ -2,7 +2,7 @@ import * as express from 'express';
 import index from './Index/';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
-import System from '..';
+import System from '../';
 import bodyParser = require('body-parser');
 
 export default class Server {

@@ -1,7 +1,7 @@
-import System from '..';
+import System from '../';
 import * as readline from 'readline';
 import * as inquirer from 'inquirer';
-import Command from './commands';
+import Command from './commands/';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EventEmitter } from 'events';

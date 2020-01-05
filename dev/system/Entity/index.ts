@@ -4,7 +4,7 @@ import Node from '../Crypt';
 import { GeeoMap } from '../GeeoMap';
 import compareEntities from './Comparison';
 import Device from '../Device';
-import System from '..';
+import System from '../';
 import { EventEmitter } from 'events';
 
 class ENTITY_PATHS {

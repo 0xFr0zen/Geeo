@@ -1,4 +1,4 @@
-import System from './dev/System/index';
+import System from './dev/system/index';
 
 
 (async ()=>{
