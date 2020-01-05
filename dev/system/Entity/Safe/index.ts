@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { GeeoMap } from '../../GeeoMap';
 import Node from '../../Crypt';
-import Identity from '../../Identity/index';
+import Identity from '../../Identity';
 
 export enum StorageType {
     Inventory = 'inventory',

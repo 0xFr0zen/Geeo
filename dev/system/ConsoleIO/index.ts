@@ -1,4 +1,4 @@
-import System from '../System';
+import System from '../';
 import * as readline from 'readline';
 import * as inquirer from 'inquirer';
 import Command from './commands/';

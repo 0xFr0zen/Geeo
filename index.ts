@@ -1,5 +1,5 @@
-import System from './dev/System';
-import GUI from './dev/GUI';
+import System from './dev/system';
+import GUI from './dev/system/GUI';
 
 
 let system:System = new System();
