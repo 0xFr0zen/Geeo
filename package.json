@@ -11,6 +11,8 @@
       "@types/inquirer": "^6.5.0",
       "@types/mysql": "^2.15.8",
       "@types/node": "^12.12.17",
+      "@types/react": "^16.9.17",
+      "@types/react-dom": "^16.9.4",
       "body-parser": "^1.19.0",
       "deep-equal": "^2.0.1",
       "del": "^5.1.0",
@@ -24,14 +26,16 @@
       "mysql": "^2.17.1",
       "nodemon": "^2.0.2",
       "path": "^0.12.7",
+      "pg": "^7.3.0",
+      "react": "^16.12.0",
+      "react-dom": "^16.12.0",
+      "reflect-metadata": "^0.1.10",
       "stream": "0.0.2",
       "ts-node": "^8.5.4",
       "typeorm": "0.2.22",
       "typescript": "^3.7.3",
       "typescript-map": "0.0.7",
-      "vash": "^0.12.9",
-      "reflect-metadata": "^0.1.10",
-      "pg": "^7.3.0"
+      "vash": "^0.12.9"
    },
    "devDependencies": {
       "ts-node": "3.3.0",
@@ -41,7 +45,7 @@
    "scripts": {
       "test": "npm install . && tsc && node ./output/test.js",
       "prestart": "npm install .",
-      "start": "ts-node src/index.ts",
+      "start": "ts-node ./index.ts",
       "compile": "tsc",
       "reset": "npm install . && tsc && node ./output/reset.js"
    },

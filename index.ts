@@ -6,4 +6,5 @@ import System from './dev/system/index';
     system.on('ready', () => {
         console.log("System is running.");
     });
+    
 })();
