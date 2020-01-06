@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-export interface Properties {
-    compiler: string;
-    framework: string;
-}
-export default class App extends Component<Properties, {}> {
-
+import Navigation from './components/Navigation';
+import User from '../system/Entity/User';
+import Identity from '../system/Identity';
+export default class App extends Component {
     render() {
-        return <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>;
+        let i = Identity.of('admin');
+        let user: User = User.from(i);
+        return (
+            <div id="main_inner">
+                <Navigation name={user.getName()} id={i.getUsername()}></Navigation>
+            </div>
+        );
     }
 }

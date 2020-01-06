@@ -14,6 +14,8 @@
       "@types/react": "^16.9.17",
       "@types/react-dom": "^16.9.4",
       "body-parser": "^1.19.0",
+      "c": "^0.1.0",
+      "co": "^4.6.0",
       "deep-equal": "^2.0.1",
       "del": "^5.1.0",
       "dotenv": "^8.2.0",

@@ -22,6 +22,7 @@ export default class Server {
 
         this.bundler = new Bundler(path.join(process.cwd(), "dev/server/index.html"));
         this.application.use(this.bundler.middleware());
+        
         // this.router = express.Router({mergeParams:true});
         // let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
         // this.application.set('view engine', view_engine);
