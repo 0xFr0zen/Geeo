@@ -1,17 +1,14 @@
-import * as express from 'express';
-import User from '../../Entity/User';
-import Identity from '../../Identity';
+import express from 'express';
+import url from 'url';
 function RLogout() {
     let router: express.Router = express.Router({ mergeParams: true });
-    router.get('/$', function(req:express.Request, res:express.Response){
-        let user = User.from(Identity.of("admin"));
-        user.setLoggedIn(false);
-        if(user.save()){
-
-            res.redirect("/");
-        }else {
-            res.send("Woops");
-        }
+    router.get('/$', function(req: express.Request, res: express.Response) {
+        res.redirect(
+            url.format({
+                pathname: "http://".concat(req.hostname.concat(':4000/auth/logout')),
+                query: req.body,
+            })
+        );
     });
     return router;
 }

@@ -10,8 +10,8 @@ export default class Command<T> extends EventEmitter
         super();
     }
     async run(parameter: any, optionals: any): Promise<T> {
-        console.log('logging command into log file');
         return new Promise((resolve, reject) => {
+            console.log('logging command into log file');
             resolve();
         });
     }

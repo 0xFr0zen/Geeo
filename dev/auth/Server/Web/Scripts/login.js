@@ -17,8 +17,9 @@ $(document).ready(function () {
         let uname = $("#form input[name='username']").val();
         let pwd = $("#form input[name='password']").val();
         if (uname.length > 0 && pwd.length > 0) {
-            $.post("http://localhost:4000/auth/login", { username: uname, password: pwd }, function (data, status, xhr) {
+            $.post("/login", { username: uname, password: pwd }, function (data, status, xhr) {
                 if (status === 'success') {
+
                     document.location.href = "/";
                 } else {
 

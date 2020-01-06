@@ -1,11 +1,11 @@
 import System from '../';
-import * as readline from 'readline';
-import * as inquirer from 'inquirer';
+import readline from 'readline';
+import inquirer from 'inquirer';
 import Command from './commands/';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { EventEmitter } from 'events';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import equal = require('deep-equal');
 interface ICommandRegExp {
     start: number;

@@ -1,14 +1,15 @@
 import express from 'express';
 import index from './Index/';
 import path from 'path';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import System from '../';
 import bodyParser = require('body-parser');
 import Bundler from "parcel-bundler";
-import * as fs from 'fs';
+// import fs from 'fs';
+import cookieParser from 'cookie-parser';
 
 export default class Server {
-    private static DEFAULT_PORT: number = 80;
+    private static DEFAULT_PORT: number = parseInt(dotenv.config().parsed.DEFAULT_WEBSERVER_PORT) || 80;
     private static DEFAULT_HOSTNAME: string = 'geeo';
     private static DEFAULT_VIEW_ENGINE:string = 'vash';
     private router: express.Router = null;
@@ -20,7 +21,7 @@ export default class Server {
         this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
-
+        this.application.use(cookieParser());
         this.router = express.Router({mergeParams:true});
         let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
         this.application.set('view engine', view_engine);
@@ -39,8 +40,9 @@ export default class Server {
     }
     public start(): void {
         if (this.application) {
-            this.listen = this.application.listen(Server.DEFAULT_PORT, () => {
-                this.system.emit('ready');
+            let port = Server.DEFAULT_PORT;
+            this.listen = this.application.listen(port, () => {
+                this.system.emit('ready', port);
             });
             
         }

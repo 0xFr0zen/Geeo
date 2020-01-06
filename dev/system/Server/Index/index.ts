@@ -6,22 +6,39 @@ import User from '../../Entity/User';
 import Login from '../Login/';
 import Logout from '../Logout';
 import Identity from '../../Identity';
+import jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
 function RIndex() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.use('/$', function(req: express.Request, res: express.Response) {
-        let user: User = User.from(Identity.of('admin'));
-        if (user != null) {
-            if (!user.isLoggedIn()) {
-                res.redirect('/login');
-                return;
-            } else {
-                let usersafes = user.getSafes();
-                res.render('index', { username: user.getName(), safes: usersafes });
-            }
-        } else {
-            res.status(404);
-            res.send('User not found');
+        if(!req.cookies){
+            console.log("Has no cookies!");
+            return res.redirect('/login');
         }
+        
+        let token:string = req.cookies.token || null;
+        if(!token){
+            console.log("NO token at all");
+            return res.redirect('/login');
+        }
+        let de_token = jwt.verify(token, dotenv.config().parsed.SECRET);
+        if(!de_token){
+            console.log("NO correct token");
+            
+            return res.redirect('/login');
+        }
+        // if (user != null) {
+        //     if (!user.isLoggedIn()) {
+        //         res.redirect('/login');
+        //         return;
+        //     } else {
+        //         let usersafes = user.getSafes();
+        //         res.render('index', { username: user.getName(), safes: usersafes });
+        //     }
+        // } else {
+        //     res.status(404);
+        //     res.send('User not found');
+        // }
     });
     router.use('/user/', RUser);
     router.use('/login', Login);

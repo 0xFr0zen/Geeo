@@ -1,23 +1,9 @@
-import * as express from 'express';
-import User from '../../Entity/User';
-import Identity from '../../Identity';
+import express from 'express';
+import url from 'url';
 function RLogin() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.get('/$', function(req: express.Request, res: express.Response) {
         res.render('login');
-    });
-    router.post('/$', function(req: express.Request, res: express.Response) {
-        let queries = req.query;
-        let user = User.from(Identity.of('admin'));
-        if (user != null) {
-            user.setLoggedIn(true);
-            if (user.save()) {
-                res.send('OK');
-            } else {
-                res.status(501);
-                res.send('Upps, failed to save user state.');
-            }
-        }
     });
     return router;
 }
