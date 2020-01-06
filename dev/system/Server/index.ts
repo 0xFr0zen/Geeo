@@ -20,13 +20,6 @@ export default class Server {
         this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
-        // let x = path.join(process.cwd(), "./dev/server/files/");
-        // let files = fs.readdirSync(x);
-        // let filesusable:string[] = [];
-        // console.log(files.forEach((f)=>{filesusable.push(x.concat(f));}));
-        
-        // this.bundler = new Bundler(filesusable, {sourceMaps:false,target:'browser'});
-        // this.application.use(this.bundler.middleware());
 
         this.router = express.Router({mergeParams:true});
         let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
