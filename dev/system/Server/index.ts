@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import index from './Index/';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
@@ -17,6 +17,7 @@ export default class Server {
         this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
+        const app = express();
         this.router = express.Router({mergeParams:true});
         let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
         this.application.set('view engine', view_engine);

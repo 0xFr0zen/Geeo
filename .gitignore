@@ -16,10 +16,7 @@
 # End of https://www.gitignore.io/api/visualstudiocode
 
 # My Ignore Files/Folders
-!saved/
-saved/*
-!saved/users/
-saved/users/*
+saved/
 config/**
 
 .prettierrc

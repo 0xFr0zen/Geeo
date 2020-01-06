@@ -3,13 +3,15 @@
         "target": "es6",
         "module": "commonjs",
         "lib": ["dom", "es6", "es2017", "esnext.asynciterable", "dom.iterable"],
-        "jsx": "react",
-        "sourceMap": false,
-        "outDir": "./output/",
-        "moduleResolution": "node",
+        "noImplicitAny": true,
         "removeComments": true,
+        "preserveConstEnums": true,
         "esModuleInterop": true,
+        "jsx": "react",
+        "allowJs": true,
+        "sourceMap": false,
+        "outDir": "output",
+        "watch": false
     },
-    "exclude": ["node_modules"],
-    "include": ["./**/*.tsx", "./**/*.ts"]
+    "exclude": ["node_modules", "output"]
 }
