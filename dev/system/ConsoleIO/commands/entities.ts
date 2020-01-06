@@ -2,7 +2,8 @@ import Command from './index';
 import Entity from '../../Entity/index';
 export default class GUI extends Command<any> {
     regex = 'entities <any> <text>';
-    run(name: any, filter?: any): Promise<any> {
+    async run(name: any, filter?: any): Promise<any> {
+        await super.run(name, filter);
         return new Promise((resolve, reject) => {
             let error: Error = new Error('Entites could be processed.');
             console.log(name);

@@ -113,7 +113,7 @@ export default class ConsoleIO extends EventEmitter {
             let com = require(`./commands/${command}`);
             let comJS: Command<any> = new com.default();
             comJS.on('done', () => {
-                // console.log(`executed command '${command}'`);
+                console.log(`executed command '${command}'`);
             });
             comJS.run(params, optional).then(obj => {
                 // console.log(obj);
