@@ -20,29 +20,29 @@ export default class Server {
         this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
-        let x = path.join(process.cwd(), "./dev/server/files/");
-        let files = fs.readdirSync(x);
-        let filesusable:string[] = [];
-        console.log(files.forEach((f)=>{filesusable.push(x.concat(f));}));
+        // let x = path.join(process.cwd(), "./dev/server/files/");
+        // let files = fs.readdirSync(x);
+        // let filesusable:string[] = [];
+        // console.log(files.forEach((f)=>{filesusable.push(x.concat(f));}));
         
-        this.bundler = new Bundler(filesusable, {sourceMaps:false,target:'browser'});
-        this.application.use(this.bundler.middleware());
+        // this.bundler = new Bundler(filesusable, {sourceMaps:false,target:'browser'});
+        // this.application.use(this.bundler.middleware());
 
-        // this.router = express.Router({mergeParams:true});
-        // let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
-        // this.application.set('view engine', view_engine);
+        this.router = express.Router({mergeParams:true});
+        let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
+        this.application.set('view engine', view_engine);
 
-        // this.application.set(
-        //     'views',
-        //     path.join(
-        //         process.cwd(),
-        //         `./dev/system/Server/Web/Templates/${view_engine}/`,
+        this.application.set(
+            'views',
+            path.join(
+                process.cwd(),
+                `./dev/system/Server/Web/Templates/${view_engine}/`,
                 
-        //     )
-        // );
-        // this.router.use('/', index);
+            )
+        );
+        this.router.use('/', index);
 
-        // this.application.use(this.router);
+        this.application.use(this.router);
     }
     public start(): void {
         if (this.application) {
