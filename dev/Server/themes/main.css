@@ -19,7 +19,7 @@ body {
   margin: 0px;
   background: #fff;
 }
-#main {
+#app {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -27,12 +27,12 @@ body {
   bottom: 0px;
   padding: 20px;
 }
-#main #main_inner {
+#app #main_inner {
   position: relative;
   width: 100%;
   height: auto;
 }
-#main #main_inner #menu {
+#app #main_inner #menu {
   -webkit-touch-callout: none;
   /* iOS Safari */
   -webkit-user-select: none;
@@ -53,12 +53,12 @@ body {
   margin-bottom: 20px;
   border-radius: 5px;
 }
-#main #main_inner #menu #inventories {
+#app #main_inner #menu #inventories {
   float: left;
   width: auto;
   height: 100%;
 }
-#main #main_inner #menu #inventories .inventory {
+#app #main_inner #menu #inventories .inventory {
   float: left;
   min-width: 100px;
   width: auto;
@@ -71,20 +71,20 @@ body {
   border-radius: 40px;
   cursor: pointer;
 }
-#main #main_inner #menu #inventories .inventory .name {
+#app #main_inner #menu #inventories .inventory .name {
   color: white;
   font-size: 12pt;
 }
-#main #main_inner #menu #inventories .inventory:hover {
+#app #main_inner #menu #inventories .inventory:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-#main #main_inner #menu #inventories .inventory:active {
+#app #main_inner #menu #inventories .inventory:active {
   background: rgba(255, 255, 255, 0.1);
 }
-#main #main_inner #menu #inventories #default {
+#app #main_inner #menu #inventories #default {
   background: #08f;
 }
-#main #main_inner #menu #inventories #add {
+#app #main_inner #menu #inventories #add {
   float: left;
   height: 100%;
   min-width: 0px;
@@ -95,13 +95,13 @@ body {
   background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
-#main #main_inner #menu #inventories #add:hover {
+#app #main_inner #menu #inventories #add:hover {
   background: rgba(255, 255, 255, 0.4);
 }
-#main #main_inner #menu #inventories #add:active {
+#app #main_inner #menu #inventories #add:active {
   background: rgba(255, 255, 255, 0.2);
 }
-#main #main_inner #menu #user {
+#app #main_inner #menu #user {
   float: right;
   width: 150px;
   height: 100%;
@@ -111,21 +111,21 @@ body {
   overflow: hidden;
   cursor: pointer;
 }
-#main #main_inner #menu #user #profile {
+#app #main_inner #menu #user #profile {
   width: 100%;
   height: 100%;
   border-radius: 40px;
   overflow: hidden;
 }
-#main #main_inner #menu #user #profile:hover {
+#app #main_inner #menu #user #profile:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-#main #main_inner #menu #user #profile img {
+#app #main_inner #menu #user #profile img {
   float: left;
   border-radius: 40px;
   height: 100%;
 }
-#main #main_inner #menu #user #profile span {
+#app #main_inner #menu #user #profile span {
   color: white;
   width: calc(100% - 30px);
   height: 100%;
@@ -134,7 +134,7 @@ body {
   padding: 7px;
   padding-left: 10px;
 }
-#main #main_inner #content {
+#app #main_inner #content {
   float: left;
   width: 100%;
   height: auto;
@@ -143,10 +143,10 @@ body {
   padding: 30px;
   border-radius: 5px;
 }
-#main #main_inner #content #inventory {
+#app #main_inner #content #inventory {
   float: left;
 }
-#main #main_inner #content #inventory .item {
+#app #main_inner #content #inventory .item {
   float: left;
   width: 120px;
   height: 30px;
@@ -157,15 +157,15 @@ body {
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
-#main #main_inner #content #inventory .item .name {
+#app #main_inner #content #inventory .item .name {
   font-size: medium;
 }
-#main #main_inner #content #inventory .item .amount {
+#app #main_inner #content #inventory .item .amount {
   margin-top: 2px;
   float: right;
   font-size: small;
 }
-#main #main_inner #content #inventory .item .amount::after {
+#app #main_inner #content #inventory .item .amount::after {
   content: 'x';
 }
 #login {

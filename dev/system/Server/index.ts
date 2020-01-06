@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import System from '../';
 import bodyParser = require('body-parser');
 import Bundler from "parcel-bundler";
+import * as fs from 'fs';
 
 export default class Server {
     private static DEFAULT_PORT: number = 80;
@@ -19,10 +20,14 @@ export default class Server {
         this.system = system;
         this.application = express();
         this.application.use(bodyParser.urlencoded({ extended: false }));
-
-        this.bundler = new Bundler(path.join(process.cwd(), "dev/server/index.html"));
-        this.application.use(this.bundler.middleware());
+        let x = path.join(process.cwd(), "./dev/server/files/");
+        let files = fs.readdirSync(x);
+        let filesusable:string[] = [];
+        console.log(files.forEach((f)=>{filesusable.push(x.concat(f));}));
         
+        this.bundler = new Bundler(filesusable, {sourceMaps:false,target:'browser'});
+        this.application.use(this.bundler.middleware());
+
         // this.router = express.Router({mergeParams:true});
         // let view_engine = dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
         // this.application.set('view engine', view_engine);
