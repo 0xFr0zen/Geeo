@@ -19,6 +19,7 @@ export default class Auth extends EventEmitter {
             next: NextFunction
         ) {
             res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+            res.header('Access-Control-Allow-Credentials', 'true'); // update to match the domain you will make the request from
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
             res.header(
                 'Access-Control-Allow-Headers',
@@ -32,26 +33,41 @@ export default class Auth extends EventEmitter {
             express
                 .Router({ mergeParams: true })
                 .post(
-                    '/login$',
+                    '/login',
                     (req: express.Request, res: express.Response) => {
-                        console.log(req.body);
-                        let username = req.body.username;
-                        let pwd = req.body.password;
-                        let x = jwt.sign(
-                            { username: username },
-                            dotenv.config().parsed.SECRET,
-                            { expiresIn: '15m' }
-                        );
-                        if (x) {
-                            res = res.cookie('token', x, {httpOnly:true, expires: new Date(Date.now() + 900000)});
+                        let loginobj = req.query || req.body;
+                        let username = loginobj.username;
+                        let pwd = loginobj.password;
+                        try {
+                            let jwt1 = createAccessToken({ name: username });
+                            console.log(jwt1);
+                            let expDate = parseInt(
+                                dotenv.config().parsed
+                                    .COOKIE_EXPIRATION!
+                            ) * 60 * 1000;
+                            res.cookie('user', jwt1, {
+                                maxAge:
+                                expDate,
+                                httpOnly: true,
+                            });
+                            return res.send({ ok: true , expDate:expDate});
+                        } catch (e) {
+                            return res.send({ ok: false});
                         }
-                        return res.send('GET AUTH');
                     }
                 )
-                .post(
+                .get(
                     '/logout$',
                     (req: express.Request, res: express.Response) => {
-                        res.send('REV AUTH');
+                        res.clearCookie('user');
+                        return res.redirect(
+                            url.format({
+                                pathname: 'http://'.concat(
+                                    req.hostname.concat(':80/')
+                                ),
+                                query: req.body,
+                            })
+                        );
                     }
                 )
         );
@@ -62,4 +78,13 @@ export default class Auth extends EventEmitter {
             this.emit('ready', port);
         });
     }
+}
+
+function createAccessToken(obj: any) {
+    return jwt.sign(obj, dotenv.config().parsed.SECRET!, {
+        expiresIn: dotenv.config().parsed.COOKIE_EXPIRATION! + 'm',
+    });
+}
+function createRefreshToken(obj: any) {
+    return createAccessToken(obj);
 }

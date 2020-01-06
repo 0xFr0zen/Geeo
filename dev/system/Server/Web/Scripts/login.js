@@ -1,35 +1,30 @@
-$(document).ready(function () {
-    $("#form > input").on('keyup', function () {
+$(document).ready(function() {
+    $('#form > input').on('keyup', function() {
         let signupShow = true;
-        $("#form > input[required]").each(function (index, elem) {
+        $('#form > input[required]').each(function(index, elem) {
             signupShow = $(elem).val().length == 0;
         });
         if (signupShow) {
-            $("#signup").show();
+            $('#signup').show();
         } else {
-            $("#signup").hide();
+            $('#signup').hide();
         }
     });
     $("#form > input[name='username']").focus();
-    $("#form").on("submit", function (e) {
+
+    $('#form').on('submit', function(e) {
         e.preventDefault();
-        // console.log(data);
-        let uname = $("#form input[name='username']").val();
-        let pwd = $("#form input[name='password']").val();
-        if (uname.length > 0 && pwd.length > 0) {
-            $.post("http://localhost:4000/auth/login", { username: uname, password: pwd }, function (data, status, xhr) {
-                if (status === 'success') {
-                    document.location.href = "/";
-                } else {
-
-                    document.location.href = "/login";
-                }
-            });
-        }
-
-
+        let url = $(this).attr('action') + "?" + $(this).serialize();
+        console.log("url", url);
+        
+        $.post(url, (data, status, xhr) => {
+            if(data.ok === true){
+                // console.log(data);
+                
+                document.location.href = "/";
+            }
+            
+        });
     });
-    $("#signup").on('click', function () {
-
-    });
+    $('#signup').on('click', function() {});
 });

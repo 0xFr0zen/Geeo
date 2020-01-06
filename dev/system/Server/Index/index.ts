@@ -8,6 +8,9 @@ import Logout from '../Logout';
 import Identity from '../../Identity';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+interface IUser {
+    username:string;
+}
 function RIndex() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.use('/$', function(req: express.Request, res: express.Response) {
@@ -16,29 +19,29 @@ function RIndex() {
             return res.redirect('/login');
         }
         
-        let token:string = req.cookies.token || null;
+        let token:string = req.cookies.user || null;
         if(!token){
-            console.log("NO token at all");
+            // console.log("NO token at all");
             return res.redirect('/login');
         }
-        let de_token = jwt.verify(token, dotenv.config().parsed.SECRET);
-        if(!de_token){
-            console.log("NO correct token");
-            
+        if(token === "empty"){
             return res.redirect('/login');
+
         }
-        // if (user != null) {
-        //     if (!user.isLoggedIn()) {
-        //         res.redirect('/login');
-        //         return;
-        //     } else {
-        //         let usersafes = user.getSafes();
-        //         res.render('index', { username: user.getName(), safes: usersafes });
-        //     }
-        // } else {
-        //     res.status(404);
-        //     res.send('User not found');
-        // }
+        try {
+            let de_token:any = jwt.verify(token, dotenv.config().parsed.SECRET!);
+            if(!de_token){
+                console.log("NO correct token");
+                
+                return res.redirect('/login');
+            }
+            let usersname = de_token.name;
+            let usersafes = User.from(Identity.of(usersname)).getSafes();
+            return res.render('index', {username:usersname, safes: usersafes});
+        }catch(e){            
+            console.error("failed", e);
+            return res.redirect('/logout');
+        }
     });
     router.use('/user/', RUser);
     router.use('/login', Login);
