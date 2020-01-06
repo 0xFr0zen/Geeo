@@ -1,5 +1,6 @@
-import Command from '../index';
+import Command from './index';
 export default class USER extends Command<any> {
+    regex = "user <text> <?any>";
     run(task: any, filter?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             let result: boolean = false;

@@ -1,5 +1,6 @@
-import Command from '../index';
+import Command from './index';
 export default class GUI extends Command<any> {
+    regex = "gui <text>";
     run(whatev: any, filter?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             let error: Error = new Error("This command does not exist.");
