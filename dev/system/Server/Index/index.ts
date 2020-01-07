@@ -14,32 +14,40 @@ interface IUser {
 function RIndex() {
     let router: express.Router = express.Router({ mergeParams: true });
     router.use('/$', function(req: express.Request, res: express.Response) {
-        if(!req.cookies){
+        let cookies = req.cookies;
+        if(!cookies){
             console.log("Has no cookies!");
             return res.redirect('/login');
         }
         
-        let token:string = req.cookies.user || null;
+        let token:string = cookies.user || null;
         if(!token){
-            // console.log("NO token at all");
+            console.log("No token at all");
+            console.log(cookies);
+            
             return res.redirect('/login');
         }
         if(token === "empty"){
+            console.log("empty cookie");
             return res.redirect('/login');
 
         }
         try {
             let de_token:any = jwt.verify(token, dotenv.config().parsed.SECRET!);
             if(!de_token){
-                console.log("NO correct token");
+                console.log("wrong token");
                 
                 return res.redirect('/login');
             }
             let usersname = de_token.name;
-            let usersafes = User.from(Identity.of(usersname)).getSafes();
-            return res.render('index', {username:usersname, safes: usersafes});
+            if(usersname){
+
+                let usersafes = User.from(Identity.of(usersname)).getSafes();
+                return res.render('index', {username:usersname, safes: usersafes});
+            }
+            return res.status(404).send("Failed to find User");
         }catch(e){            
-            console.error("failed", e);
+            console.error("failed", token, e);
             return res.redirect('/logout');
         }
     });

@@ -23,7 +23,6 @@ export default class System extends Entity {
             System.device.initialize();
             this.server = new Server(this);
             this.consoleIO = new ConsoleIO(this);
-            this.server.start();
         }).catch((e)=> {
             console.error(e);
         });
