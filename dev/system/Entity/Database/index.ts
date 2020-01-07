@@ -25,7 +25,7 @@ export default class Database extends Entity {
                 localAddress: '127.0.0.1',
                 connectTimeout: 60,
                 user: options.username,
-                password: options.username,
+                password: options.password,
                 port: options.port | Database.MYSQL_PORT,
                 database: 'm104',
             });

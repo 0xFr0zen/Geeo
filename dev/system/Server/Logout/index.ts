@@ -4,10 +4,10 @@ function RLogout() {
     let router: express.Router = express.Router({ mergeParams: true });
 
     router.get('/', function(req: express.Request, res: express.Response) {
-        res.redirect(
+        res.clearCookie("user").redirect(
             url.format({
                 pathname: 'http://'.concat(
-                    req.hostname.concat(':4000/auth/logout')
+                    req.hostname.concat('/auth/logout')
                 ),
             })
         );
