@@ -50,6 +50,7 @@
    },
    "scripts": {
       "test": "npm install . && tsc && node ./output/test.js",
+      "db": "nodemon --exec ts-node ./db_test.ts",
       "prestart": "npm install .",
       "start": "nodemon --exec ts-node ./index.ts",
       "reset": "ts-node ./reset.ts",

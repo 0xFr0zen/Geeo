@@ -41,25 +41,6 @@ export default class Server {
             })
         );
         this.application.use(bodyParser.urlencoded({ extended: false }));
-        // this.application.use(function(
-        //     req: express.Request,
-        //     res: express.Response,
-        //     next: NextFunction
-        // ) {
-        //     res.header(
-        //         'Access-Control-Allow-Origin',
-        //         url.format({
-        //             pathname: 'http://'.concat(req.hostname),
-        //         })
-        //     ); // update to match the domain you will make the request from
-        //     res.header('Access-Control-Allow-Credentials', 'true'); // update to match the domain you will make the request from
-        //     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        //     res.header(
-        //         'Access-Control-Allow-Headers',
-        //         'Origin, X-Requested-With, Content-Type, Accept'
-        //     );
-        //     next();
-        // });
         this.router = express.Router({ mergeParams: true });
 
         let view_engine =
@@ -133,7 +114,6 @@ export default class Server {
                 let loginobj = req.query || req.body;
                 let username = loginobj.username;
                 let pwd = loginobj.password;
-                console.log('already has?', req.session.sid);
 
                 try {
                     let s = '';
