@@ -1,16 +1,16 @@
 import express, { NextFunction } from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
-import System from '../';
+import System from '..';
 import bodyParser = require('body-parser');
 import fs from 'fs';
 import session from 'express-session';
 import url from 'url';
 import jwt from 'jsonwebtoken';
-import Identity from '../Identity';
 import User from '../Entity/User';
 import Safe from '../Entity/Safe';
 import { GeeoMap } from '../GeeoMap';
+import Database from '../../Database/index';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -21,8 +21,10 @@ export default class Server {
     private application: express.Application = null;
     private listen: import('http').Server = null;
     private system: System = null;
+    private DB:Database = null;
     constructor(system: System) {
         this.system = system;
+        this.DB = new Database('geeo', {username:'root', password:''});
         this.application = express();
         this.application.set('trust proxy', 1);
         this.application.use(
@@ -76,9 +78,7 @@ export default class Server {
 
                     let usersname = de_token.name;
                     if (typeof usersname === 'string') {
-                        let usersafes = User.from(
-                            Identity.of(usersname)
-                        ).getSafes();
+                        let usersafes: any[] = [];
                         return res.render('index', {
                             username: usersname,
                             safes: usersafes,
@@ -143,25 +143,25 @@ export default class Server {
             ) {
                 res.render('user', { username: req.params.name });
             })
-            .use('/user/:name/storages$', function(
+            .use('/user/:name/storages$', async (
                 req: express.Request,
                 res: express.Response
-            ) {
-                let user = null;
+            ) => {
+                
                 let name = req.params.name;
-                user = User.from(Identity.of(name));
+                let user = User.bind(User.find,name, this.DB);
 
                 let showcase_safes: any[] = [];
                 if (user != null) {
                     let safes = user.getSafes();
 
-                    safes.forEach(safe => {
+                    safes.forEach(async (safe:Safe) => {
                         if (safe.getLastLoaded() != null) {
                             let storage: IStorage = {
                                 name: safe.getName(),
-                                created: safe.getCreated(),
-                                last_loaded: safe.getLastLoaded(),
-                                space: safe.getSpace(),
+                                created: await safe.getCreated(),
+                                last_loaded: await safe.getLastLoaded(),
+                                space: await safe.getSpace(),
                             };
                             showcase_safes.push(storage);
                         }
@@ -174,10 +174,10 @@ export default class Server {
                 req: express.Request,
                 res: express.Response
             ) {
-                let user = null;
                 let name = req.params.name;
                 let invname = req.params.invname;
-                user = User.from(Identity.of(name));
+                let user = User.bind(User.find,name, this.DB);
+
                 let result: Safe = null;
                 if (user != null) {
                     let safes = user.getSafes();
@@ -201,23 +201,19 @@ export default class Server {
                 let name: string = req.params.name;
                 let invname: string = req.params.invname;
 
-                user = User.from(Identity.of(name));
+                user = undefined
 
                 if (user != null) {
                     switch (req.params.operation) {
                         case 'add':
                             user.addSafe(invname);
-                            result = user.save();
 
                             break;
                         case 'remove':
                             user.removeSafe(invname);
-                            result = user.save();
                             break;
                         case 'edit':
                             let safe: Safe = user.getSafe(invname);
-                            // safe.addItem()
-                            result = user.save();
                             break;
 
                         default:

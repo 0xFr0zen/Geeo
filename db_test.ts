@@ -1,4 +1,4 @@
-import Database from './dev/system/Entity/Database/index';
+import Database from './dev/Database';
 let db = new Database('SV', {
     username: 'root',
     password: '',

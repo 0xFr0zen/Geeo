@@ -1,14 +1,22 @@
-import Entity from '..';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as mysql from 'mysql';
-import { EventEmitter } from 'events';
 interface IDatabase {
     username: string;
     password: string;
 }
+export class Result {
+    private res:any = {};
+    constructor(res:any){
+        this.res = res;
+    }
+    public getColumns():string[] {
+        return Object.keys(this.res);
+    }
+    public getRow(column:string){
+        this.res[column];
+    }
+}
 export default class Database {
-    
     public static readonly GeeoDatabaseRoot = path.join(
         process.cwd(),
         './config/db/'
@@ -20,8 +28,8 @@ export default class Database {
     private pwd: string = '';
     private static connections: mysql.Connection[] = [];
     constructor(
-        name:string, 
-        options: IDatabase = {username: 'root', password: '' }
+        name: string,
+        options: IDatabase = { username: 'root', password: '' }
     ) {
         // super();
         this.port = Database.MYSQL_PORT!;
@@ -29,7 +37,7 @@ export default class Database {
         this.username = options.username;
 
         if (this.connection == null) {
-            let dboptions:mysql.ConnectionConfig = {
+            let dboptions: mysql.ConnectionConfig = {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
@@ -37,7 +45,7 @@ export default class Database {
                 user: this.username,
                 password: this.pwd,
                 port: this.port,
-                database:name
+                database: name,
             };
             this.connection = mysql.createConnection(dboptions);
 
@@ -50,55 +58,53 @@ export default class Database {
             });
         }
     }
-    public query(string: string, values?: any[]): Promise<any> {
-        
-        return new Promise((resolve, reject)=> {
-            let retresults:any[] = [];
-        if (this.connection != null) {
-            if (values) {
-                this.connection.query(string, values, async (
-                    error,
-                    results,
-                    fields
-                ) => {
-                    if (error) reject(error);
-                    retresults = await this.parseResult(results);
-                    resolve(retresults);
-                });
+    public query(string: string, values?: any[]): Promise<Result[]> {
+        return new Promise((resolve, reject) => {
+            let retresults: Result[] = [];
+            if (this.connection != null) {
+                if (values) {
+                    this.connection.query(
+                        string,
+                        values,
+                        async (error, results, fields) => {
+                            if (error) reject(error);
+                            retresults = await this.parseResult(results);
+                            resolve(retresults);
+                        }
+                    );
+                } else {
+                    this.connection.query(
+                        string,
+                        async (error, results, fields) => {
+                            if (error) reject(error);
+                            retresults = await this.parseResult(results);
+
+                            resolve(retresults);
+                        }
+                    );
+                }
             } else {
-                this.connection.query(string, async (
-                    error,
-                    results,
-                    fields
-                ) => {
-                    if (error) reject(error);
-                    retresults = await this.parseResult(results);
-                    
-                    resolve(retresults);
-                });
+                reject(new Error('no connection'));
             }
-        }else {
-            reject(new Error("no connection"));
-        }
         });
     }
     parseResult(results: any): PromiseLike<any[]> {
-        return new Promise((resolve, reject)=> {
-            if(results.length == 0){
+        return new Promise((resolve, reject) => {
+            if (results.length == 0) {
                 reject([]);
             }
-            let result:any[] = [];
+            let result: Result[] = [];
             for (const key in results) {
-                let colnames:string[] = Object.keys(results[key]);
-                
-                let s:any = {};
+                let colnames: string[] = Object.keys(results[key]);
+
+                let s: any = {};
                 colnames.forEach(col => {
                     s[col] = results[key][col];
                 });
-                result.push(s);
+                let r:Result = new Result(s);
+                result.push(r);
             }
             resolve(result);
-            
         });
     }
     public close() {
@@ -107,7 +113,7 @@ export default class Database {
         }
     }
     public static exitAll() {
-        Database.connections.forEach((con:mysql.Connection)=>con.end());
+        Database.connections.forEach((con: mysql.Connection) => con.end());
     }
 }
 export class DatabaseUser {

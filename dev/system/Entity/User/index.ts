@@ -2,8 +2,8 @@ import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
 import Safe, { StorageType } from '../Safe';
-import Node from '../../Crypt';
-import Identity from '../../Identity/index';
+import Node from '../../../Crypt';
+import Database from '../../../Database/index';
 
 /**
  * User Class.
@@ -13,6 +13,7 @@ import Identity from '../../Identity/index';
  * @extends {Entity}
  */
 export class User extends Entity {
+    
     /**
      * Creates an instance of User.
      * @param {string} name
@@ -24,25 +25,37 @@ export class User extends Entity {
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
         if (!standalone) {
-            this.addParameter('identity', Identity.of(name));
+            this.addParameter('identity', name);
             let defaultSafe: Safe = new Safe(
                 name,
                 'default',
-                StorageType.Inventory,
-                true
+                StorageType.Inventory
             );
             defaultSafe.addItem('testitem_json', {
                 test: 'lol',
                 numbered: 1,
                 booled: false,
             });
-            defaultSafe.save();
             this.addSafe(defaultSafe);
-            this.save();
         } else {
         }
     }
-
+    static async find(name: string, DB: Database): Promise<User> {
+        return new Promise(async (resolve, reject)=> {
+            let results = (await DB.query(`SELECT * FROM users WHERE username = ?`, [name]));
+            if(results.length == 0){
+                reject(`No User '${name}' found`);
+            }
+            let user = new User("");
+            let userres = results[0];
+            let userCols = userres.getColumns();
+            for(let k in userCols){
+                user.updateParameter(k, userres.getRow(k));
+            }
+            resolve(user);
+            
+        });
+    }
     /**
      * Checks if the user Exists
      *
@@ -51,23 +64,14 @@ export class User extends Entity {
      * @returns {boolean}
      * @memberof User
      */
-    public static exists(name: string | Identity): boolean {
+    public static exists(name: string): boolean {
         let p1 = process.cwd();
-        if (name instanceof Identity) {
-            let p = path.join(
-                p1,
-                './saved/entities/users/',
-                Buffer.from(name.getUsername(), 'utf8').toString('hex')
-            );
-            return fs.existsSync(p);
-        } else {
-            let p = path.join(
-                p1,
-                './saved/entities/users/',
-                Buffer.from(name, 'utf8').toString('hex')
-            );
-            return fs.existsSync(p);
-        }
+        let p = path.join(
+            p1,
+            './saved/entities/users/',
+            Buffer.from(name, 'utf8').toString('hex')
+        );
+        return fs.existsSync(p);
     }
 
     /**
@@ -79,85 +83,8 @@ export class User extends Entity {
      * @memberof User
      */
     public static create(name: string): User {
-        let p = path.join(
-            process.cwd(),
-            './saved/entities/users/',
-            Buffer.from(name, 'utf8').toString('hex')
-        );
         let user = null;
-        if (!fs.existsSync(p)) {
-            fs.mkdirSync(p);
-            user = new User(name);
-        } else {
-            user = User.from(Identity.of(name));
-        }
         return user;
-    }
-    private static standalone(): Entity {
-        let u = new User('standalone', true);
-        return u;
-    }
-    /**
-     *
-     * Loads User based on hash
-     * @static
-     * @param {string} hash
-     * @returns {User}
-     * @memberof User
-     */
-    public static from(ident: Identity): User {
-        let u: User = null;
-        if (ident != null) {
-            let userpathname = Buffer.from(
-                ident.getUsername(),
-                'utf8'
-            ).toString('hex');
-
-            let userPath = path.join(
-                process.cwd(),
-                './saved/entities/users/',
-                userpathname
-            );
-            let p = path.join(userPath, 'snapshots/');
-            let snaps = fs.readdirSync(p).sort();
-            if (snaps.length > 0) {
-                let latest = snaps[snaps.length - 1];
-
-                let latestPath = path.join(p, latest);
-                let p2 = path.join(userPath, 'user');
-                let name = '';
-                let file = fs.readFileSync(latestPath).toString();
-                let encJSON = new Node(file, {
-                    privateKey: ident.getPrivateKey(),
-                });
-                let decryptedData = encJSON.decryptText();
-
-                let userJSON = JSON.parse(decryptedData).user;
-                u = new User(userJSON.name, true);
-                let keys = Object.keys(userJSON);
-
-                keys.forEach(key => {
-                    let value = userJSON[key];
-                    if (key === 'storages') {
-                        let storagesHolder: Safe[] = [];
-                        let storages = value;
-                        storages.forEach((storage: any) => {
-                            let safe = Safe.from(storage);
-                            storagesHolder.push(safe);
-                        });
-                        u.addParameter('storages', storagesHolder);
-                    } else {
-                        u.addParameter(key, value);
-                    }
-                });
-                u.addParameter('last_loaded', Date.now());
-            } else {
-                u = new User(ident.getUsername());
-            }
-        } else {
-        }
-
-        return u;
     }
     public setLoggedIn(s: boolean) {
         this.addParameter('loggedin', s);
@@ -179,23 +106,26 @@ export class User extends Entity {
      */
     public addSafe(storage: Safe | string): boolean {
         let result = false;
-        
+
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {
-                if(storage instanceof Safe) {
+                if (storage instanceof Safe) {
                     if (storages.length < storages.push(storage)) {
-                        this.update('storages', storages);
+                        this.updateParameter('storages', storages);
                         result = true;
                     }
-                }else {
-                    let s = new Safe(this.getName(), storage, StorageType.Inventory);
+                } else {
+                    let s = new Safe(
+                        this.getName(),
+                        storage,
+                        StorageType.Inventory
+                    );
                     if (storages.length < storages.push(s)) {
-                        this.update('storages', storages);
+                        this.updateParameter('storages', storages);
                         result = true;
                     }
                 }
-                
             }
         }
         return result;
@@ -223,7 +153,7 @@ export class User extends Entity {
                 })[0];
                 if (safe != null) {
                     storages = storages.splice(storages.indexOf(safe), 1);
-                    this.update('storages', storages);
+                    this.updateParameter('storages', storages);
                     result = true;
                 }
             }
