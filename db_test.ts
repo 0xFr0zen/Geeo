@@ -3,8 +3,8 @@ let db = new Database('SV', {
     username: 'root',
     password: '',
 });
-let q = `SELECT * FROM Student WHERE Fachrichtung = ?;`;
-let v = ["BWL"];
+let q:string = ``;
+let v:any[] = [];
 db.query(q, v)
     .then(results => console.log(results))
     .catch(e => console.error(e))
