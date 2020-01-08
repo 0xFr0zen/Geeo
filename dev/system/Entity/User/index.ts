@@ -19,41 +19,34 @@ export class User extends Entity {
      * @param {string} name
      * @memberof User
      */
-    constructor(name: string, standalone = false) {
+    constructor(name: string) {
         super('user', name);
         this.addParameter('settings', '');
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
-        if (!standalone) {
-            this.addParameter('identity', name);
-            let defaultSafe: Safe = new Safe(
-                name,
-                'default',
-                StorageType.Inventory
-            );
-            defaultSafe.addItem('testitem_json', {
-                test: 'lol',
-                numbered: 1,
-                booled: false,
-            });
-            this.addSafe(defaultSafe);
-        } else {
-        }
+        
     }
-    static async find(name: string, DB: Database): Promise<User> {
-        return new Promise(async (resolve, reject)=> {
-            let results = (await DB.query(`SELECT * FROM users WHERE username = ?`, [name]));
-            if(results.length == 0){
-                reject(`No User '${name}' found`);
+    public static find(name: string, DB: Database): Promise<User> {
+        return new Promise((resolve, reject)=> {
+            if(DB == null){
+                reject("No Database");
             }
-            let user = new User("");
-            let userres = results[0];
-            let userCols = userres.getColumns();
-            for(let k in userCols){
-                user.updateParameter(k, userres.getRow(k));
-            }
-            resolve(user);
+            DB.query(`SELECT username, firstname, lastname, email, created FROM users WHERE username = ?`, [name]).then(results => {
+                console.log(results);
             
+                if(results.length == 0){
+                    reject(`No User '${name}' found`);
+                }
+                let user = new User("");
+                let userres = results[0];
+                let userCols = userres.getColumns();
+                for(let k in userCols){
+                    let param = userCols[k];
+                    let val = userres.getRow(param);
+                    user.updateParameter(param, val);
+                }
+                resolve(user);
+            });
         });
     }
     /**

@@ -14,7 +14,7 @@ export default class System extends Entity {
     private consoleIO: ConsoleIO;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
-        
+        this.server = new Server(this);
     }
     public static getDevice(): Device {
         return this.device;

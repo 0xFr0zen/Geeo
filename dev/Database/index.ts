@@ -5,15 +5,19 @@ interface IDatabase {
     password: string;
 }
 export class Result {
-    private res:any = {};
+    private res:any = null;
     constructor(res:any){
         this.res = res;
+        
     }
     public getColumns():string[] {
         return Object.keys(this.res);
     }
-    public getRow(column:string){
-        this.res[column];
+    public hasColumn(name:string):boolean {
+        return this.getColumns().indexOf(name) > -1;
+    }
+    public getRow(column:string):any{
+        return this.res[column];
     }
 }
 export default class Database {
@@ -92,17 +96,25 @@ export default class Database {
         return new Promise((resolve, reject) => {
             if (results.length == 0) {
                 reject([]);
+            }else {
+                
             }
+
             let result: Result[] = [];
             for (const key in results) {
                 let colnames: string[] = Object.keys(results[key]);
+                if(colnames.length > 0){
 
-                let s: any = {};
-                colnames.forEach(col => {
-                    s[col] = results[key][col];
-                });
-                let r:Result = new Result(s);
-                result.push(r);
+                    let s: any = {};
+                    colnames.forEach(col => {
+                        s[col] = results[key][col];
+                    });
+                    let r:Result = new Result(s);
+                    result.push(r);
+                }else {
+                    result.push(new Result(true));
+                    resolve();
+                }
             }
             resolve(result);
         });

@@ -21,10 +21,10 @@ export default class Server {
     private application: express.Application = null;
     private listen: import('http').Server = null;
     private system: System = null;
-    private DB:Database = null;
+    private DB: Database = null;
     constructor(system: System) {
         this.system = system;
-        this.DB = new Database('geeo', {username:'root', password:''});
+        this.DB = new Database('geeo', { username: 'root', password: '' });
         this.application = express();
         this.application.set('trust proxy', 1);
         this.application.use(
@@ -143,85 +143,86 @@ export default class Server {
             ) {
                 res.render('user', { username: req.params.name });
             })
-            .use('/user/:name/storages$', async (
-                req: express.Request,
-                res: express.Response
-            ) => {
-                
-                let name = req.params.name;
-                let user = User.bind(User.find,name, this.DB);
+            .use(
+                '/user/:name/storages$',
+                async (req: express.Request, res: express.Response) => {
+                    let name = req.params.name;
+                    let user = User.bind(User.find, name, this.DB);
 
-                let showcase_safes: any[] = [];
-                if (user != null) {
-                    let safes = user.getSafes();
+                    let showcase_safes: any[] = [];
+                    if (user != null) {
+                        let safes = user.getSafes();
 
-                    safes.forEach(async (safe:Safe) => {
-                        if (safe.getLastLoaded() != null) {
-                            let storage: IStorage = {
-                                name: safe.getName(),
-                                created: await safe.getCreated(),
-                                last_loaded: await safe.getLastLoaded(),
-                                space: await safe.getSpace(),
-                            };
-                            showcase_safes.push(storage);
-                        }
-                    });
-                }
-
-                res.json(showcase_safes);
-            })
-            .use('/user/:name/storage/:invname', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let name = req.params.name;
-                let invname = req.params.invname;
-                let user = User.bind(User.find,name, this.DB);
-
-                let result: Safe = null;
-                if (user != null) {
-                    let safes = user.getSafes();
-                    safes.find((safe: Safe) => {
-                        return safe.getName() === invname;
-                    });
-                    result = safes[0];
-                }
-                if (result != null) {
-                    res.json(JSON.parse(result.toString()).safe);
-                } else {
-                    res.status(404).send(`Storage '${name}' not found`);
-                }
-            })
-            .post('/user/:name/storages/:operation/:invname', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let user: User = null;
-                let result: boolean = false;
-                let name: string = req.params.name;
-                let invname: string = req.params.invname;
-
-                user = undefined
-
-                if (user != null) {
-                    switch (req.params.operation) {
-                        case 'add':
-                            user.addSafe(invname);
-
-                            break;
-                        case 'remove':
-                            user.removeSafe(invname);
-                            break;
-                        case 'edit':
-                            let safe: Safe = user.getSafe(invname);
-                            break;
-
-                        default:
-                            break;
+                        safes.forEach(async (safe: Safe) => {
+                            if (safe.getLastLoaded() != null) {
+                                let storage: IStorage = {
+                                    name: safe.getName(),
+                                    created: await safe.getCreated(),
+                                    last_loaded: await safe.getLastLoaded(),
+                                    space: await safe.getSpace(),
+                                };
+                                showcase_safes.push(storage);
+                            }
+                        });
                     }
+
+                    res.json(showcase_safes);
                 }
-                res.json({ added: result });
-            })
+            )
+            .use(
+                '/user/:name/storage/:invname',
+                (req: express.Request, res: express.Response) => {
+                    let name = req.params.name;
+                    let invname = req.params.invname;
+                    User.find(name, this.DB)
+                        .then(user => {
+                            let result: Safe = null;
+                            if (user != null) {
+                                let safes = user.getSafes();
+                                safes.find((safe: Safe) => {
+                                    return safe.getName() === invname;
+                                });
+                                result = safes[0];
+                            }
+                            if (result != null) {
+                                res.json(JSON.parse(result.toString()).safe);
+                            } else {
+                                res.status(404).send(
+                                    `Storage '${name}' not found`
+                                );
+                            }
+                        })
+                        .catch(e => console.error(e));
+                }
+            )
+            .post(
+                '/user/:name/storages/:operation/:invname',
+                (req: express.Request, res: express.Response) => {
+                    let result: boolean = false;
+                    let name: string = req.params.name;
+                    let invname: string = req.params.invname;
+                    User.find(name, this.DB)
+                        .then(user => {
+                            switch (req.params.operation) {
+                                case 'add':
+                                    user.addSafe(invname);
+
+                                    break;
+                                case 'remove':
+                                    user.removeSafe(invname);
+                                    break;
+                                case 'edit':
+                                    let safe: Safe = user.getSafe(invname);
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                            res.json({ added: result });
+                        })
+                        .catch(e => console.error(e));
+                }
+            )
             .use('/themes/:file', function(
                 req: express.Request,
                 res: express.Response

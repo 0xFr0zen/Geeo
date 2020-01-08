@@ -10,9 +10,11 @@ interface IEntity {
 }
 
 export default class Entity extends EventEmitter {
-    private properties: IEntity = null;
+    private properties: IEntity = {name:null,type:null, created:null};
     constructor(type: string, name: string) {
         super();
+        console.log(type, name);
+        
         this.properties.type = type;
         this.properties.name = name;
         this.properties.created = Date.now();
