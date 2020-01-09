@@ -1,8 +1,8 @@
 export default class Queries {
     static readonly USER: any = {
         CREATE: 'INSERT INTO users(username, pass, firstname, lastname, email, created) VALUES(?, ?, ?, ?, ?, ?);',
-        FIND_EXACT: 'SELECT * FROM users WHERE ? = ?;',
-        FIND_LIKE:'SELECT * FROM users WHERE ? LIKE ?;',
+        FIND_EXACT: 'SELECT * FROM users WHERE username = ?;',
+        FIND_LIKE:'SELECT * FROM users WHERE username LIKE ?;',
         REMOVE: '' ,
         VERIFY: '' ,
     };

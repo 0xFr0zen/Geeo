@@ -4,6 +4,7 @@ import * as path from 'path';
 import Safe, { StorageType } from '../Safe';
 import Node from '../../../Crypt';
 import Database from '../../../Database/index';
+import Queries from '../../../Database/Queries';
 
 /**
  * User Class.
@@ -13,7 +14,6 @@ import Database from '../../../Database/index';
  * @extends {Entity}
  */
 export class User extends Entity {
-    
     /**
      * Creates an instance of User.
      * @param {string} name
@@ -24,29 +24,36 @@ export class User extends Entity {
         this.addParameter('settings', '');
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
-        
     }
-    public static find(name: string, DB: Database): Promise<User> {
-        return new Promise((resolve, reject)=> {
-            if(DB == null){
-                reject("No Database");
+    public static find(uname: string, DB: Database): Promise<User> {
+        return new Promise((resolve, reject) => {
+            if (DB == null) {
+                reject('No Database');
             }
-            DB.query(`SELECT username, firstname, lastname, email, created FROM users WHERE username = ?`, [name]).then(results => {
-                console.log(results);
-            
-                if(results.length == 0){
-                    reject(`No User '${name}' found`);
-                }
-                let user = new User("");
-                let userres = results[0];
-                let userCols = userres.getColumns();
-                for(let k in userCols){
-                    let param = userCols[k];
-                    let val = userres.getRow(param);
-                    user.updateParameter(param, val);
-                }
-                resolve(user);
-            });
+            DB.query(Queries.USER.FIND_EXACT, [uname])
+                .then(results => {
+                    console.log(results);
+
+                    if (results.length == 0) {
+                        reject(`No User '${uname}' found`);
+                    }
+                    let user = new User('');
+                    let userres = results[0];
+                    let userCols = userres.getColumns();
+                    for (let k in userCols) {
+                        let param = userCols[k];
+                        let val = userres.getRow(param);
+                        user.updateParameter(param, val);
+                    }
+                    resolve(user);
+                })
+                .catch(e => {
+                    if(e === 'No result'){
+                        reject(`No User '${uname}' found`);
+
+
+                    }
+                });
         });
     }
     /**

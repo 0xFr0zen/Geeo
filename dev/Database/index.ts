@@ -5,18 +5,17 @@ interface IDatabase {
     password: string;
 }
 export class Result {
-    private res:any = null;
-    constructor(res:any){
+    private res: any = null;
+    constructor(res: any) {
         this.res = res;
-        
     }
-    public getColumns():string[] {
+    public getColumns(): string[] {
         return Object.keys(this.res);
     }
-    public hasColumn(name:string):boolean {
+    public hasColumn(name: string): boolean {
         return this.getColumns().indexOf(name) > -1;
     }
-    public getRow(column:string):any{
+    public getRow(column: string): any {
         return this.res[column];
     }
 }
@@ -67,62 +66,75 @@ export default class Database {
             let retresults: Result[] = [];
             if (this.connection != null) {
                 if (values) {
-                    this.connection.query(
-                        string,
-                        values,
-                        async (error, results, fields) => {
-                            if (error) reject(error);
-                            retresults = await this.parseResult(results);
-                            resolve(retresults);
-                        }
-                    );
+                    let reeees: Result = null;
+                    this.connection
+                        .query(string, values)
+                        .on('result', async (row, index) => {
+                            console.log("result", row, index);
+                            let s = null;
+                            this.parseResult(row)
+                                .then((result: Result) => {
+                                    s = result;
+                                    reeees = s;
+                                    retresults.push(s);
+                                    resolve(retresults);
+                                })
+                                .catch(e => {
+                                    reject(e);
+                                });
+                        })
+                        .on('error', error => {
+                            reject(error);
+                        })
+                        .on('end', () => {
+                            if (reeees == null) {
+                                reject('No result');
+                            }
+                        });
                 } else {
-                    this.connection.query(
-                        string,
-                        async (error, results, fields) => {
-                            if (error) reject(error);
-                            retresults = await this.parseResult(results);
+                    this.connection
+                        .query(string)
+                        .on('result', async (row, index) => {
+                            console.log(index);
 
                             resolve(retresults);
-                        }
-                    );
+                        })
+                        .on('error', error => {
+                            reject(error);
+                        }).on('end', () => {
+                            reject("No result");
+                        });
                 }
             } else {
-                reject(new Error('no connection'));
+                reject('no connection');
             }
         });
     }
-    parseResult(results: any): PromiseLike<any[]> {
+    parseResult(givenresult: any): Promise<Result> {
+        console.log(givenresult);
+
         return new Promise((resolve, reject) => {
-            if (results.length == 0) {
+            if (givenresult.length == 0) {
                 reject([]);
             }
-            let result: Result[] = [];
-            if(!results){
-                console.log(results);
-                
-                let r:Result = new Result(results);
-                result.push(r);
-                resolve(result);
-            }else {
-                for (const key in results) {
-                    let colnames: string[] = Object.keys(results[key]);
-                    if(colnames.length > 0){
-    
+            let result: Result = null;
+            if (!givenresult) {
+                resolve(new Result(givenresult));
+            } else {
+                for (const key in givenresult) {
+                    let colnames: string[] = Object.keys(givenresult[key]);
+                    if (colnames.length > 0) {
                         let s: any = {};
                         colnames.forEach(col => {
-                            s[col] = results[key][col];
+                            s[col] = givenresult[key][col];
                         });
-                        let r:Result = new Result(s);
-                        result.push(r);
-                    }else {
-                        result.push(new Result(true));
-                        resolve();
+                        result = new Result(s);
+                    } else {
+                        result = new Result(true);
                     }
                 }
                 resolve(result);
             }
-            
         });
     }
     public close() {
