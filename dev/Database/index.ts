@@ -98,7 +98,7 @@ export default class Database {
                 reject([]);
             }
             let result: Result[] = [];
-            if(instanceOf('OkPacket', results)){
+            if(!results){
                 console.log(results);
                 
                 let r:Result = new Result(results);
@@ -147,7 +147,4 @@ export class DatabaseUser {
     public getPassword(): string {
         return this.password;
     }
-}
-function instanceOf(type:string, object: any): object is mysql.Query {
-    return type in object;
 }
