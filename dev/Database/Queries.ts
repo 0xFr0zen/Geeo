@@ -1,23 +1,16 @@
-export class Queries {
-    static readonly USER:IQuery = {
-        CREATE:{syntax:"INSERT INTO users(username, pass, firstname, lastname, email, created) VALUES(?,?,?,?,?,?);", params:6},
-        FIND:{syntax:"", params:1},
-        REMOVE:{syntax:"", params:2},
-        VERIFY:{syntax:"", params:1},
-
+export default class Queries {
+    static readonly USER: any = {
+        CREATE: 'INSERT INTO users(username, pass, firstname, lastname, email, created) VALUES(?, ?, ?, ?, ?, ?);',
+        FIND_EXACT: 'SELECT * FROM users WHERE ? = ?;',
+        FIND_LIKE:'SELECT * FROM users WHERE ? LIKE ?;',
+        REMOVE: '' ,
+        VERIFY: '' ,
     };
     static readonly STORAGE = {};
     static readonly DOCUMENTS = {};
 }
-interface IQuery {
-    [key:string]:QueryBox;
-}
-interface QueryBox {
-    syntax:string;
-    params:number;
-}
 
 export interface PreparedQuery {
-    query:QueryBox;
+    query:string;
     values?:any[];
 }

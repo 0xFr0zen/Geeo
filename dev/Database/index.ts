@@ -96,27 +96,33 @@ export default class Database {
         return new Promise((resolve, reject) => {
             if (results.length == 0) {
                 reject([]);
-            }else {
-                
             }
-
             let result: Result[] = [];
-            for (const key in results) {
-                let colnames: string[] = Object.keys(results[key]);
-                if(colnames.length > 0){
-
-                    let s: any = {};
-                    colnames.forEach(col => {
-                        s[col] = results[key][col];
-                    });
-                    let r:Result = new Result(s);
-                    result.push(r);
-                }else {
-                    result.push(new Result(true));
-                    resolve();
+            if(instanceOf('OkPacket', results)){
+                console.log(results);
+                
+                let r:Result = new Result(results);
+                result.push(r);
+                resolve(result);
+            }else {
+                for (const key in results) {
+                    let colnames: string[] = Object.keys(results[key]);
+                    if(colnames.length > 0){
+    
+                        let s: any = {};
+                        colnames.forEach(col => {
+                            s[col] = results[key][col];
+                        });
+                        let r:Result = new Result(s);
+                        result.push(r);
+                    }else {
+                        result.push(new Result(true));
+                        resolve();
+                    }
                 }
+                resolve(result);
             }
-            resolve(result);
+            
         });
     }
     public close() {
@@ -141,4 +147,7 @@ export class DatabaseUser {
     public getPassword(): string {
         return this.password;
     }
+}
+function instanceOf(type:string, object: any): object is mysql.Query {
+    return type in object;
 }

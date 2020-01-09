@@ -1,5 +1,5 @@
 import Database from './dev/Database';
-import { PreparedQuery, Queries } from './dev/Database/Queries';
+import Queries, { PreparedQuery } from './dev/Database/Queries';
 let db = new Database('geeo');
 
 let queries: PreparedQuery[] = [
@@ -18,15 +18,14 @@ let queries: PreparedQuery[] = [
 
 for (const queryKey in queries) {
 
-    let pQ = queries[queryKey];
-    console.log(pQ)
-    let pQQ = pQ.query.syntax;
-    let pQP = pQ.query.params;
-    if(pQP == pQ.values.length){
-        db.query(pQQ, pQ.values)
+    let pQ:PreparedQuery = queries[queryKey];
+    let pQQB = pQ.query;
+    let countedParams = (pQQB.split("?").length - 1);
+    if(countedParams === pQ.values.length){
+        db.query(pQQB, pQ.values)
         .then(results => console.log(results))
         .catch(e => console.error(e))
-        .finally(() => console.log(`query '${pQQ}' done`));
+        .finally(() => console.log(`query '${pQQB}' done`));
     }
     
 }
