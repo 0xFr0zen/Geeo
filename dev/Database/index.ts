@@ -62,51 +62,54 @@ export default class Database {
         }
     }
     public query(string: string, values?: any[]): Promise<Result[]> {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let retresults: Result[] = [];
             if (this.connection != null) {
-                if (values) {
-                    let reeees: Result = null;
-                    this.connection
-                        .query(string, values)
-                        .on('result', async (row, index) => {
-                            console.log("result", row, index);
-                            let s = null;
-                            this.parseResult(row)
-                                .then((result: Result) => {
-                                    s = result;
-                                    reeees = s;
-                                    retresults.push(s);
-                                    resolve(retresults);
-                                })
-                                .catch(e => {
-                                    reject(e);
-                                });
-                        })
-                        .on('error', error => {
-                            reject(error);
-                        })
-                        .on('end', () => {
-                            if (reeees == null) {
-                                reject('No result');
-                            }
-                        });
-                } else {
-                    this.connection
-                        .query(string)
-                        .on('result', async (row, index) => {
-                            console.log(index);
-
-                            resolve(retresults);
-                        })
-                        .on('error', error => {
-                            reject(error);
-                        }).on('end', () => {
-                            reject("No result");
-                        });
+                try {
+                    if (values) {
+                        let reeees: Result = null;
+                        this.connection
+                            .query(string, values)
+                            .on('result', async (row, index) => {
+                                // console.log('result', row, index);
+                                let s = await this.parseResult(row);
+                                reeees = s;
+                                retresults.push(s);
+                                return resolve(retresults);
+                            })
+                            .on('error', error => {
+                                return reject(error);
+                            })
+                            .on('end', () => {
+                                if (reeees == null) {
+                                    return reject('No result');
+                                }
+                            });
+                    } else {
+                        let reeees: Result = null;
+                        this.connection
+                            .query(string)
+                            .on('result', async (row, index) => {
+                                // console.log('result', row, index);
+                                let s = await this.parseResult(row);
+                                reeees = s;
+                                retresults.push(s);
+                                return resolve(retresults);
+                            })
+                            .on('error', error => {
+                                return reject(error);
+                            })
+                            .on('end', () => {
+                                if (reeees == null) {
+                                    return reject('No result');
+                                }
+                            });
+                    }
+                } catch (e) {
+                    return reject(e);
                 }
             } else {
-                reject('no connection');
+                return reject('no connection');
             }
         });
     }
