@@ -113,7 +113,8 @@ export default class Database {
             }
         });
     }
-    parseResult(givenresult: any): Promise<Result> {
+    
+    private parseResult(givenresult: any): Promise<Result> {
         console.log(givenresult);
 
         return new Promise((resolve, reject) => {
