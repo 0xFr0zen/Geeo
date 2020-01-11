@@ -35,9 +35,11 @@ export class User extends Entity {
                     console.log(results);
 
                     if (results.length == 0) {
-                        reject(`No User '${uname}' found`);
+                        return reject(`No User '${uname}' found`);
                     }
                     let userres = results[0];
+                    console.log(userres);
+                    
                     let userCols = userres.getColumns();
                     
                     let user = new User(userres.getRow('username'));
@@ -46,13 +48,15 @@ export class User extends Entity {
                         let val = userres.getRow(param);
                         user.updateParameter(param, val);
                     }
-                    resolve(user);
+                    console.log(user);
+                    
+                    return resolve(user);
                 })
                 .catch(e => {
                     if(e === 'No result'){
-                        reject(`No User '${uname}' found`);
-
-
+                        return reject(`No User '${uname}' found`);
+                    }else {
+                        return reject(e);
                     }
                 });
         });

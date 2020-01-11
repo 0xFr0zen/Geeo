@@ -25,11 +25,12 @@ export default class Database {
         './config/db/'
     );
     private static MYSQL_PORT: number = 3306;
-    private connection: mysql.Connection = null;
+    private pool: mysql.Pool = null;
     private port: number = Database.MYSQL_PORT;
     private username: string = '';
     private pwd: string = '';
     private static connections: mysql.Connection[] = [];
+    private dboptions: mysql.PoolConfig;
     constructor(
         name: string,
         options: IDatabase = { username: 'root', password: '' }
@@ -39,8 +40,8 @@ export default class Database {
         this.pwd = options.password;
         this.username = options.username;
 
-        if (this.connection == null) {
-            let dboptions: mysql.ConnectionConfig = {
+        if (this.pool == null) {
+            this.dboptions = {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
@@ -49,48 +50,62 @@ export default class Database {
                 password: this.pwd,
                 port: this.port,
                 database: name,
+                connectionLimit: 5,
+                waitForConnections: true,
+                queueLimit: 10,
             };
-            this.connection = mysql.createConnection(dboptions);
+            this.pool = mysql.createPool(this.dboptions);
 
-            this.connection.connect((err, ...argss) => {
-                if (err) {
-                    console.log(err, argss);
-                } else {
-                    Database.connections.push(this.connection);
-                }
+            this.pool.on('error', error => {
+                console.log(error);
+            });
+            this.pool.on('connection', connection => {
+                console.log(connection.state);
             });
         }
     }
     public query(string: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
             let retresults: Result[] = [];
-            if (this.connection != null) {
+            if (this.pool != null) {
                 try {
-                    if (values) {
-                        this.connection
-                            .query(string, values)
-                            .on('result', async (row, index) => {
-                                // console.log('result', row, index);
-                                let s = await this.parseResult(row);
-                                retresults.push(s);
-                                return resolve(retresults);
-                            })
-                            .on('error', error => {
-                                return reject(error.message);
-                            });
-                    } else {
-                        this.connection
-                            .query(string)
-                            .on('result', async (row, index) => {
-                                // console.log('result', row, index);
-                                let s = await this.parseResult(row);
-                                retresults.push(s);
-                                return resolve(retresults);
-                            })
-                            .on('error', error => {
-                                return reject(error.message);
-                            });
-                    }
+                    this.pool.getConnection((err, connection) => {
+                        if (err) return reject(err.message);
+                        connection.connect(err => {
+                            return reject(err.message);
+                        });
+                        if (values) {
+                            connection
+                                .query(string, values, (err, res, fields) => {
+                                    if (err) return reject(err.message);
+                                    console.log(res);
+                                })
+                                .on('result', async (row, index) => {
+                                    // console.log('result', row, index);
+                                    let s = await this.parseResult(row);
+                                    retresults.push(s);
+                                    console.log('res', s);
+
+                                    return resolve(retresults);
+                                })
+                                .on('error', error => {
+                                    return reject(error.message);
+                                });
+                        } else {
+                            connection
+                                .query(string)
+                                .on('result', async (row, index) => {
+                                    // console.log('result', row, index);
+                                    let s = await this.parseResult(row);
+                                    retresults.push(s);
+                                    return resolve(retresults);
+                                })
+                                .on('error', error => {
+                                    return reject(error.message);
+                                });
+                        }
+                        connection.release();
+                    });
                 } catch (e) {
                     return reject(e);
                 }
@@ -116,8 +131,8 @@ export default class Database {
         });
     }
     public close() {
-        if (this.connection != null) {
-            this.connection.end();
+        if (this.pool != null) {
+            this.pool.end();
         }
     }
     public static exitAll() {
