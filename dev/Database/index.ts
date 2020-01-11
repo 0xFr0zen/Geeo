@@ -1,9 +1,7 @@
 import * as path from 'path';
 import * as mysql from 'mysql';
-interface IDatabase {
-    username: string;
-    password: string;
-}
+import Options from './Options';
+
 export class Result {
     private res: any = null;
     constructor(res: any) {
@@ -20,12 +18,8 @@ export class Result {
     }
 }
 export default class Database {
-    public static readonly GeeoDatabaseRoot = path.join(
-        process.cwd(),
-        './config/db/'
-    );
     private static MYSQL_PORT: number = 3306;
-    private pool: mysql.Pool = null;
+    private static pool: mysql.Pool = null;
     private port: number = Database.MYSQL_PORT;
     private username: string = '';
     private pwd: string = '';
@@ -33,14 +27,14 @@ export default class Database {
     private dboptions: mysql.PoolConfig;
     constructor(
         name: string,
-        options: IDatabase = { username: 'root', password: '' }
+        options: Options.IDatabase = { username: 'root', password: '' }
     ) {
         // super();
         this.port = Database.MYSQL_PORT!;
         this.pwd = options.password;
         this.username = options.username;
 
-        if (this.pool == null) {
+        if (Database.pool == null) {
             this.dboptions = {
                 insecureAuth: false,
                 multipleStatements: true,
@@ -50,28 +44,28 @@ export default class Database {
                 password: this.pwd,
                 port: this.port,
                 database: name,
-                connectionLimit: 5,
+                connectionLimit: 10,
                 waitForConnections: true,
-                queueLimit: 10,
+                queueLimit: 5,
             };
-            this.pool = mysql.createPool(this.dboptions);
+            Database.pool = mysql.createPool(this.dboptions);
 
-            this.pool.on('error', error => {
+            Database.pool.on('error', error => {
                 console.error(error);
             });
 
-            this.pool.on('enqueue', () => {
+            Database.pool.on('enqueue', () => {
                 console.log('Waiting for available connection slot');
             });
 
-            this.pool.on('acquire', connection => {
+            Database.pool.on('acquire', connection => {
                 console.log('Connection %d acquired', connection.threadId);
             });
 
-            this.pool.on('connection', connection => {
+            Database.pool.on('connection', connection => {
                 console.log('Connection %d connected', connection.threadId);
             });
-            this.pool.on('release', connection => {
+            Database.pool.on('release', connection => {
                 console.log('Connection %d released', connection.threadId);
             });
         }
@@ -79,7 +73,7 @@ export default class Database {
     public query(string: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
             let retresults: Result[] = [];
-            if (this.pool != null) {
+            if (Database.pool != null) {
                 try {
                     let myerror = null;
                     let connection: mysql.PoolConnection = await this.getConnection();
@@ -87,14 +81,11 @@ export default class Database {
                         connection
                             .query(string, values)
                             .on('result', async (row, index) => {
-                                connection.release();
-                                
                                 let resultBox = await this.parseResult(row);
                                 // console.log(resultBox);
-                                
+
                                 retresults.push(resultBox);
                                 resolve(retresults);
-                                
                             })
                             .on('error', error => {
                                 myerror = error.message;
@@ -103,7 +94,6 @@ export default class Database {
                         connection
                             .query(string)
                             .on('result', async (row, index) => {
-                                connection.release();
                                 let resultBox = await this.parseResult(row);
                                 retresults.push(resultBox);
                                 resolve(retresults);
@@ -111,12 +101,14 @@ export default class Database {
                             .on('error', error => {
                                 myerror = error.message;
                             });
-                    }if (myerror != null) {
+                    }
+
+                    connection.release();
+                    if (myerror != null) {
                         console.log('irgendwelche errors? => ', myerror);
                         reject(myerror || 'No Results');
-                    }else {
-                        console.log("kein plan digga");
-                        
+                    } else {
+                        console.log('kein plan digga');
                     }
                 } catch (e) {
                     reject(e);
@@ -128,7 +120,7 @@ export default class Database {
     }
     private getConnection(): Promise<mysql.PoolConnection> {
         return new Promise((resolve, reject) => {
-            this.pool.getConnection((err, connection) => {
+            Database.pool.getConnection((err, connection) => {
                 if (err) reject(err.message);
                 if (connection != null) {
                     resolve(connection);
@@ -154,8 +146,8 @@ export default class Database {
         });
     }
     public close() {
-        if (this.pool != null) {
-            this.pool.end();
+        if (Database.pool != null) {
+            Database.pool.end();
         }
     }
 }

@@ -5,6 +5,7 @@ import Safe, { StorageType } from '../Safe';
 import Node from '../../../Crypt';
 import Database from '../../../Database/index';
 import Queries from '../../../Database/Queries';
+import Options from '../../../Database/Options';
 
 /**
  * User Class.
@@ -36,21 +37,21 @@ export class User extends Entity {
                         return reject(`No User '${uname}' found`);
                     }
                     let userres = results[0];
-                    
+
                     let userCols = userres.getColumns();
-                    
-                    let user = new User(userres.getRow('username'));
+
+                    let user = User.call(userres.getRow('username'));
                     for (let k in userCols) {
                         let param = userCols[k];
                         let val = userres.getRow(param);
                         user.updateParameter(param, val);
-                    }                    
+                    }
                     return resolve(user);
                 })
                 .catch(e => {
-                    if(e === 'No result'){
+                    if (e === 'No result') {
                         return reject(`No User '${uname}' found`);
-                    }else {
+                    } else {
                         return reject(e);
                     }
                 });
@@ -82,9 +83,14 @@ export class User extends Entity {
      * @returns {User}
      * @memberof User
      */
-    public static create(name: string): User {
-        let user = null;
-        return user;
+    public static create(
+        name: string,
+        password: string,
+        options: Options.UserCreateOptions
+    ): Promise<User> {
+        return new Promise((resolve, reject) => {
+            //    let user = new User(name)
+        });
     }
     public setLoggedIn(s: boolean) {
         this.addParameter('loggedin', s);
@@ -105,7 +111,7 @@ export class User extends Entity {
      * @memberof User
      */
     public addSafe(storage: Safe | string): Promise<boolean> {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             if (this.hasParameter('storages')) {
                 let storages = this.getParameter('storages');
                 if (storages != null && Array.isArray(storages)) {
@@ -113,7 +119,7 @@ export class User extends Entity {
                         if (storages.length < storages.push(storage)) {
                             this.updateParameter('storages', storages);
                             return resolve(true);
-                        }else {
+                        } else {
                             return resolve(false);
                         }
                     } else {
@@ -123,15 +129,16 @@ export class User extends Entity {
                             StorageType.Inventory
                         );
                         if (storages.length < storages.push(s)) {
-                            this.updateParameter('storages', storages);
-                            return resolve(true);
-                        }else {
-                            return resolve(false)
+                            return resolve(
+                                this.updateParameter('storages', storages)
+                            );
+                        } else {
+                            return resolve(false);
                         }
                     }
                 }
-            }else {
-                return reject("No storage")
+            } else {
+                return reject('No storage');
             }
         });
     }
@@ -176,5 +183,4 @@ export class User extends Entity {
         return result;
     }
 }
-
 export default User;
