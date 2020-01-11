@@ -10,14 +10,13 @@ interface IEntity {
 }
 
 export default class Entity extends EventEmitter {
-    private properties: IEntity = {name:null,type:null, created:null};
-    constructor(type: string, name: string) {
+    private properties: IEntity = { name: null, type: null, created: null };
+    constructor(type: string, name: string, created?: number) {
         super();
-        console.log(type, name);
-        
+
         this.properties.type = type;
         this.properties.name = name;
-        this.properties.created = Date.now();
+        this.properties.created = created || Date.now();
     }
     protected addParameter(name: string, value: any): Promise<boolean> {
         return new Promise((resolve, reject) => {

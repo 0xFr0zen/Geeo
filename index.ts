@@ -9,8 +9,9 @@ User.find('admin', db)
             new Safe(user.getName(), 'default', StorageType.Inventory)
         );
         console.log(user);
+
+        db.close();
     })
     .catch(e => {
         console.error(e);
     });
-db.close();

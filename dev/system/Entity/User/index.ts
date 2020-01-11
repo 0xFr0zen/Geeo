@@ -32,13 +32,10 @@ export class User extends Entity {
             }
             DB.query(Queries.USER.FIND_EXACT, [uname])
                 .then(results => {
-                    console.log(results);
-
                     if (results.length == 0) {
                         return reject(`No User '${uname}' found`);
                     }
                     let userres = results[0];
-                    console.log(userres);
                     
                     let userCols = userres.getColumns();
                     
@@ -47,9 +44,7 @@ export class User extends Entity {
                         let param = userCols[k];
                         let val = userres.getRow(param);
                         user.updateParameter(param, val);
-                    }
-                    console.log(user);
-                    
+                    }                    
                     return resolve(user);
                 })
                 .catch(e => {
@@ -109,31 +104,36 @@ export class User extends Entity {
      * @private
      * @memberof User
      */
-    public addSafe(storage: Safe | string): boolean {
-        let result = false;
-
-        if (this.hasParameter('storages')) {
-            let storages = this.getParameter('storages');
-            if (storages != null && Array.isArray(storages)) {
-                if (storage instanceof Safe) {
-                    if (storages.length < storages.push(storage)) {
-                        this.updateParameter('storages', storages);
-                        result = true;
-                    }
-                } else {
-                    let s = new Safe(
-                        this.getName(),
-                        storage,
-                        StorageType.Inventory
-                    );
-                    if (storages.length < storages.push(s)) {
-                        this.updateParameter('storages', storages);
-                        result = true;
+    public addSafe(storage: Safe | string): Promise<boolean> {
+        return new Promise((resolve, reject)=> {
+            if (this.hasParameter('storages')) {
+                let storages = this.getParameter('storages');
+                if (storages != null && Array.isArray(storages)) {
+                    if (storage instanceof Safe) {
+                        if (storages.length < storages.push(storage)) {
+                            this.updateParameter('storages', storages);
+                            return resolve(true);
+                        }else {
+                            return resolve(false);
+                        }
+                    } else {
+                        let s = new Safe(
+                            this.getName(),
+                            storage,
+                            StorageType.Inventory
+                        );
+                        if (storages.length < storages.push(s)) {
+                            this.updateParameter('storages', storages);
+                            return resolve(true);
+                        }else {
+                            return resolve(false)
+                        }
                     }
                 }
+            }else {
+                return reject("No storage")
             }
-        }
-        return result;
+        });
     }
     public getSafe(name: string): Safe {
         let result = null;

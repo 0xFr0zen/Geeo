@@ -57,10 +57,22 @@ export default class Database {
             this.pool = mysql.createPool(this.dboptions);
 
             this.pool.on('error', error => {
-                console.log(error);
+                console.error(error);
             });
+
+            this.pool.on('enqueue', () => {
+                console.log('Waiting for available connection slot');
+            });
+
+            this.pool.on('acquire', connection => {
+                console.log('Connection %d acquired', connection.threadId);
+            });
+
             this.pool.on('connection', connection => {
-                console.log(connection.state);
+                console.log('Connection %d connected', connection.threadId);
+            });
+            this.pool.on('release', connection => {
+                console.log('Connection %d released', connection.threadId);
             });
         }
     }
@@ -69,52 +81,63 @@ export default class Database {
             let retresults: Result[] = [];
             if (this.pool != null) {
                 try {
-                    this.pool.getConnection((err, connection) => {
-                        if (err) return reject(err.message);
-                        connection.connect(err => {
-                            return reject(err.message);
-                        });
-                        if (values) {
-                            connection
-                                .query(string, values, (err, res, fields) => {
-                                    if (err) return reject(err.message);
-                                    console.log(res);
-                                })
-                                .on('result', async (row, index) => {
-                                    // console.log('result', row, index);
-                                    let s = await this.parseResult(row);
-                                    retresults.push(s);
-                                    console.log('res', s);
-
-                                    return resolve(retresults);
-                                })
-                                .on('error', error => {
-                                    return reject(error.message);
-                                });
-                        } else {
-                            connection
-                                .query(string)
-                                .on('result', async (row, index) => {
-                                    // console.log('result', row, index);
-                                    let s = await this.parseResult(row);
-                                    retresults.push(s);
-                                    return resolve(retresults);
-                                })
-                                .on('error', error => {
-                                    return reject(error.message);
-                                });
-                        }
-                        connection.release();
-                    });
+                    let myerror = null;
+                    let connection: mysql.PoolConnection = await this.getConnection();
+                    if (values) {
+                        connection
+                            .query(string, values)
+                            .on('result', async (row, index) => {
+                                connection.release();
+                                
+                                let resultBox = await this.parseResult(row);
+                                // console.log(resultBox);
+                                
+                                retresults.push(resultBox);
+                                resolve(retresults);
+                                
+                            })
+                            .on('error', error => {
+                                myerror = error.message;
+                            });
+                    } else {
+                        connection
+                            .query(string)
+                            .on('result', async (row, index) => {
+                                connection.release();
+                                let resultBox = await this.parseResult(row);
+                                retresults.push(resultBox);
+                                resolve(retresults);
+                            })
+                            .on('error', error => {
+                                myerror = error.message;
+                            });
+                    }if (myerror != null) {
+                        console.log('irgendwelche errors? => ', myerror);
+                        reject(myerror || 'No Results');
+                    }else {
+                        console.log("kein plan digga");
+                        
+                    }
                 } catch (e) {
-                    return reject(e);
+                    reject(e);
                 }
             } else {
-                return reject('no connection');
+                reject('no connection');
             }
         });
     }
-
+    private getConnection(): Promise<mysql.PoolConnection> {
+        return new Promise((resolve, reject) => {
+            this.pool.getConnection((err, connection) => {
+                if (err) reject(err.message);
+                if (connection != null) {
+                    resolve(connection);
+                } else {
+                    reject('No connection!');
+                }
+            });
+        });
+    }
     private parseResult(givenresult: any): Promise<Result> {
         return new Promise((resolve, reject) => {
             let result: Result = null;
@@ -135,10 +158,8 @@ export default class Database {
             this.pool.end();
         }
     }
-    public static exitAll() {
-        Database.connections.forEach((con: mysql.Connection) => con.end());
-    }
 }
+
 export class DatabaseUser {
     private username: string = '';
     private password: string = '';
