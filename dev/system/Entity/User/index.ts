@@ -37,9 +37,10 @@ export class User extends Entity {
                     if (results.length == 0) {
                         reject(`No User '${uname}' found`);
                     }
-                    let user = new User('');
                     let userres = results[0];
                     let userCols = userres.getColumns();
+                    
+                    let user = new User(userres.getRow('username'));
                     for (let k in userCols) {
                         let param = userCols[k];
                         let val = userres.getRow(param);

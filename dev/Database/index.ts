@@ -67,42 +67,28 @@ export default class Database {
             if (this.connection != null) {
                 try {
                     if (values) {
-                        let reeees: Result = null;
                         this.connection
                             .query(string, values)
                             .on('result', async (row, index) => {
                                 // console.log('result', row, index);
                                 let s = await this.parseResult(row);
-                                reeees = s;
                                 retresults.push(s);
                                 return resolve(retresults);
                             })
                             .on('error', error => {
-                                return reject(error);
-                            })
-                            .on('end', () => {
-                                if (reeees == null) {
-                                    return reject('No result');
-                                }
+                                return reject(error.message);
                             });
                     } else {
-                        let reeees: Result = null;
                         this.connection
                             .query(string)
                             .on('result', async (row, index) => {
                                 // console.log('result', row, index);
                                 let s = await this.parseResult(row);
-                                reeees = s;
                                 retresults.push(s);
                                 return resolve(retresults);
                             })
                             .on('error', error => {
-                                return reject(error);
-                            })
-                            .on('end', () => {
-                                if (reeees == null) {
-                                    return reject('No result');
-                                }
+                                return reject(error.message);
                             });
                     }
                 } catch (e) {
@@ -113,31 +99,19 @@ export default class Database {
             }
         });
     }
-    
-    private parseResult(givenresult: any): Promise<Result> {
-        console.log(givenresult);
 
+    private parseResult(givenresult: any): Promise<Result> {
         return new Promise((resolve, reject) => {
-            if (givenresult.length == 0) {
-                reject([]);
-            }
             let result: Result = null;
             if (!givenresult) {
-                resolve(new Result(givenresult));
+                return reject('No Result');
             } else {
+                let s: any = {};
                 for (const key in givenresult) {
-                    let colnames: string[] = Object.keys(givenresult[key]);
-                    if (colnames.length > 0) {
-                        let s: any = {};
-                        colnames.forEach(col => {
-                            s[col] = givenresult[key][col];
-                        });
-                        result = new Result(s);
-                    } else {
-                        result = new Result(true);
-                    }
+                    s[key] = givenresult[key];
                 }
-                resolve(result);
+                result = new Result(s);
+                return resolve(result);
             }
         });
     }
