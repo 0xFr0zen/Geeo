@@ -10,7 +10,7 @@ import ConsoleIO from './ConsoleIO';
 
 export default class System extends Entity {
     private static device: Device = new Device();
-    private server: Server;
+    private server: Server = null;
     private consoleIO: ConsoleIO;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
@@ -19,5 +19,4 @@ export default class System extends Entity {
     public static getDevice(): Device {
         return this.device;
     }
-    
 }

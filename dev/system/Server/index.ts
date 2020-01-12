@@ -3,14 +3,15 @@ import path from 'path';
 import dotenv from 'dotenv';
 import System from '..';
 import bodyParser = require('body-parser');
-import fs from 'fs';
 import session from 'express-session';
-import url from 'url';
 import jwt from 'jsonwebtoken';
-import User from '../Entity/User';
-import Safe from '../Entity/Safe';
-import { GeeoMap } from '../GeeoMap';
 import Database from '../../Database/index';
+import login from './routes/login';
+import logout from './routes/logout';
+import user from './routes/user';
+import themes from './routes/themes';
+import scripts from './routes/scripts';
+import images from './routes/images';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -21,10 +22,8 @@ export default class Server {
     private application: express.Application = null;
     private listen: import('http').Server = null;
     private system: System = null;
-    private DB: Database = null;
     constructor(system: System) {
         this.system = system;
-        this.DB = new Database();
         this.application = express();
         this.application.set('trust proxy', 1);
         this.application.use(
@@ -93,206 +92,16 @@ export default class Server {
                     return res.redirect('/logout');
                 }
             })
-            .get('/login$', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let q = req.query || req.body;
-
-                let { sid } = req.session;
-
-                if (typeof q.forced !== 'undefined') {
-                    return res.render('login');
-                } else if (!sid) {
-                    console.log("No 'user' cookie set", sid);
-                    return res.render('login');
-                }
-
-                return res.redirect('/');
-            })
-            .post('/login$', (req: express.Request, res: express.Response) => {
-                let loginobj = req.query || req.body;
-                let username = loginobj.username;
-                let pwd = loginobj.password;
-
-                try {
-                    let s = '';
-                    req.session.sid = { name: username };
-
-                    req.session.save(err => {
-                        if (err) console.error('save error =>', err);
-                        console.log(
-                            `cookie '${Object.keys(req.session)}' saved`
-                        );
-                    });
-
-                    return res.end(String(req.session.sid.name));
-                } catch (e) {
-                    console.error(e);
-                    return res.redirect('/login');
-                }
-            })
-            .get('/logout$', (req: express.Request, res: express.Response) => {
-                req.session.user = null;
-                req.session.save(err => console.log(err));
-                return res.redirect('/');
-            })
-            .use('/user/:name/', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                res.render('user', { username: req.params.name });
-            })
-            .use(
-                '/user/:name/storages$',
-                async (req: express.Request, res: express.Response) => {
-                    let name = req.params.name;
-                    let user = User.bind(User.find, name, this.DB);
-
-                    let showcase_safes: any[] = [];
-                    if (user != null) {
-                        let safes = user.getSafes();
-
-                        safes.forEach(async (safe: Safe) => {
-                            if (safe.getLastLoaded() != null) {
-                                let storage: IStorage = {
-                                    name: safe.getName(),
-                                    created: await safe.getCreated(),
-                                    last_loaded: await safe.getLastLoaded(),
-                                    space: await safe.getSpace(),
-                                };
-                                showcase_safes.push(storage);
-                            }
-                        });
-                    }
-
-                    res.json(showcase_safes);
-                }
-            )
-            .use(
-                '/user/:name/storage/:invname',
-                (req: express.Request, res: express.Response) => {
-                    let username = req.params.name;
-                    let invname = req.params.invname;
-                    User.findFirst({ name: username })
-                        .then(user => {
-                            let result: Safe = null;
-                            if (user != null) {
-                                let safes = user.getSafes();
-                                safes.find((safe: Safe) => {
-                                    return safe.getName() === invname;
-                                });
-                                result = safes[0];
-                            }
-                            if (result != null) {
-                                res.json(JSON.parse(result.toString()).safe);
-                            } else {
-                                res.status(404).send(
-                                    `Storage '${username}' not found`
-                                );
-                            }
-                        })
-                        .catch(e => console.error(e));
-                }
-            )
-            .post(
-                '/user/:name/storages/:operation/:invname',
-                (req: express.Request, res: express.Response) => {
-                    let result: boolean = false;
-                    let username: string = req.params.name;
-                    let invname: string = req.params.invname;
-                    User.findFirst({ name: username })
-                        .then(user => {
-                            switch (req.params.operation) {
-                                case 'add':
-                                    user.addSafe(invname);
-
-                                    break;
-                                case 'remove':
-                                    user.removeSafe(invname);
-                                    break;
-                                case 'edit':
-                                    let safe: Safe = user.getSafe(invname);
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                            res.json({ added: result });
-                        })
-                        .catch(e => console.error(e));
-                }
-            )
-            .use('/themes/:file', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let p = path.join(
-                    process.cwd(),
-                    './dev/system/Server/Web/Themes/',
-                    req.params.file
-                );
-                res.setHeader('Content-Type', 'text/css');
-
-                if (fs.existsSync(p)) {
-                    res.sendFile(p);
-                } else {
-                    res.status(404);
-                    res.send(`File '${p}' not found`);
-                }
-            })
-            .use('/scripts/:file', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let p = path.join(
-                    process.cwd(),
-                    './dev/system/Server/Web/Scripts/',
-                    req.params.file
-                );
-                res.setHeader('Content-Type', 'application/javascript');
-
-                if (fs.existsSync(p)) {
-                    res.sendFile(p);
-                } else {
-                    res.status(404);
-                    res.send(`File '${p}' not found`);
-                }
-            })
-            .use('/images/:file(.*)', function(
-                req: express.Request,
-                res: express.Response
-            ) {
-                let file = req.params.file.split('/');
-                let p = '';
-                if (file.length == 2) {
-                    let type = file[0];
-                    let fname = file[1];
-                    p = path.join(
-                        process.cwd(),
-                        './dev/system/Server/Web/Images/',
-                        type,
-                        fname
-                    );
-                } else {
-                    let type = file[0];
-                    let fname = file[1];
-                    p = path.join(
-                        process.cwd(),
-                        './dev/system/Server/Web/Images/default/',
-                        req.params.file
-                    );
-                }
-
-                res.setHeader('Content-Type', 'application/javascript');
-
-                if (fs.existsSync(p)) {
-                    res.sendFile(p);
-                } else {
-                    res.status(404);
-                    res.send(`File '${p}' not found`);
-                }
-            });
+            .get('/login$', login.get)
+            .post('/login$', login.post)
+            .get('/logout$', logout.get)
+            .use('/user/:name/$', user.profile)
+            .use('/user/:name/storages/$', user.storages)
+            .use('/user/:name/storage/:invname/$', user.storage)
+            .post('/user/:name/storages/:operation/:invname/$', user.operate)
+            .use('/themes/:file/$', themes.load)
+            .use('/scripts/:file/$', scripts.load)
+            .use('/images/:file(.*)$', images.load);
         this.application.use(this.router);
         this.start();
     }
@@ -322,11 +131,4 @@ export async function createAccessToken(obj: any): Promise<string> {
 }
 export async function createRefreshToken(obj: any) {
     return createAccessToken(obj);
-}
-
-interface IStorage {
-    name: string;
-    created: Date;
-    space: GeeoMap<string, any>;
-    last_loaded: Date;
 }

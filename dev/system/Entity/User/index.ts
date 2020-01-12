@@ -96,7 +96,6 @@ export class User extends Entity {
                 options.created,
             ]);
             console.log(results);
-            
         });
     }
     public setLoggedIn(s: boolean) {
@@ -180,7 +179,7 @@ export class User extends Entity {
         return result;
     }
     public getSafes(): Safe[] {
-        let result = null;
+        let result: Safe[] = [];
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');
             if (storages != null && Array.isArray(storages)) {

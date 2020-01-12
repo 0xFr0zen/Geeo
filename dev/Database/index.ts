@@ -32,6 +32,10 @@ export default class Database {
     private static avgLatency: number = 0;
     constructor() {
         if (Database.pool == null) {
+            console.log(
+                Database.avgLatency != 0 ? 'Reopening pool.' : 'Opening pool.'
+            );
+
             let options: Options.IDatabase = {
                 username: 'root',
                 password: '',
@@ -43,14 +47,14 @@ export default class Database {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
-                connectTimeout: 60000,
+                connectTimeout: 700,
                 user: this.username,
                 password: this.pwd,
                 port: this.port,
                 database: 'geeo',
-                connectionLimit: 10,
+                connectionLimit: 20,
                 waitForConnections: true,
-                queueLimit: 5,
+                queueLimit: 10,
             };
             Database.pool = mysql.createPool(this.dboptions);
 
@@ -73,24 +77,29 @@ export default class Database {
                 console.log('Connection %d released', connection.threadId);
             });
             Database.idleChecker = setInterval(() => {
-                if (
-                    Database.lastQueried
-                ) {
+                if (Database.lastQueried) {
                     let delta = (Date.now() - Database.lastQueried) % 1000;
                     Database.deltas.push(delta);
                     let sumDeltas = 0;
                     Database.deltas.forEach(d => {
-                        sumDeltas+=d;
+                        sumDeltas += d;
                     });
 
-                    Database.avgLatency = Math.floor(sumDeltas/Database.idleCounter);
-                    if(delta >= Database.avgLatency || Database.idleCounter >= 10){
+                    Database.avgLatency = Math.floor(
+                        sumDeltas / Database.idleCounter
+                    );
+                    if (
+                        delta >= Database.avgLatency &&
+                        Database.idleCounter >= 10
+                    ) {
+                        console.log('Closing pool.');
                         Database.pool.end();
                         Database.pool = null;
+                        Database.idleCounter = 1;
                         clearInterval(Database.idleChecker);
+                        console.log('Closed pool');
                     }
                     Database.idleCounter++;
-                    
                 }
             }, parseInt(dotenv.config().parsed.DB_IDLE_TIMER!) * 1000);
         } else {
