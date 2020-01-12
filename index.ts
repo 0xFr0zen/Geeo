@@ -9,7 +9,7 @@ import Queries from './dev/Database/Queries';
 //     email: 'myemail@gmail.com',
 //     created: new Date(Date.now()),
 // });
-let db = new Database('geeo');
+let db = new Database();
 db.query(Queries.DATABASES.SHOW)
     .then(results => {
         results.forEach(result=> {
@@ -22,11 +22,6 @@ db.query(Queries.DATABASES.SHOW)
     });
 // User.find('admin', db)
 //     .then(user => {
-//         user.addSafe(
-//             new Safe(user.getName(), 'default', StorageType.Inventory)
-//         );
-//         console.log(user);
-
 //         db.close();
 //     })
 //     .catch(e => {

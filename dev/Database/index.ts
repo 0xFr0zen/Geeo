@@ -23,18 +23,16 @@ export default class Database {
     private port: number = Database.MYSQL_PORT;
     private username: string = '';
     private pwd: string = '';
-    private static connections: mysql.Connection[] = [];
     private dboptions: mysql.PoolConfig;
-    constructor(
-        name: string,
-        options: Options.IDatabase = { username: 'root', password: '' }
-    ) {
-        // super();
-        this.port = Database.MYSQL_PORT!;
-        this.pwd = options.password;
-        this.username = options.username;
-
+    constructor() {
         if (Database.pool == null) {
+            let options: Options.IDatabase = {
+                username: 'root',
+                password: '',
+            };
+            this.port = Database.MYSQL_PORT!;
+            this.pwd = options.password;
+            this.username = options.username;
             this.dboptions = {
                 insecureAuth: false,
                 multipleStatements: true,
@@ -43,7 +41,7 @@ export default class Database {
                 user: this.username,
                 password: this.pwd,
                 port: this.port,
-                database: name,
+                database: 'geeo',
                 connectionLimit: 10,
                 waitForConnections: true,
                 queueLimit: 5,
@@ -105,10 +103,7 @@ export default class Database {
 
                     connection.release();
                     if (myerror != null) {
-                        console.log('irgendwelche errors? => ', myerror);
                         reject(myerror || 'No Results');
-                    } else {
-                        console.log('kein plan digga');
                     }
                 } catch (e) {
                     reject(e);
