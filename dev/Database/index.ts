@@ -66,50 +66,80 @@ export default class Database {
             Database.pool.on('release', connection => {
                 console.log('Connection %d released', connection.threadId);
             });
+        } else {
+            console.log('Already has pool.');
         }
     }
-    public query(string: string, values?: any[]): Promise<Result[]> {
+    public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
             let retresults: Result[] = [];
-            if (Database.pool != null) {
-                try {
-                    let myerror = null;
-                    let connection: mysql.PoolConnection = await this.getConnection();
-                    if (values) {
-                        connection
-                            .query(string, values)
-                            .on('result', async (row, index) => {
-                                let resultBox = await this.parseResult(row);
-                                // console.log(resultBox);
+            if (await this.isValidQuery(syntax, values)) {
+                if (Database.pool != null) {
+                    try {
+                        let myerror = null;
+                        let connection: mysql.PoolConnection = await this.getConnection();
+                        if (values) {
+                            connection
+                                .query(syntax, values)
+                                .on('result', async (row, index) => {
+                                    let resultBox = await this.parseResult(row);
+                                    // console.log(resultBox);
 
-                                retresults.push(resultBox);
-                                resolve(retresults);
-                            })
-                            .on('error', error => {
-                                myerror = error.message;
-                            });
-                    } else {
-                        connection
-                            .query(string)
-                            .on('result', async (row, index) => {
-                                let resultBox = await this.parseResult(row);
-                                retresults.push(resultBox);
-                                resolve(retresults);
-                            })
-                            .on('error', error => {
-                                myerror = error.message;
-                            });
-                    }
+                                    retresults.push(resultBox);
+                                    resolve(retresults);
+                                })
+                                .on('error', error => {
+                                    myerror = error.message;
+                                });
+                        } else {
+                            connection
+                                .query(syntax)
+                                .on('result', async (row, index) => {
+                                    let resultBox = await this.parseResult(row);
+                                    retresults.push(resultBox);
+                                    resolve(retresults);
+                                })
+                                .on('error', error => {
+                                    myerror = error.message;
+                                });
+                        }
 
-                    connection.release();
-                    if (myerror != null) {
-                        reject(myerror || 'No Results');
+                        connection.release();
+
+                        if (myerror != null) {
+                            reject(myerror || 'No Results');
+                        }
+                    } catch (e) {
+                        reject(e);
                     }
-                } catch (e) {
-                    reject(e);
+                } else {
+                    reject('no connection');
                 }
             } else {
-                reject('no connection');
+                reject('Bad Query, Check syntax (missing values)');
+            }
+        });
+    }
+    public format(obj: any): Promise<string> {
+        return new Promise((resolve, reject) => {
+            let result = '';
+            for (const key in obj) {
+                let val = obj[key];
+                result += `\`${key}\`=${mysql.escape(val)} AND `;
+            }
+            result = result.substr(0, result.length - 5);
+            resolve(result);
+        });
+    }
+    private isValidQuery(syntax: string, values?: any[]): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            if (!values) {
+                resolve(!syntax.includes('?'));
+            } else {
+                let placeholderAmount = syntax.split('?').length - 1;
+                let valuesAmount = values.length;
+
+                resolve(placeholderAmount === valuesAmount);
             }
         });
     }

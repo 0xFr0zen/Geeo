@@ -1,4 +1,4 @@
-import Entity from '..';
+import Entity, { EntityFilter } from '..';
 import * as fs from 'fs';
 import * as path from 'path';
 import Safe, { StorageType } from '../Safe';
@@ -6,7 +6,12 @@ import Node from '../../../Crypt';
 import Database from '../../../Database/index';
 import Queries from '../../../Database/Queries';
 import Options from '../../../Database/Options';
-
+export interface UserFilter extends EntityFilter {
+    username?:string;
+    email?: string;
+    firstname?:string;
+    lastname?:string;
+}
 /**
  * User Class.
  *
@@ -26,21 +31,22 @@ export class User extends Entity {
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
     }
-    public static find(uname: string, DB: Database): Promise<User> {
-        return new Promise((resolve, reject) => {
-            if (DB == null) {
-                reject('No Database');
-            }
-            DB.query(Queries.USER.FIND_EXACT, [uname])
+    public static find(filter: UserFilter): Promise<User> {
+        return new Promise(async (resolve, reject) => {
+            let db = new Database();
+            let filtered_values = await db.format(filter);
+            console.log(filtered_values);
+            
+            db.query(Queries.USER.FIND_EXACT_MULTIPLE, [filtered_values])
                 .then(results => {
                     if (results.length == 0) {
-                        return reject(`No User '${uname}' found`);
+                        return reject(`No User via '${filter}' found`);
                     }
                     let userres = results[0];
 
                     let userCols = userres.getColumns();
 
-                    let user = User.call(userres.getRow('username'));
+                    let user = new User(userres.getRow('username'));
                     for (let k in userCols) {
                         let param = userCols[k];
                         let val = userres.getRow(param);
@@ -50,29 +56,12 @@ export class User extends Entity {
                 })
                 .catch(e => {
                     if (e === 'No result') {
-                        return reject(`No User '${uname}' found`);
+                        return reject(`No User via '${filter}' found`);
                     } else {
                         return reject(e);
                     }
                 });
         });
-    }
-    /**
-     * Checks if the user Exists
-     *
-     * @static
-     * @param {(string | Identity)} name
-     * @returns {boolean}
-     * @memberof User
-     */
-    public static exists(name: string): boolean {
-        let p1 = process.cwd();
-        let p = path.join(
-            p1,
-            './saved/entities/users/',
-            Buffer.from(name, 'utf8').toString('hex')
-        );
-        return fs.existsSync(p);
     }
 
     /**
@@ -89,7 +78,7 @@ export class User extends Entity {
         options: Options.UserCreateOptions
     ): Promise<User> {
         return new Promise((resolve, reject) => {
-            //    let user = new User(name)
+            let user = new User(name);
         });
     }
     public setLoggedIn(s: boolean) {

@@ -8,12 +8,16 @@ interface IEntity {
     created: number;
     [key: string]: any;
 }
+export interface EntityFilter {
+    name?:string;
+    type?:string;
+    created?:number;
 
+}
 export default class Entity extends EventEmitter {
     private properties: IEntity = { name: null, type: null, created: null };
     constructor(type: string, name: string, created?: number) {
         super();
-
         this.properties.type = type;
         this.properties.name = name;
         this.properties.created = created || Date.now();
@@ -78,5 +82,8 @@ export default class Entity extends EventEmitter {
                 reject('Never loaded.');
             }
         });
+    }
+    public toJSON():any {
+        return this.properties;
     }
 }

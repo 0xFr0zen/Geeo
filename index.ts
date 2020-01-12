@@ -10,20 +10,22 @@ import Queries from './dev/Database/Queries';
 //     created: new Date(Date.now()),
 // });
 let db = new Database();
-db.query(Queries.DATABASES.SHOW)
-    .then(results => {
-        results.forEach(result=> {
-            console.log(result.getRow('Database'));
-        })
-       db.close(); 
-    })
-    .catch(err => {
-        console.log(err);
-    });
-// User.find('admin', db)
-//     .then(user => {
-//         db.close();
+// db.query(Queries.DATABASES.SHOW)
+//     .then(results => {
+//         results.forEach(result=> {
+//             console.log(result.getRow('Database'));
+//         })
+//        db.close();
 //     })
-//     .catch(e => {
-//         console.error(e);
+//     .catch(err => {
+//         console.log(err);
 //     });
+User.find({ username: 'admin' })
+    .then(user => {
+        console.log(user.toJSON());
+
+        db.close();
+    })
+    .catch(e => {
+        console.error(e);
+    });

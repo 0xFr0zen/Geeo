@@ -24,7 +24,7 @@ export default class Server {
     private DB: Database = null;
     constructor(system: System) {
         this.system = system;
-        this.DB = new Database('geeo', { username: 'root', password: '' });
+        this.DB = new Database();
         this.application = express();
         this.application.set('trust proxy', 1);
         this.application.use(
@@ -172,9 +172,9 @@ export default class Server {
             .use(
                 '/user/:name/storage/:invname',
                 (req: express.Request, res: express.Response) => {
-                    let name = req.params.name;
+                    let username = req.params.name;
                     let invname = req.params.invname;
-                    User.find(name, this.DB)
+                    User.find({ name: username })
                         .then(user => {
                             let result: Safe = null;
                             if (user != null) {
@@ -188,7 +188,7 @@ export default class Server {
                                 res.json(JSON.parse(result.toString()).safe);
                             } else {
                                 res.status(404).send(
-                                    `Storage '${name}' not found`
+                                    `Storage '${username}' not found`
                                 );
                             }
                         })
@@ -199,9 +199,9 @@ export default class Server {
                 '/user/:name/storages/:operation/:invname',
                 (req: express.Request, res: express.Response) => {
                     let result: boolean = false;
-                    let name: string = req.params.name;
+                    let username: string = req.params.name;
                     let invname: string = req.params.invname;
-                    User.find(name, this.DB)
+                    User.find({ name: username })
                         .then(user => {
                             switch (req.params.operation) {
                                 case 'add':
