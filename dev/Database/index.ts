@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as mysql from 'mysql';
 import Options from './Options';
+import * as dotenv from 'dotenv';
 
 export class Result {
     private res: any = null;
@@ -24,6 +25,11 @@ export default class Database {
     private username: string = '';
     private pwd: string = '';
     private dboptions: mysql.PoolConfig;
+    private static idleChecker: NodeJS.Timeout;
+    private static lastQueried: number;
+    private static deltas: any[] = [];
+    private static idleCounter: number = 1;
+    private static avgLatency: number = 0;
     constructor() {
         if (Database.pool == null) {
             let options: Options.IDatabase = {
@@ -66,12 +72,34 @@ export default class Database {
             Database.pool.on('release', connection => {
                 console.log('Connection %d released', connection.threadId);
             });
+            Database.idleChecker = setInterval(() => {
+                if (
+                    Database.lastQueried
+                ) {
+                    let delta = (Date.now() - Database.lastQueried) % 1000;
+                    Database.deltas.push(delta);
+                    let sumDeltas = 0;
+                    Database.deltas.forEach(d => {
+                        sumDeltas+=d;
+                    });
+
+                    Database.avgLatency = Math.floor(sumDeltas/Database.idleCounter);
+                    if(delta >= Database.avgLatency || Database.idleCounter >= 10){
+                        Database.pool.end();
+                        Database.pool = null;
+                        clearInterval(Database.idleChecker);
+                    }
+                    Database.idleCounter++;
+                    
+                }
+            }, parseInt(dotenv.config().parsed.DB_IDLE_TIMER!) * 1000);
         } else {
             console.log('Already has pool.');
         }
     }
     public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
+            Database.lastQueried = Date.now();
             let retresults: Result[] = [];
             if (await this.isValidQuery(syntax, values)) {
                 if (Database.pool != null) {
@@ -79,18 +107,17 @@ export default class Database {
                         let myerror = null;
                         let connection: mysql.PoolConnection = await this.getConnection();
                         if (values) {
-                            connection
+                            let q = connection
                                 .query(syntax, values)
                                 .on('result', async (row, index) => {
                                     let resultBox = await this.parseResult(row);
-                                    // console.log(resultBox);
-
                                     retresults.push(resultBox);
                                     resolve(retresults);
                                 })
                                 .on('error', error => {
                                     myerror = error.message;
                                 });
+                            console.log(q.sql);
                         } else {
                             connection
                                 .query(syntax)
@@ -124,8 +151,12 @@ export default class Database {
         return new Promise((resolve, reject) => {
             let result = '';
             for (const key in obj) {
-                let val = obj[key];
-                result += `\`${key}\`=${mysql.escape(val)} AND `;
+                let val: any = obj[key];
+                if (typeof val === 'string' && val.includes('%')) {
+                    result += `\`${key}\` LIKE ${mysql.escape(val)} AND `;
+                } else {
+                    result += `\`${key}\`=${mysql.escape(val)} AND `;
+                }
             }
             result = result.substr(0, result.length - 5);
             resolve(result);
@@ -133,13 +164,16 @@ export default class Database {
     }
     private isValidQuery(syntax: string, values?: any[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
+            if (syntax.length == 0) {
+                return reject('Query-Syntax is empty.');
+            }
             if (!values) {
-                resolve(!syntax.includes('?'));
+                return resolve(!syntax.includes('?'));
             } else {
                 let placeholderAmount = syntax.split('?').length - 1;
                 let valuesAmount = values.length;
 
-                resolve(placeholderAmount === valuesAmount);
+                return resolve(placeholderAmount === valuesAmount);
             }
         });
     }

@@ -174,7 +174,7 @@ export default class Server {
                 (req: express.Request, res: express.Response) => {
                     let username = req.params.name;
                     let invname = req.params.invname;
-                    User.find({ name: username })
+                    User.findFirst({ name: username })
                         .then(user => {
                             let result: Safe = null;
                             if (user != null) {
@@ -201,7 +201,7 @@ export default class Server {
                     let result: boolean = false;
                     let username: string = req.params.name;
                     let invname: string = req.params.invname;
-                    User.find({ name: username })
+                    User.findFirst({ name: username })
                         .then(user => {
                             switch (req.params.operation) {
                                 case 'add':

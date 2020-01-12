@@ -9,10 +9,9 @@ interface IEntity {
     [key: string]: any;
 }
 export interface EntityFilter {
-    name?:string;
-    type?:string;
-    created?:number;
-
+    name?: string;
+    type?: string;
+    created?: number;
 }
 export default class Entity extends EventEmitter {
     private properties: IEntity = { name: null, type: null, created: null };
@@ -83,7 +82,7 @@ export default class Entity extends EventEmitter {
             }
         });
     }
-    public toJSON():any {
+    public toJSON(): any {
         return this.properties;
     }
 }

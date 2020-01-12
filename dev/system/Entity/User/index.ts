@@ -7,10 +7,10 @@ import Database from '../../../Database/index';
 import Queries from '../../../Database/Queries';
 import Options from '../../../Database/Options';
 export interface UserFilter extends EntityFilter {
-    username?:string;
+    username?: string;
     email?: string;
-    firstname?:string;
-    lastname?:string;
+    firstname?: string;
+    lastname?: string;
 }
 /**
  * User Class.
@@ -31,28 +31,31 @@ export class User extends Entity {
         this.addParameter('storages', []);
         this.addParameter('loggedin', false);
     }
-    public static find(filter: UserFilter): Promise<User> {
+    public static find(filter: UserFilter): Promise<User[]> {
         return new Promise(async (resolve, reject) => {
             let db = new Database();
             let filtered_values = await db.format(filter);
-            console.log(filtered_values);
-            
-            db.query(Queries.USER.FIND_EXACT_MULTIPLE, [filtered_values])
+
+            db.query(Queries.USER.FIND_MULTIPLE.replace('?', filtered_values))
                 .then(results => {
                     if (results.length == 0) {
                         return reject(`No User via '${filter}' found`);
                     }
-                    let userres = results[0];
+                    let ret: User[] = [];
+                    for (let u in results) {
+                        let userres = results[u];
 
-                    let userCols = userres.getColumns();
+                        let userCols = userres.getColumns();
 
-                    let user = new User(userres.getRow('username'));
-                    for (let k in userCols) {
-                        let param = userCols[k];
-                        let val = userres.getRow(param);
-                        user.updateParameter(param, val);
+                        let user = new User(userres.getRow('username'));
+                        for (let k in userCols) {
+                            let param = userCols[k];
+                            let val = userres.getRow(param);
+                            user.updateParameter(param, val);
+                            ret.push(user);
+                        }
                     }
-                    return resolve(user);
+                    return resolve(ret);
                 })
                 .catch(e => {
                     if (e === 'No result') {
@@ -63,7 +66,12 @@ export class User extends Entity {
                 });
         });
     }
-
+    public static findFirst(filter: UserFilter): Promise<User> {
+        return new Promise(async (resolve, reject) => {
+            let users = await User.find(filter);
+            return resolve(users[0]);
+        });
+    }
     /**
      * Creates a User based on name
      *
@@ -77,8 +85,18 @@ export class User extends Entity {
         password: string,
         options: Options.UserCreateOptions
     ): Promise<User> {
-        return new Promise((resolve, reject) => {
-            let user = new User(name);
+        return new Promise(async (resolve, reject) => {
+            let db = new Database();
+            let results = await db.query(Queries.USER.CREATE, [
+                name,
+                password,
+                options.firstname,
+                options.lastname,
+                options.email,
+                options.created,
+            ]);
+            console.log(results);
+            
         });
     }
     public setLoggedIn(s: boolean) {
