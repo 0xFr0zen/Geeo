@@ -32,6 +32,7 @@ export default class Database {
     private static avgLatency: number = 0;
     private static db_life: number;
     private static dboptions: mysql.PoolConfig = {};
+    private static internalInterv: NodeJS.Timeout;
 
     constructor() {
         if (Database.cluster == null) {
@@ -64,10 +65,8 @@ export default class Database {
                 canRetry: true,
             });
             for (let i = 0; i < Database.poolAmount; i++) {
-                Database.cluster.add(
-                    Database.clusterCount++ + '',
-                    Database.dboptions
-                );
+                let poolname = Database.clusterCount++;
+                Database.cluster.add('pool' + poolname, Database.dboptions);
             }
             Database.db_life = Date.now();
 
@@ -89,13 +88,18 @@ export default class Database {
             Database.cluster.on('release', connection => {
                 console.log('Connection %d released', connection.threadId);
             });
-            Database.idleChecker = setInterval(Database.updater, 60 * 1000);
+            console.log(
+                'Updater set for: ' +
+                    new Date(new Date().getTime() + 5000).toISOString()
+            );
+            Database.idleChecker = setInterval(Database.updater, 5 * 1000);
         } else {
             console.log('Already has pool.');
         }
     }
-    private static updater(){
-        if (Database.lastQueried) {
+    private static updater() {
+        if (Database.lastQueried && Database.cluster) {
+            console.log('query was made.......');
             let delta = (Date.now() - Database.lastQueried) % 1000;
             if (Database.deltas.length >= 10) {
                 Database.deltas.shift();
@@ -107,27 +111,34 @@ export default class Database {
                 sumDeltas += d;
             });
 
-            Database.avgLatency = Math.floor(
-                sumDeltas / Database.idleCounter
-            );
-            let internalIterv = setInterval(()=>{
+            Database.avgLatency = Math.floor(sumDeltas / Database.idleCounter);
+            Database.internalInterv = setInterval(() => {
                 Database.lifetime()
-                .then((life: string) => {
-                    console.log('Database lifetime: ' + life);
-                    if (Database.idleCounter >= Database.idleBorder) {
-                        Database.cluster.end();
-                        Database.cluster = null;
-                        Database.idleCounter = 1;
-                        clearInterval(Database.idleChecker);
-                    }
-                    Database.idleCounter++;
-                })
-                .catch(e => {
-                    console.error(e);
-                });
+                    .then((life: string) => {
+                        console.log('Database lifetime: ' + life);
+                        if (Database.idleCounter >= Database.idleBorder && Database.cluster != null) {
+                            Database.cluster.end(err => {
+                                if (err) {
+                                    console.log(err.message);
+                                }
+                                console.log('Cluster closed');
+                            });
+                            Database.cluster = null;
+                            Database.idleCounter = 1;
+                            clearInterval(Database.idleChecker);
+                            clearInterval(Database.internalInterv);
+                        }
+                        Database.idleCounter++;
+                    })
+                    .catch(e => {
+                        console.error(e);
+                    });
             }, 1000);
-            clearInterval(internalIterv);
         }
+        console.log(
+            'Next Updater set for: ' +
+                new Date(new Date().getTime() + 5000).toISOString()
+        );
     }
     private static lifetime(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
@@ -154,41 +165,50 @@ export default class Database {
     public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
             Database.lastQueried = Date.now();
+            console.log('Last Queried: ' + new Date().toISOString());
             let retresults: Result[] = [];
             if (await this.isValidQuery(syntax, values)) {
                 if (Database.cluster != null) {
                     try {
                         let myerror = null;
                         let connection: mysql.PoolConnection = await this.getConnection();
-                        if (values) {
-                            let q = connection
-                                .query(syntax, values)
-                                .on('result', async (row, index) => {
-                                    let resultBox = await this.parseResult(row);
-                                    retresults.push(resultBox);
-                                    resolve(retresults);
-                                })
-                                .on('error', error => {
-                                    myerror = error.message;
-                                });
-                            console.log(q.sql);
+                        if (connection != null) {
+                            if (values) {
+                                let q = connection
+                                    .query(syntax, values)
+                                    .on('result', async (row, index) => {
+                                        let resultBox = await this.parseResult(
+                                            row
+                                        );
+                                        retresults.push(resultBox);
+                                        resolve(retresults);
+                                    })
+                                    .on('error', error => {
+                                        myerror = error.message;
+                                    });
+                                console.log(q.sql);
+                            } else {
+                                connection
+                                    .query(syntax)
+                                    .on('result', async (row, index) => {
+                                        let resultBox = await this.parseResult(
+                                            row
+                                        );
+                                        retresults.push(resultBox);
+                                        resolve(retresults);
+                                    })
+                                    .on('error', error => {
+                                        myerror = error.message;
+                                    });
+                            }
+
+                            connection.release();
+
+                            if (myerror != null) {
+                                reject(myerror || 'No Results');
+                            }
                         } else {
-                            connection
-                                .query(syntax)
-                                .on('result', async (row, index) => {
-                                    let resultBox = await this.parseResult(row);
-                                    retresults.push(resultBox);
-                                    resolve(retresults);
-                                })
-                                .on('error', error => {
-                                    myerror = error.message;
-                                });
-                        }
-
-                        connection.release();
-
-                        if (myerror != null) {
-                            reject(myerror || 'No Results');
+                            reject('No Connection.');
                         }
                     } catch (e) {
                         reject(e);
@@ -233,7 +253,7 @@ export default class Database {
     }
     private getConnection(): Promise<mysql.PoolConnection> {
         return new Promise((resolve, reject) => {
-            Database.cluster.getConnection((err, connection) => {
+            Database.cluster.of('*').getConnection((err, connection) => {
                 if (err) reject(err.message);
                 if (connection != null) {
                     resolve(connection);
