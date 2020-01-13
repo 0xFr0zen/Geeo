@@ -24,15 +24,12 @@ export default class Database {
     private static clusterCount: number = 0;
     private static idleChecker: NodeJS.Timeout;
     private static poolAmount = 10;
-    private static idleBorder: number =
-        parseInt(dotenv.config().parsed.DB_IDLE_MAX) || 15;
     private static lastQueried: number;
     private static deltas: any[] = [];
     private static idleCounter: number = 1;
     private static avgLatency: number = 0;
     private static db_life: number;
     private static dboptions: mysql.PoolConfig = {};
-    private static internalInterv: NodeJS.Timeout;
 
     constructor() {
         if (Database.cluster == null) {
@@ -90,16 +87,17 @@ export default class Database {
             });
             console.log(
                 'Updater set for: ' +
-                    new Date(new Date().getTime() + 5000).toISOString()
+                    new Date(new Date().getTime() + 60000).toISOString()
             );
-            Database.idleChecker = setInterval(Database.updater, 5 * 1000);
+            if (Database.idleChecker != null) {
+                Database.idleChecker = setInterval(Database.updater, 60 * 1000);
+            }
         } else {
             console.log('Already has pool.');
         }
     }
-    private static updater() {
+    private static async updater() {
         if (Database.lastQueried && Database.cluster) {
-            console.log('query was made.......');
             let delta = (Date.now() - Database.lastQueried) % 1000;
             if (Database.deltas.length >= 10) {
                 Database.deltas.shift();
@@ -112,32 +110,25 @@ export default class Database {
             });
 
             Database.avgLatency = Math.floor(sumDeltas / Database.idleCounter);
-            Database.internalInterv = setInterval(() => {
-                Database.lifetime()
-                    .then((life: string) => {
-                        console.log('Database lifetime: ' + life);
-                        if (Database.idleCounter >= Database.idleBorder && Database.cluster != null) {
-                            Database.cluster.end(err => {
-                                if (err) {
-                                    console.log(err.message);
-                                }
-                                console.log('Cluster closed');
-                            });
-                            Database.cluster = null;
-                            Database.idleCounter = 1;
-                            clearInterval(Database.idleChecker);
-                            clearInterval(Database.internalInterv);
-                        }
-                        Database.idleCounter++;
-                    })
-                    .catch(e => {
-                        console.error(e);
-                    });
-            }, 1000);
+            if (delta >= this.avgLatency) {
+                Database.cluster.end(err => {
+                    if (err) {
+                        console.log(err.message);
+                    }
+                    console.log('Cluster closed');
+                });
+                Database.cluster = null;
+                Database.idleCounter = 1;
+
+                clearInterval(Database.idleChecker);
+            }
+
+            console.log('Database lifetime: ' + (await Database.lifetime()));
+            Database.idleCounter++;
         }
         console.log(
             'Next Updater set for: ' +
-                new Date(new Date().getTime() + 5000).toISOString()
+                new Date(new Date().getTime() + 60000).toISOString()
         );
     }
     private static lifetime(): Promise<string> {
