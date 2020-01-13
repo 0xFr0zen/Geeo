@@ -20,18 +20,22 @@ export class Result {
 }
 export default class Database {
     private static MYSQL_PORT: number = 3306;
-    private static pool: mysql.Pool = null;
-    private port: number = Database.MYSQL_PORT;
-    private username: string = '';
-    private pwd: string = '';
-    private dboptions: mysql.PoolConfig;
+    private static cluster: mysql.PoolCluster = null;
+    private static clusterCount: number = 0;
     private static idleChecker: NodeJS.Timeout;
+    private static poolAmount = 10;
+    private static idleBorder: number =
+        parseInt(dotenv.config().parsed.DB_IDLE_MAX) || 15;
     private static lastQueried: number;
     private static deltas: any[] = [];
     private static idleCounter: number = 1;
     private static avgLatency: number = 0;
+    private static db_life: number;
+    private static dboptions: mysql.PoolConfig = {};
+
     constructor() {
-        if (Database.pool == null) {
+        if (Database.cluster == null) {
+            Database.deltas = [];
             console.log(
                 Database.avgLatency != 0 ? 'Reopening pool.' : 'Opening pool.'
             );
@@ -40,78 +44,119 @@ export default class Database {
                 username: 'root',
                 password: '',
             };
-            this.port = Database.MYSQL_PORT!;
-            this.pwd = options.password;
-            this.username = options.username;
-            this.dboptions = {
+            Database.dboptions = {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
                 connectTimeout: 700,
-                user: this.username,
-                password: this.pwd,
-                port: this.port,
+                user: options.username,
+                password: options.password,
+                port: Database.MYSQL_PORT!,
                 database: 'geeo',
                 connectionLimit: 20,
                 waitForConnections: true,
                 queueLimit: 10,
             };
-            Database.pool = mysql.createPool(this.dboptions);
+            Database.cluster = mysql.createPoolCluster({
+                defaultSelector: 'ORDER',
+                restoreNodeTimeout: 10,
+                removeNodeErrorCount: 10,
+                canRetry: true,
+            });
+            for (let i = 0; i < Database.poolAmount; i++) {
+                Database.cluster.add(
+                    Database.clusterCount++ + '',
+                    Database.dboptions
+                );
+            }
+            Database.db_life = Date.now();
 
-            Database.pool.on('error', error => {
+            Database.cluster.on('error', error => {
                 console.error(error);
             });
 
-            Database.pool.on('enqueue', () => {
+            Database.cluster.on('enqueue', () => {
                 console.log('Waiting for available connection slot');
             });
 
-            Database.pool.on('acquire', connection => {
+            Database.cluster.on('acquire', connection => {
                 console.log('Connection %d acquired', connection.threadId);
             });
 
-            Database.pool.on('connection', connection => {
+            Database.cluster.on('connection', connection => {
                 console.log('Connection %d connected', connection.threadId);
             });
-            Database.pool.on('release', connection => {
+            Database.cluster.on('release', connection => {
                 console.log('Connection %d released', connection.threadId);
             });
-            Database.idleChecker = setInterval(() => {
-                if (Database.lastQueried) {
-                    let delta = (Date.now() - Database.lastQueried) % 1000;
-                    Database.deltas.push(delta);
-                    let sumDeltas = 0;
-                    Database.deltas.forEach(d => {
-                        sumDeltas += d;
-                    });
-
-                    Database.avgLatency = Math.floor(
-                        sumDeltas / Database.idleCounter
-                    );
-                    if (
-                        delta >= Database.avgLatency &&
-                        Database.idleCounter >= 10
-                    ) {
-                        console.log('Closing pool.');
-                        Database.pool.end();
-                        Database.pool = null;
-                        Database.idleCounter = 1;
-                        clearInterval(Database.idleChecker);
-                        console.log('Closed pool');
-                    }
-                    Database.idleCounter++;
-                }
-            }, parseInt(dotenv.config().parsed.DB_IDLE_TIMER!) * 1000);
+            Database.idleChecker = setInterval(Database.updater, 60 * 1000);
         } else {
             console.log('Already has pool.');
         }
+    }
+    private static updater(){
+        if (Database.lastQueried) {
+            let delta = (Date.now() - Database.lastQueried) % 1000;
+            if (Database.deltas.length >= 10) {
+                Database.deltas.shift();
+            }
+            Database.deltas.push(delta);
+
+            let sumDeltas = 0;
+            Database.deltas.forEach(d => {
+                sumDeltas += d;
+            });
+
+            Database.avgLatency = Math.floor(
+                sumDeltas / Database.idleCounter
+            );
+            let internalIterv = setInterval(()=>{
+                Database.lifetime()
+                .then((life: string) => {
+                    console.log('Database lifetime: ' + life);
+                    if (Database.idleCounter >= Database.idleBorder) {
+                        Database.cluster.end();
+                        Database.cluster = null;
+                        Database.idleCounter = 1;
+                        clearInterval(Database.idleChecker);
+                    }
+                    Database.idleCounter++;
+                })
+                .catch(e => {
+                    console.error(e);
+                });
+            }, 1000);
+            clearInterval(internalIterv);
+        }
+    }
+    private static lifetime(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            if (Database.db_life == null) {
+                return reject('No entity');
+            }
+            let ms = Date.now() - Database.db_life;
+            let secs = Math.floor((ms / 1000) % 1000);
+            let minutes = Math.floor((ms / 1000 / 1000) % 60);
+            let hours = Math.floor((ms / 1000 / 1000 / 60) % 60);
+            let days = Math.floor((ms / 1000 / 1000 / 60 / 60) % 24);
+            let months = Math.floor((ms / 1000 / 1000 / 60 / 60 / 24) % 28);
+            let result: string[] = [];
+            result.push(
+                months + 'M',
+                days + 'd',
+                hours + 'h',
+                minutes + 'm',
+                secs + 's'
+            );
+            return resolve(result.join(':'));
+        });
     }
     public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise(async (resolve, reject) => {
             Database.lastQueried = Date.now();
             let retresults: Result[] = [];
             if (await this.isValidQuery(syntax, values)) {
-                if (Database.pool != null) {
+                if (Database.cluster != null) {
                     try {
                         let myerror = null;
                         let connection: mysql.PoolConnection = await this.getConnection();
@@ -188,7 +233,7 @@ export default class Database {
     }
     private getConnection(): Promise<mysql.PoolConnection> {
         return new Promise((resolve, reject) => {
-            Database.pool.getConnection((err, connection) => {
+            Database.cluster.getConnection((err, connection) => {
                 if (err) reject(err.message);
                 if (connection != null) {
                     resolve(connection);
@@ -214,8 +259,8 @@ export default class Database {
         });
     }
     public close() {
-        if (Database.pool != null) {
-            Database.pool.end();
+        if (Database.cluster != null) {
+            Database.cluster.end();
         }
     }
 }

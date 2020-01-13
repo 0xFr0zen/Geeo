@@ -5,10 +5,11 @@ import { GeeoMap } from '../../GeeoMap';
 namespace user {
     export async function profile(req: express.Request, res: express.Response) {
         console.log('user profile');
-        if ((await User.findFirst({ username: req.params.name })) != null) {
-            return res.render('user', { username: req.params.name });
+        let user1 = await User.findFirst({ username: req.params.name });
+        if (user1 != null) {
+            return res.render('user', { user: user1.toJSON() });
         } else {
-            throw new Error('could find user');
+            throw new Error(`Could'nt find user`);
         }
     }
     export async function storages(
