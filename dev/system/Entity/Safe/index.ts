@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { GeeoMap } from '../../../system/GeeoMap';
 import { resolve } from 'dns';
+import Database from '../../../Database/index';
+import Queries from '../../../Database/Queries';
 
 export enum StorageType {
     Inventory = 'inventory',
@@ -41,8 +43,32 @@ export default class Safe extends Entity {
         this.addParameter('storagetype', storagetype);
         this.addParameter('space', new GeeoMap<string, any>());
     }
+    public static load(username: string): Promise<Safe[]> {
+        return new Promise((resolve, reject) => {
+            let results: Safe[] = [];
+            let db = new Database();
+            db.query(Queries.STORAGE.LOAD, [username])
+                .then(res => {
+                    if (res.length > 0) {
+                        res.forEach(r => {
+                            let safe = new Safe(
+                                r.getRow('username'),
+                                r.getRow('safename'),
+                                r.getRow('safetype')
+                            );
+                            results.push(safe);
+                        });
+                    } else {
+                        reject('No Safe found.');
+                    }
+                })
+                .catch(e => {
+                    return reject(e);
+                });
+            return resolve(results);
+        });
+    }
     public static from(json: any): Safe {
-        
         json = json.safe;
         let safe: Safe = new Safe(json.user, json.name, json.storagetype);
 
@@ -55,7 +81,7 @@ export default class Safe extends Entity {
         return safe;
     }
     public getSpace(): Promise<GeeoMap<string, any>> {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             let result = null;
             let s = this.getParameter('space');
             let gm: GeeoMap<string, any> = new GeeoMap<string, any>();
@@ -66,34 +92,35 @@ export default class Safe extends Entity {
     }
     public async addItem(name: string, item: any): Promise<Safe> {
         return new Promise(async (resolve, reject) => {
-            this.updateParameter('space', (await this.getSpace()).addItem(name, item));
+            this.updateParameter(
+                'space',
+                (await this.getSpace()).addItem(name, item)
+            );
             resolve(this);
         });
     }
     public async getItem(name: string): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            
             let space = await this.getSpace();
-            if(space == null){
-                reject("No Space created.");
+            if (space == null) {
+                reject('No Space created.');
             }
             resolve(space.getItem(name));
-
         });
     }
     public async removeItem(name: string): Promise<Safe> {
-        return new Promise(async (resolve, reject)=> {
+        return new Promise(async (resolve, reject) => {
             let space = await this.getSpace();
-            if(space == null){
-                reject("No Space created.")
+            if (space == null) {
+                reject('No Space created.');
             }
-            
+
             space.removeItem(name);
-            if(await !this.updateParameter('space', space)){
+            if (await !this.updateParameter('space', space)) {
                 reject(`Couldn't update '${name}'`);
             }
-            resolve(this)
-        })
+            resolve(this);
+        });
     }
     public getPath(): string {
         let result = this.hasParameter('path')
@@ -101,7 +128,7 @@ export default class Safe extends Entity {
             : null;
         return result;
     }
-    public getUsername():string {
-        return this.getParameter('user').toString()
+    public getUsername(): string {
+        return this.getParameter('user').toString();
     }
 }

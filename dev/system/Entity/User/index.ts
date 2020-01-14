@@ -27,9 +27,8 @@ export class User extends Entity {
      */
     constructor(name: string) {
         super('user', name);
-        this.addParameter('settings', '');
-        this.addParameter('storages', []);
         this.addParameter('loggedin', false);
+        this.loadSafes();
     }
     public static find(filter: UserFilter): Promise<User[]> {
         return new Promise(async (resolve, reject) => {
@@ -48,6 +47,7 @@ export class User extends Entity {
                         let userCols = userres.getColumns();
 
                         let user = new User(userres.getRow('username'));
+
                         for (let k in userCols) {
                             let param = userCols[k];
                             let val = userres.getRow(param);
@@ -110,45 +110,38 @@ export class User extends Entity {
 
         return result;
     }
+
+    private async loadSafes() {
+        this.addParameter('storages', await Safe.load(this.getName()));
+    }
     /**
      * Creates a storage for the User.
      *
      * @private
      * @memberof User
      */
-    public addSafe(storage: Safe | string): Promise<boolean> {
-        return new Promise((resolve, reject) => {
+    public addSafe(storage: string): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
             if (this.hasParameter('storages')) {
                 let storages = this.getParameter('storages');
                 if (storages != null && Array.isArray(storages)) {
-                    if (storage instanceof Safe) {
-                        if (storages.length < storages.push(storage)) {
-                            this.updateParameter('storages', storages);
-                            return resolve(true);
-                        } else {
-                            return resolve(false);
-                        }
-                    } else {
-                        let s = new Safe(
-                            this.getName(),
-                            storage,
-                            StorageType.Inventory
+                    let s = new Safe(
+                        this.getName(),
+                        storage,
+                        StorageType.Inventory
+                    );
+                    if (storages.length < storages.push(s)) {
+                        return resolve(
+                            this.updateParameter('storages', storages)
                         );
-                        if (storages.length < storages.push(s)) {
-                            return resolve(
-                                this.updateParameter('storages', storages)
-                            );
-                        } else {
-                            return resolve(false);
-                        }
+                    } else {
+                        return resolve(false);
                     }
                 }
-            } else {
-                return reject('No storage');
             }
         });
     }
-    public getSafe(name: string): Safe {
+    public getSafe(name: string): Promise<Safe> {
         let result = null;
         if (this.hasParameter('storages')) {
             let storages = this.getParameter('storages');

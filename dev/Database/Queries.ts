@@ -1,6 +1,5 @@
 namespace Queries {
     export enum USER {
-
         /**
          * creating user (username, password, firstname, lastname, email and current date required)
          */
@@ -21,7 +20,6 @@ namespace Queries {
          */
         FIND_LIKE = 'SELECT username,firstname, lastname, email, userid FROM users WHERE username LIKE ?;',
 
-
         /**
          *  removes user.
          */
@@ -39,7 +37,9 @@ namespace Queries {
         TABLES = '',
         TRIGGERS = '',
     }
-    export enum STORAGE {}
+    export enum STORAGE {
+        LOAD = 'SELECT safe.safeID as safeid, safe.safetype as safetype, safe.safename as safename, safe.safeinventoryID as safeinventoryID, user.username as username FROM user INNER JOIN safe on safe.safeid = user.userid WHERE user.userID = ?',
+    }
     export enum DOCUMENTS {}
 }
 export default Queries;

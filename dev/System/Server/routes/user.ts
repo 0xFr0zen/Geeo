@@ -71,7 +71,7 @@ namespace user {
         let username: string = req.params.name;
         let invname: string = req.params.invname;
         User.findFirst({ name: username })
-            .then(user => {
+            .then(async user => {
                 switch (req.params.operation) {
                     case 'add':
                         user.addSafe(invname);
@@ -81,7 +81,7 @@ namespace user {
                         user.removeSafe(invname);
                         break;
                     case 'edit':
-                        let safe: Safe = user.getSafe(invname);
+                        let safe: Safe = await user.getSafe(invname);
                         break;
 
                     default:
