@@ -1,7 +1,15 @@
 import User from './dev/System/Entity/User';
 import Safe, { StorageType } from './dev/System/Entity/Safe';
 import System from './dev/System/index';
+import service from 'os-service';
+// service.stop(0);
+// service.add("mysql", (e)=>{
+//     if (e) console.error(e);
+// });
 
+// service.run(()=>{
+//     console.log("rinning mysql");
+// });
 let system = new System();
 system.on('ready', port => {
     console.log('system is running on port: ' + port);
