@@ -5,7 +5,7 @@ namespace themes {
     export function load(req: express.Request, res: express.Response) {
         let p = path.join(
             process.cwd(),
-            './dev/system/Server/Web/Themes/',
+            './dev/System/Server/Web/Themes/',
             req.params.file
         );
         res.setHeader('Content-Type', 'text/css');

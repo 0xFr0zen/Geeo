@@ -10,7 +10,7 @@ namespace images {
             let fname = file[1];
             p = path.join(
                 process.cwd(),
-                './dev/system/Server/Web/Images/',
+                './dev/System/Server/Web/Images/',
                 type,
                 fname
             );

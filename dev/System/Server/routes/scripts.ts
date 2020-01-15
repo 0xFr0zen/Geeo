@@ -6,7 +6,7 @@ namespace scripts {
     export function load(req: express.Request, res: express.Response) {
         let p = path.join(
             process.cwd(),
-            './dev/system/Server/Web/Scripts/',
+            './dev/System/Server/Web/Scripts/',
             req.params.file
         );
         res.setHeader('Content-Type', 'application/javascript');

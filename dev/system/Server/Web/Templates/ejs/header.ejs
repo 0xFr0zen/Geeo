@@ -7,14 +7,14 @@
             module = undefined;
         }
     </script>
-    <script src="/scripts/jquery.js"></script>
+    <script defer src="/scripts/jquery.js"></script>
     <% if(typeof username !== 'undefined'){ %>
     <script>
         var username = '<%-username%>';
     </script>
     <% } %> <% if(scripts) { %>
-        <% scripts.forEach(function(script){ %>
-    <script src="/scripts/<%= script %>.js"></script>
+    <% scripts.forEach(function(script){ %>
+    <script defer src="/scripts/<%= script %>.js"></script>
     <% }); %>
     <% } %>
     <script>

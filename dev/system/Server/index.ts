@@ -95,13 +95,16 @@ export default class Server {
             .get('/login$', login.get)
             .post('/login$', login.post)
             .get('/logout$', logout.get)
-            .use('/user/:name/$', user.profile)
-            .use('/user/:name/storages/$', user.storages)
-            .use('/user/:name/storage/:invname/$', user.storage)
-            .post('/user/:name/storages/:operation/:invname/$', user.operate)
-            .use('/themes/:file/$', themes.load)
-            .use('/scripts/:file/$', scripts.load)
-            .use('/images/:file(.*)$', images.load);
+            .use('/user/:name$', user.profile)
+            .use('/user/:name/storages', user.storages)
+            .use('/user/:name/storage/:invname', user.storage)
+            .post(
+                '/user/:name/storages/:operation/:invname',
+                user.operate
+            )
+            .use('/themes/:file', themes.load)
+            .use('/scripts/:file', scripts.load)
+            .use('/images/:file(.*)', images.load);
         this.application.use(this.router);
         this.start();
     }

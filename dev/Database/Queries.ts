@@ -39,6 +39,7 @@ namespace Queries {
     }
     export enum STORAGE {
         LOAD = 'SELECT safe.safeID as safeid, safe.safetype as safetype, safe.safename as safename, safe.safeinventoryID as safeinventoryID, user.username as username FROM user INNER JOIN safe on safe.safeid = user.userid WHERE user.userID = ?',
+        ADD =  'INSERT INTRO safe(safetype, safename, )',
     }
     export enum DOCUMENTS {}
 }
