@@ -50,7 +50,7 @@ export default class Database {
                 user: options.username,
                 password: options.password,
                 port: Database.MYSQL_PORT!,
-                database: 'geeo',
+                database:'geeo_test',
                 connectionLimit: 20,
                 waitForConnections: true,
                 queueLimit: 10,
@@ -176,6 +176,8 @@ export default class Database {
                                     })
                                     .on('error', error => {
                                         myerror = error.message;
+                                        console.log("error", myerror);
+                                        
                                     });
                                 console.log(q.sql);
                             } else {

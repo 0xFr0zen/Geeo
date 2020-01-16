@@ -3,7 +3,7 @@ namespace Queries {
         /**
          * creating user (username, password, firstname, lastname, email and current date required)
          */
-        CREATE = 'INSERT INTO users(username, pass, firstname, lastname, email, created) VALUES(?, ?, ?, ?, ?, ?);',
+        CREATE = 'INSERT INTO user(username, pass, firstname, lastname, email, created) VALUES(?, ?, ?, ?, ?, ?);',
 
         /**
          * Looks for the exact match of the username.
