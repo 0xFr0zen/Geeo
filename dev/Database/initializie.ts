@@ -19,7 +19,7 @@ namespace Initializer {
             db.query(s)
                 .then(async (results: Result[]) => {
                     x = results.length;
-                    let d = await db.query(Queries.USER.CREATE, ["admin","admin", "oezguer", "isbert", "frozennetwork1996@gmail.com", new Date()]);
+                    let d = await db.query(Queries.USER.CREATE, ["admin", "admin", "oezguer", "isbert", "frozennetwork1996@gmail.com", new Date()]);
                     console.log(d);
 
                 })

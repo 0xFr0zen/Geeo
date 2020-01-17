@@ -12,6 +12,7 @@ import user from './routes/user';
 import themes from './routes/themes';
 import scripts from './routes/scripts';
 import images from './routes/images';
+import register from './routes/register';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -41,7 +42,7 @@ export default class Server {
                 },
             })
         );
-        this.application.use(bodyParser.urlencoded({ extended: false }));
+        this.application.use(bodyParser.json());
         this.router = express.Router({ mergeParams: true });
 
         let view_engine =
@@ -95,6 +96,8 @@ export default class Server {
             .get('/login$', login.get)
             .post('/login$', login.post)
             .get('/logout$', logout.get)
+            .get('/register$', register.get)
+            .post('/register$', register.post)
             .use('/user/:name$', user.profile)
             .use('/user/:name/storages', user.storages)
             .use('/user/:name/storage/:invname', user.storage)
