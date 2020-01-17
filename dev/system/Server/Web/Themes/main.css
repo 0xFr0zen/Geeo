@@ -1,3 +1,33 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/MaterialIcons-Regular.eot);
+  /* For IE6-8 */
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(/fonts/MaterialIcons-Regular.woff2) format('woff2'), url(/fonts/MaterialIcons-Regular.woff) format('woff'), url(/fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
 * {
   box-sizing: border-box;
   font-family: 'Lato', sans-serif;
@@ -25,12 +55,11 @@ body {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  padding: 20px;
 }
 #main #main_inner {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 #main #main_inner #menu {
   -webkit-touch-callout: none;
@@ -46,67 +75,54 @@ body {
   user-select: none;
   position: relative;
   float: left;
-  width: 100%;
-  height: 60px;
-  background: #333;
+  width: 70px;
+  height: 100%;
+  background: transparent;
   padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 5px;
 }
 #main #main_inner #menu #inventories {
   float: left;
-  width: auto;
-  height: 100%;
+  width: 50px;
+  height: auto;
 }
 #main #main_inner #menu #inventories .inventory {
+  vertical-align: middle;
+  display: inline-table;
   float: left;
-  min-width: 100px;
-  width: auto;
-  height: 100%;
+  width: 50px;
+  height: 50px;
   margin-right: 10px;
-  padding: 10px;
-  color: white;
-  background: rgba(255, 255, 255, 0.05);
+  color: black;
+  background: #ddd;
   text-align: center;
-  border-radius: 40px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  padding: 12px 10px;
   cursor: pointer;
 }
-#main #main_inner #menu #inventories .inventory .name {
-  color: white;
-  font-size: 12pt;
-}
 #main #main_inner #menu #inventories .inventory:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #ccc;
 }
 #main #main_inner #menu #inventories .inventory:active {
-  background: rgba(255, 255, 255, 0.1);
+  background: #c5c5c5;
 }
-#main #main_inner #menu #inventories #default {
+#main #main_inner #menu #inventories .inventory.highlighted {
   background: #08f;
+  color: white;
 }
 #main #main_inner #menu #inventories #add {
   float: left;
-  height: 100%;
-  min-width: 0px;
-  width: 40px !important;
-  padding: 10px;
+  height: 50px !important;
+  width: 50px !important;
   text-align: center;
-  color: white;
-  background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
-#main #main_inner #menu #inventories #add:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
-#main #main_inner #menu #inventories #add:active {
-  background: rgba(255, 255, 255, 0.2);
-}
 #main #main_inner #menu #user {
-  float: right;
-  width: 150px;
-  height: 100%;
+  position: absolute;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
   background: #777;
-  padding: 5px;
   border-radius: 40px;
   overflow: hidden;
   cursor: pointer;
@@ -116,32 +132,21 @@ body {
   height: 100%;
   border-radius: 40px;
   overflow: hidden;
+  text-align: center;
+  color: white;
+  padding: 12px 10px;
 }
 #main #main_inner #menu #user #profile:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-#main #main_inner #menu #user #profile img {
-  float: left;
-  border-radius: 40px;
-  height: 100%;
-}
-#main #main_inner #menu #user #profile span {
-  color: white;
-  width: calc(100% - 30px);
-  height: 100%;
-  float: left;
-  font-size: 10pt;
-  padding: 7px;
-  padding-left: 10px;
+  background: #555;
 }
 #main #main_inner #content {
-  float: left;
-  width: 100%;
-  height: auto;
+  position: absolute;
+  left: 70px;
+  width: calc(100% - 70px);
+  height: 100%;
   min-height: 400px;
-  background-color: #ddd;
+  background-color: transparent;
   padding: 30px;
-  border-radius: 5px;
 }
 #main #main_inner #content #inventory {
   float: left;
@@ -188,12 +193,12 @@ input {
   border: none;
   background: #ddd;
   margin-bottom: 10px;
-  outline: none;
-  border-radius: 25px;
+  outline: none !important;
+  border-radius: 5px;
   font-size: 13pt;
 }
 input:focus {
-  background: rgba(0, 153, 255, 0.05);
+  background: #ccc;
 }
 input:last-child {
   margin-bottom: 0px;
@@ -215,7 +220,7 @@ input[type='submit']:active {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  background: white;
+  background: #eee;
 }
 #login #form {
   position: fixed;
@@ -226,45 +231,9 @@ input[type='submit']:active {
   left: 50%;
   top: 50%;
 }
-#login #form input {
-  width: 100%;
-  height: 50px;
-  padding: 5px 20px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  margin-bottom: 10px;
-  outline: none;
-  border-radius: 25px;
-  font-size: 13pt;
-}
-#login #form input:focus {
-  background: rgba(0, 153, 255, 0.05);
-  border: 1px solid rgba(0, 153, 255, 0.8);
-}
-#login #form input:last-child {
-  margin-bottom: 0px;
-}
-#login #form input[type='submit'] {
-  color: white;
-  background: #08f;
-  cursor: pointer;
-}
-#login #form input[type='submit']:hover {
-  background: #33a0ff;
-}
-#login #form input[type='submit']:active {
-  background: #66b8ff;
-}
-#login #form input#signup {
-  color: #08f;
-  background: transparent;
-  border: 1px solid #005299;
-  cursor: pointer;
-}
-#login #form input#signup:hover {
-  border: 1px solid #006dcc;
-}
-#login #form input#signup:active {
-  border: 1px solid #007ae6;
+#login #form input[type='text'] {
+  background: #ccc;
+  color: black;
 }
 #prompter {
   z-index: 999;

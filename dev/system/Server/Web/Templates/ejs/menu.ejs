@@ -1,21 +1,14 @@
 <div id="menu">
     <div id="inventories">
-        <div id="default" class="inventory">
-            <span invname="default" class="name">default</span>
-        </div>
+        <div id="default" class="inventory material-icons highlighted">&#xe156</div>
         <% safelist = safes.filter((safe)=>{return safe.getName() !== "default";});%>
         <% safelist.forEach(function(safe){ %>
         <% safename = safe.getName(); %>
-            <div class="inventory">
-                <span class="name" invname="<%- safename %>"><%- safename %></span>
-            </div>
+            <div class="inventory" invname="<%- safename %>"></div>
         <% }); %>
-        <div id="add" class="inventory">+</div>
+        <div id="add" class="inventory material-icons">add</div>
     </div>
     <div id="user">
-        <div id="profile">
-            <img src="https://via.placeholder.com/30" />
-            <span><%- username %></span>
-        </div>
+        <div id="profile" class="material-icons">account_box</div>
     </div>
 </div>

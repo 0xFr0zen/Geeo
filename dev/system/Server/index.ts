@@ -13,6 +13,7 @@ import themes from './routes/themes';
 import scripts from './routes/scripts';
 import images from './routes/images';
 import register from './routes/register';
+import fonts from './routes/fonts';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -57,41 +58,26 @@ export default class Server {
             )
         );
         this.router
-            .get('/$', function(req: express.Request, res: express.Response) {
-                let { sid } = req.session;
-                if (!sid) {
-                    console.log(sid);
-
-                    return res.redirect('/login');
-                }
-                try {
-                    let de_token: any = jwt.verify(
-                        sid,
-                        dotenv.config().parsed.SECRET!
+            .use(
+                (
+                    req: express.Request,
+                    res: express.Response,
+                    next: express.NextFunction
+                ) => {
+                    res.setHeader(
+                        'Cache-Control',
+                        'private, no-cache, no-store, must-revalidate'
                     );
-                    if (!de_token) {
-                        console.log('wrong token');
-
-                        return res.redirect('/login');
-                    }
-                    console.log(de_token);
-
-                    let usersname = de_token.name;
-                    if (typeof usersname === 'string') {
-                        let usersafes: any[] = [];
-                        return res.render('index', {
-                            username: usersname,
-                            safes: usersafes,
-                        });
-                    } else {
-                        return res
-                            .status(404)
-                            .send({ error: 'this cookie is wrongly made' });
-                    }
-                } catch (e) {
-                    console.error('failed', sid, e);
-                    return res.redirect('/logout');
+                    res.setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
+                    res.setHeader('Pragma', 'no-cache');
+                    next();
                 }
+            )
+            .get('/$', (req: express.Request, res: express.Response) => {
+                return res.render('index', {
+                    username: 'admin',
+                    safes: [],
+                });
             })
             .get('/login$', login.get)
             .post('/login$', login.post)
@@ -101,11 +87,9 @@ export default class Server {
             .use('/user/:name$', user.profile)
             .use('/user/:name/storages', user.storages)
             .use('/user/:name/storage/:invname', user.storage)
-            .post(
-                '/user/:name/storages/:operation/:invname',
-                user.operate
-            )
+            .post('/user/:name/storages/:operation/:invname', user.operate)
             .use('/themes/:file', themes.load)
+            .use('/fonts/:file', fonts.load)
             .use('/scripts/:file', scripts.load)
             .use('/images/:file(.*)', images.load);
         this.application.use(this.router);
