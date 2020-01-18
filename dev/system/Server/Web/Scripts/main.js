@@ -22,8 +22,16 @@ $(document).ready(function () {
             });
         }
     });
-    $('#menu #user #profile').on('click', function () {
+    $('#menu #user #profile').on('click', () => {
         document.location.href = '/logout';
+    });
+    $('#switcher').on('click', () => {
+        let laststate = $('#switcher #state').attr('state');
+        if (laststate === 'cashier') {
+            $('#switcher #state').attr('state', 'overview');
+        } else {
+            $('#switcher #state').attr('state', 'cashier');
+        }
     });
     $(window).on('keydown', function (e) {
         if (e.key === 'Escape') {
