@@ -135,6 +135,7 @@ body {
                 }
             }
         }
+
         #register {
             position: fixed;
             width: 250px;
@@ -177,6 +178,17 @@ input {
             background: lighten(#08f, 20%);
         }
     }
+    &#signup {
+        color: white;
+        background: #08f;
+        cursor: pointer;
+        &:hover {
+            background: lighten(#08f, 10%);
+        }
+        &:active {
+            background: lighten(#08f, 20%);
+        }
+    }
 }
 #login {
     position: fixed;
@@ -190,12 +202,40 @@ input {
         width: 300px;
         height: auto;
         margin-left: -150px;
-        margin-top: -115px;
+        margin-top: -110px;
         left: 50%;
         top: 50%;
         input[type='text'] {
             background: #ccc;
             color: black;
+        }
+        #other {
+            margin-top: 10px;
+            width: 300px;
+            height: auto;
+            padding: 10px 5px;
+            color: rgb(12, 76, 131);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            * {
+                text-decoration: none;
+                color: rgb(12, 76, 131);
+            }
+            #left {
+                float: left;
+                width: 50%;
+                height: auto;
+                a {
+                    float: left;
+                }
+            }
+            #right {
+                float: right;
+                width: 50%;
+                height: auto;
+                a {
+                    float: right;
+                }
+            }
         }
     }
 }

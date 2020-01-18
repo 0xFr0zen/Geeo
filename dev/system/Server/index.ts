@@ -14,6 +14,8 @@ import scripts from './routes/scripts';
 import images from './routes/images';
 import register from './routes/register';
 import fonts from './routes/fonts';
+import headers from './routes/headers';
+import indexsite from './routes/indexsite';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -58,27 +60,8 @@ export default class Server {
             )
         );
         this.router
-            .use(
-                (
-                    req: express.Request,
-                    res: express.Response,
-                    next: express.NextFunction
-                ) => {
-                    res.setHeader(
-                        'Cache-Control',
-                        'private, no-cache, no-store, must-revalidate'
-                    );
-                    res.setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
-                    res.setHeader('Pragma', 'no-cache');
-                    next();
-                }
-            )
-            .get('/$', (req: express.Request, res: express.Response) => {
-                return res.render('index', {
-                    username: 'admin',
-                    safes: [],
-                });
-            })
+            .use(headers.load)
+            .get('/$', indexsite.get)
             .get('/login$', login.get)
             .post('/login$', login.post)
             .get('/logout$', logout.get)

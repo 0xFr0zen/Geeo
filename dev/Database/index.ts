@@ -30,13 +30,12 @@ export default class Database {
     private static avgLatency: number = 0;
     private static db_life: number;
     private static dboptions: mysql.PoolConfig = {};
-
     constructor() {
         if (Database.cluster == null) {
             Database.deltas = [];
-            console.log(
-                Database.avgLatency != 0 ? 'Reopening pool.' : 'Opening pool.'
-            );
+            // console.log(
+            //     Database.avgLatency != 0 ? 'Reopening pool.' : 'Opening pool.'
+            // );
 
             let options: Options.IDatabase = {
                 username: 'root',
@@ -46,24 +45,25 @@ export default class Database {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
-                connectTimeout: 700,
+                connectTimeout: 10000,
+                acquireTimeout: 10000,
                 user: options.username,
                 password: options.password,
                 port: Database.MYSQL_PORT!,
-                database:'geeo_test',
+                database: 'geeotest',
                 connectionLimit: 20,
                 waitForConnections: true,
                 queueLimit: 10,
             };
             Database.cluster = mysql.createPoolCluster({
-                defaultSelector: 'ORDER',
                 restoreNodeTimeout: 10,
                 removeNodeErrorCount: 10,
                 canRetry: true,
             });
             for (let i = 0; i < Database.poolAmount; i++) {
                 let poolname = Database.clusterCount++;
-                Database.cluster.add('pool' + poolname, Database.dboptions);
+                let n = 'pool' + poolname;
+                Database.cluster.add(Database.dboptions);
             }
             Database.db_life = Date.now();
 
@@ -93,7 +93,7 @@ export default class Database {
                 Database.idleChecker = setInterval(Database.updater, 60 * 1000);
             }
         } else {
-            console.log('Already has pool.');
+            // console.log('Already has pool.');
         }
     }
     private static async updater() {
@@ -159,50 +159,51 @@ export default class Database {
             console.log('Last Queried: ' + new Date().toISOString());
             let retresults: Result[] = [];
             if (await this.isValidQuery(syntax, values)) {
+
                 if (Database.cluster != null) {
                     try {
-                        let myerror = null;
-                        let connection: mysql.PoolConnection = await this.getConnection();
-                        if (connection != null) {
-                            if (values) {
-                                let q = connection
-                                    .query(syntax, values)
-                                    .on('result', async (row, index) => {
-                                        let resultBox = await this.parseResult(
-                                            row
-                                        );
-                                        retresults.push(resultBox);
-                                        resolve(retresults);
-                                    })
-                                    .on('error', error => {
-                                        myerror = error.message;
-                                        console.log("error", myerror);
-                                        
-                                    });
-                                console.log(q.sql);
-                            } else {
-                                connection
-                                    .query(syntax)
-                                    .on('result', async (row, index) => {
-                                        let resultBox = await this.parseResult(
-                                            row
-                                        );
-                                        retresults.push(resultBox);
-                                        resolve(retresults);
-                                    })
-                                    .on('error', error => {
-                                        myerror = error.message;
-                                    });
-                            }
+                        let myerror: any = null;
+                        this.getConnection()
+                            .then((connection: mysql.PoolConnection) => {
+                                if (values) {
+                                    let q = connection
+                                        .query(syntax, values)
+                                        .on('result', async (row, index) => {
+                                            let resultBox = await this.parseResult(
+                                                row
+                                            );
+                                            retresults.push(resultBox);
+                                            resolve(retresults);
+                                        })
+                                        .on('error', error => {
+                                            myerror = error.message;
+                                            console.log('error', myerror);
+                                        });
+                                    console.log(q.sql);
+                                } else {
+                                    connection
+                                        .query(syntax)
+                                        .on('result', async (row, index) => {
+                                            let resultBox = await this.parseResult(
+                                                row
+                                            );
+                                            retresults.push(resultBox);
+                                            resolve(retresults);
+                                        })
+                                        .on('error', error => {
+                                            myerror = error.message;
+                                        });
+                                }
 
-                            connection.release();
+                                connection.release();
 
-                            if (myerror != null) {
-                                reject(myerror || 'No Results');
-                            }
-                        } else {
-                            reject('No Connection.');
-                        }
+                                if (myerror != null) {
+                                    reject(myerror || 'No Results');
+                                }
+                            })
+                            .catch(e => {
+                                reject(e);
+                            });
                     } catch (e) {
                         reject(e);
                     }
@@ -246,14 +247,22 @@ export default class Database {
     }
     private getConnection(): Promise<mysql.PoolConnection> {
         return new Promise((resolve, reject) => {
-            Database.cluster.of('*').getConnection((err, connection) => {
-                if (err) reject(err.message);
-                if (connection != null) {
-                    resolve(connection);
-                } else {
-                    reject('No connection!');
-                }
-            });
+            let pool = Database.cluster.of('*');
+            if (pool != null) {
+                pool.getConnection((err, connection) => {
+                    if (err) {
+                        console.error(err);
+                        return reject(err.message);
+                    }
+                    if (connection != null) {
+                        return resolve(connection);
+                    } else {
+                        return reject('No connection!');
+                    }
+                });
+            } else {
+                return reject('No pool found');
+            }
         });
     }
     private parseResult(givenresult: any): Promise<Result> {

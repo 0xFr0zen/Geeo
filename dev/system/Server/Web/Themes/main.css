@@ -214,6 +214,17 @@ input[type='submit']:hover {
 input[type='submit']:active {
   background: #66b8ff;
 }
+input#signup {
+  color: white;
+  background: #08f;
+  cursor: pointer;
+}
+input#signup:hover {
+  background: #33a0ff;
+}
+input#signup:active {
+  background: #66b8ff;
+}
 #login {
   position: fixed;
   top: 0px;
@@ -227,13 +238,41 @@ input[type='submit']:active {
   width: 300px;
   height: auto;
   margin-left: -150px;
-  margin-top: -115px;
+  margin-top: -110px;
   left: 50%;
   top: 50%;
 }
 #login #form input[type='text'] {
   background: #ccc;
   color: black;
+}
+#login #form #other {
+  margin-top: 10px;
+  width: 300px;
+  height: auto;
+  padding: 10px 5px;
+  color: #0c4c83;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+#login #form #other * {
+  text-decoration: none;
+  color: #0c4c83;
+}
+#login #form #other #left {
+  float: left;
+  width: 50%;
+  height: auto;
+}
+#login #form #other #left a {
+  float: left;
+}
+#login #form #other #right {
+  float: right;
+  width: 50%;
+  height: auto;
+}
+#login #form #other #right a {
+  float: right;
 }
 #prompter {
   z-index: 999;

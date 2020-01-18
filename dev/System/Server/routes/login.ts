@@ -7,12 +7,9 @@ namespace login {
 
         if (typeof q.forced !== 'undefined') {
             return res.render('login');
-        } else if (!sid) {
-            console.log("No 'user' cookie set", sid);
-            return res.render('login');
         }
 
-        return res.redirect('/');
+        return res.render('login');
     }
     export function post(req: express.Request, res: express.Response) {
         let loginobj = req.query || req.body;

@@ -8,17 +8,17 @@ namespace Queries {
         /**
          * Looks for the exact match of the username.
          */
-        FIND_EXACT = 'SELECT username,firstname, lastname, email, userid FROM users WHERE username = ? LIMIT 1;',
+        FIND_EXACT = 'SELECT username,firstname, lastname, email, userid FROM user WHERE username = ? LIMIT 1;',
 
         /**
          * Looks for multiple users, via filter, lists them up.
          */
-        FIND_MULTIPLE = 'SELECT username,firstname, lastname, email, userid FROM users WHERE ?;',
+        FIND_MULTIPLE = 'SELECT username,firstname, lastname, email, userid FROM user WHERE ?;',
 
         /**
          * Looks for multiple users via username-filter, list them up.
          */
-        FIND_LIKE = 'SELECT username,firstname, lastname, email, userid FROM users WHERE username LIKE ?;',
+        FIND_LIKE = 'SELECT username,firstname, lastname, email, userid FROM user WHERE username LIKE ?;',
 
         /**
          *  removes user.
@@ -38,8 +38,8 @@ namespace Queries {
         TRIGGERS = '',
     }
     export enum STORAGE {
-        LOAD = 'SELECT safe.safeID as safeid, safe.safetype as safetype, safe.safename as safename, safe.safeinventoryID as safeinventoryID, user.username as username FROM user INNER JOIN safe on safe.safeid = user.userid WHERE user.userID = ?',
-        ADD =  'INSERT INTRO safe(safetype, safename, )',
+        LOAD = 'SELECT safe.safeID as safeid, safe.safename as safename, safe.safedescription as safedescription, user.username as username FROM safe INNER JOIN user_has_safe on safe.safeid = user_has_safe.safeid INNER JOIN user on user.username = ?',
+        ADD =  'INSERT INTRO safe(safename, safedescription, spaceID) VALUES(?, ?, ?);',
     }
     export enum DOCUMENTS {}
 }
