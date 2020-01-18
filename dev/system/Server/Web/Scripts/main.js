@@ -12,12 +12,12 @@ $(document).ready(function () {
         } else {
             $(inventory_button).on('click', function (e) {
                 prompter('Storage name?', 'newStorage').then((title) => {
-                    // console.log(title + " created.");
-                    createInventory(username, title);
+                    console.log(title + " created.");
+                    // createInventory(username, title);
                 }).catch((message) => {
-                    // console.log(message);
-                }).finally(()=> {
-                    document.location.reload();
+                    console.log(message);
+                }).finally(() => {
+                    // document.location.reload();
                 });
             });
         }
@@ -33,37 +33,23 @@ $(document).ready(function () {
 });
 function prompter(question, defaultanswer) {
     return new Promise((resolve, reject) => {
-        $('#prompter').empty();
-        let input = document.createElement('input');
-        $(input).attr('id', 'input');
-        $(input).attr('placeholder', question);
-        let ok_button = document.createElement('button');
-        $(ok_button).attr('id', 'o');
-        $(ok_button).text("OK");
-        let cancel_button = document.createElement('button');
-        $(cancel_button).attr('id', 'c');
-        $(cancel_button).text("Cancel");
-
-        $('#prompter').append(input);
-        $('#prompter').append(ok_button);
-
-        $('#prompter').append(cancel_button);
-        $('#prompter').fadeIn(100);
-        $(input).focus();
-        $(ok_button).on('click', function () {
-            resolve($(input).val());
-            $('#prompter').fadeOut(100);
-        })
-        $(cancel_button).on('click', function () {
-            reject('user canceled');
-            
-            $('#prompter').fadeOut(100);
-        });
-        $(window).on('keydown', function (e) {
-            if (e.key === 'Escape') {
-                reject('user canceled');
-                
-                $('#prompter').fadeOut(100);
+        let outside = $("#prompter");
+        let inputter = outside.find("input");
+        inputter.attr('placeholder', question);
+        outside.fadeIn('fast');
+        $("#prompter button").on('click', (element) => {
+            outside.fadeOut('fast');
+            let me = $(element.currentTarget);
+            switch (me.attr("id")) {
+                case 'ok':
+                    resolve(inputter.val());
+                    break;
+                case 'cancel':
+                    reject('user rejected');
+                    break;
+                default:
+                    resolve(defaultanswer);
+                    break;
             }
         });
     });
@@ -79,7 +65,7 @@ function createInventory(username, inventoryname) {
     });
 }
 function loadInventory(username, name) {
-    
+
     $('#content #inventory').empty();
     $.getJSON(`/user/${username}/storage/${name}`).then(function (storage) {
         let space = storage.space;

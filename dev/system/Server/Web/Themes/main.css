@@ -189,7 +189,7 @@ body {
 input {
   width: 100%;
   height: 50px;
-  padding: 5px 20px;
+  padding: 5px 12px;
   border: none;
   background: #ddd;
   margin-bottom: 10px;
@@ -236,19 +236,32 @@ input#signup:active {
 #login #form {
   position: fixed;
   width: 300px;
-  height: auto;
+  height: 400px;
   margin-left: -150px;
-  margin-top: -110px;
   left: 50%;
-  top: 50%;
+  top: 100px;
 }
-#login #form input[type='text'] {
-  background: #ccc;
-  color: black;
+#login #form #logo {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 180px;
+  background-color: transparent;
+}
+#login #form #logo #logoimage {
+  position: relative;
+  width: 78px;
+  height: 80px;
+  background: rgba(0, 136, 255, 0.5);
+  top: 50%;
+  left: 50%;
+  margin-top: -40px;
+  margin-left: -40px;
+  border-radius: 100%;
 }
 #login #form #other {
   margin-top: 10px;
-  width: 300px;
+  width: 100%;
   height: auto;
   padding: 10px 5px;
   color: #0c4c83;
@@ -288,21 +301,18 @@ input#signup:active {
   position: absolute;
   top: 100px;
   left: 50%;
-  margin-left: -100px;
-  width: 200px;
-  height: 40px;
-  padding: 10px;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  outline: none;
+  margin-left: -150px;
+  width: 300px;
+}
+#prompter button {
+  width: 145px;
 }
 #prompter #o {
   position: absolute;
   top: 150px;
   left: 50%;
-  width: 90px;
-  margin-left: -100px;
+  width: 145px;
+  margin-left: -150px;
   height: 40px;
   padding: 10px;
   background: green;
@@ -314,8 +324,8 @@ input#signup:active {
   position: absolute;
   top: 150px;
   left: 50%;
-  margin-left: 10px;
-  width: 90px;
+  margin-left: 5px;
+  width: 145px;
   height: 40px;
   padding: 10px;
   background: red;
