@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    loadInventory(username, 'default');
+    // loadInventory(username, 'default');
     $('#menu #inventories .inventory').each((index, inventory_button) => {
         let id = $(inventory_button).attr('id');
         if (id !== 'add') {
