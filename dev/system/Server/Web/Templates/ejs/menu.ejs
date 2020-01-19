@@ -1,16 +1,17 @@
 <div id="menu">
     <div id="inventories">
-        <div id="default" class="inventory material-icons highlighted">&#xe156</div>
-        <% safelist = safes.filter((safe)=>{return safe.getName() !== "default";});%>
-        <% safelist.forEach(function(safe){ %>
-        <% safename = safe.getName(); %>
-            <div class="inventory" invname="<%- safename %>"></div>
-        <% }); %>
-        <div id="add" class="inventory material-icons">add</div>
     </div>
     
-    <div id="switcher">
-        <div id="state" state="overview"></div>
+    <div id="optionals">
+
+        <div id="loading" class="circle">
+            <div id="loadercircle"></div>
+        </div>
+        <div id="add" class="circle material-icons">add</div>
+        </div>
+    
+    <div id="switcher" state="overview">
+        <div id="state"></div>
     </div>
     <div id="user">
         <div id="profile" class="material-icons">account_box</div>

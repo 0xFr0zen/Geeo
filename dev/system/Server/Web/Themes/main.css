@@ -80,14 +80,16 @@ body {
   background: transparent;
   padding: 10px;
 }
-#main #main_inner #menu #inventories {
+#main #main_inner #menu #inventories,
+#main #main_inner #menu #optionals {
   float: left;
   width: 50px;
   height: auto;
 }
-#main #main_inner #menu #inventories .inventory {
+#main #main_inner #menu #inventories .circle,
+#main #main_inner #menu #optionals .circle {
   vertical-align: middle;
-  display: inline-table;
+  display: table-cell;
   float: left;
   width: 50px;
   height: 50px;
@@ -100,17 +102,48 @@ body {
   padding: 12px 10px;
   cursor: pointer;
 }
-#main #main_inner #menu #inventories .inventory:hover {
+#main #main_inner #menu #inventories .circle:hover,
+#main #main_inner #menu #optionals .circle:hover {
   background: #ccc;
 }
-#main #main_inner #menu #inventories .inventory:active {
+#main #main_inner #menu #inventories .circle:active,
+#main #main_inner #menu #optionals .circle:active {
   background: #c5c5c5;
 }
-#main #main_inner #menu #inventories .inventory.highlighted {
+#main #main_inner #menu #inventories .circle.highlighted,
+#main #main_inner #menu #optionals .circle.highlighted {
   background: #08f;
   color: white;
 }
-#main #main_inner #menu #inventories #add {
+#main #main_inner #menu #inventories .circle.highlighted2,
+#main #main_inner #menu #optionals .circle.highlighted2 {
+  background: #ffd000;
+  color: white;
+}
+#main #main_inner #menu #inventories #loading,
+#main #main_inner #menu #optionals #loading {
+  height: 50px !important;
+  width: 50px !important;
+  background: transparent;
+  padding: 10px;
+}
+#main #main_inner #menu #inventories #loading #loadercircle,
+#main #main_inner #menu #optionals #loading #loadercircle {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  padding: 0px;
+  border-radius: 100%;
+  border: 2px solid;
+  border-top-color: rgba(0, 0, 0, 0.65);
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+  border-left-color: rgba(0, 0, 0, 0.65);
+  border-right-color: rgba(0, 0, 0, 0.15);
+  -webkit-animation: loader 0.8s linear infinite;
+  animation: loader 0.8s linear infinite;
+}
+#main #main_inner #menu #inventories #add,
+#main #main_inner #menu #optionals #add {
   float: left;
   height: 50px !important;
   width: 50px !important;
@@ -130,6 +163,18 @@ body {
   padding: 2px;
   transition: all 0.1s ease-in-out;
 }
+#main #main_inner #menu #switcher[state='overview'] {
+  border-color: rgba(0, 136, 255);
+}
+#main #main_inner #menu #switcher[state='overview'] #state {
+  background: rgba(0, 136, 255);
+}
+#main #main_inner #menu #switcher[state='cashier'] {
+  border-color: #00ffaa;
+}
+#main #main_inner #menu #switcher[state='cashier'] #state {
+  background: rgba(0, 255, 170);
+}
 #main #main_inner #menu #switcher:hover {
   border-width: 4px;
   padding: 2px;
@@ -142,12 +187,6 @@ body {
   height: 100%;
   background: #777;
   border-radius: 100%;
-}
-#main #main_inner #menu #switcher #state[state='overview'] {
-  background: rgba(0, 136, 255);
-}
-#main #main_inner #menu #switcher #state[state='cashier'] {
-  background: #ff2600;
 }
 #main #main_inner #menu #user {
   position: absolute;
@@ -359,4 +398,20 @@ button.cancel {
   float: right;
   color: white;
   margin-left: 7px;
+}
+@keyframes loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }

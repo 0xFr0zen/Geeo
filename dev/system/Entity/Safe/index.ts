@@ -132,3 +132,23 @@ export default class Safe extends Entity {
         return this.getParameter('user').toString();
     }
 }
+export namespace Safes {
+    export function listof(username: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            let db = new Database();
+            db.query(Queries.STORAGE.LOAD, [username])
+                .then(resultlist => {
+                    let list: string[] = [];
+                    for (const key in resultlist) {
+                        let s = resultlist[key];
+                        list.push(s.getRow('safeid'));
+                        
+                    }
+                    return resolve(list);
+                })
+                .catch(e => {
+                    return reject(e);
+                });
+        });
+    }
+}

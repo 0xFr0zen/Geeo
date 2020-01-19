@@ -1,36 +1,28 @@
 $(document).ready(function () {
-    // loadInventory(username, 'default');
-    $('#menu #inventories .inventory').each((index, inventory_button) => {
-        let id = $(inventory_button).attr('id');
-        if (id !== 'add') {
-            $(inventory_button).on('click', function (e) {
-                var name = $(this)
-                    .children('.name')
-                    .attr('invname');
-                loadInventory(username, name);
-            });
-        } else {
-            $(inventory_button).on('click', function (e) {
-                prompter('Storage name?', 'newStorage').then((title) => {
-                    console.log(title + " created.");
-                    // createInventory(username, title);
-                }).catch((message) => {
-                    console.log(message);
-                }).finally(() => {
-                    // document.location.reload();
-                });
-            });
-        }
+    getInventories();
+    $('#menu #optionals .circle#add').on('click', () => {
+        prompter('Storage name?', 'newStorage').then((invname) => {
+            console.log(invnamename + " created.");
+            // createInventory(username, invname);
+        }).catch((message) => {
+            console.log(message);
+        }).finally(() => {
+            // document.location.reload();
+        });
+    });
+    $('#menu #inventories .inventory').on('click', function () {
+        console.log(this);
+
     });
     $('#menu #user #profile').on('click', () => {
         document.location.href = '/logout';
     });
     $('#switcher').on('click', () => {
-        let laststate = $('#switcher #state').attr('state');
+        let laststate = $('#switcher').attr('state');
         if (laststate === 'cashier') {
-            $('#switcher #state').attr('state', 'overview');
+            $('#switcher').attr('state', 'overview');
         } else {
-            $('#switcher #state').attr('state', 'cashier');
+            $('#switcher').attr('state', 'cashier');
         }
     });
     $(window).on('keydown', function (e) {
@@ -43,8 +35,16 @@ function prompter(question, defaultanswer) {
     return new Promise((resolve, reject) => {
         let outside = $("#prompter");
         let inputter = outside.find("input");
+        inputter.val("");
         inputter.attr('placeholder', question);
         outside.fadeIn('fast');
+        inputter.focus();
+        inputter.on('keydown', (e) => {
+            if (e.originalEvent.key === "Enter") {
+                resolve(inputter.val());
+                outside.fadeOut('fast');
+            }
+        });
         $("#prompter button").on('click', (element) => {
             outside.fadeOut('fast');
             let me = $(element.currentTarget);
@@ -63,6 +63,25 @@ function prompter(question, defaultanswer) {
     });
 
 }
+function getInventories() {
+    $("#optionals #loading").fadeIn('fast');
+
+    $.getJSON(`user/${username}/storages/`, (data) => {
+        console.log(data);
+        if (data.length == 0) {
+            $("#optionals #add").addClass("highlighted2");
+        }
+        $("#optionals #loading").fadeOut('fast');
+
+    }).catch((e) => {
+
+        $("#optionals #loading").fadeOut('fast');
+        // $("#optionals #error").fadeIn('fast');
+        console.log(e);
+
+    });
+
+}
 function createInventory(username, inventoryname) {
     $.post(`user/${username}/storages/add/${inventoryname}`, function (
         data
@@ -73,7 +92,7 @@ function createInventory(username, inventoryname) {
     });
 }
 function loadInventory(username, name) {
-
+    $("#optionals #loading").fadeIn('fast');
     $('#content #inventory').empty();
     $.getJSON(`/user/${username}/storage/${name}`).then(function (storage) {
         let space = storage.space;
@@ -83,18 +102,22 @@ function loadInventory(username, name) {
             let item = space[keys[key]];
             let keys2 = Object.keys(item);
 
-            let d = document.createElement('div');
-            d.className = 'item';
+            let div = document.createElement('div');
+            div.className = 'item';
             let x = document.createElement('span');
             x.className = 'name';
             $(x).text(keys2[0]);
-            let y = document.createElement('span');
-            y.className = 'amount';
-            $(y).text(keys2.length);
-            $(d).append(x);
-            $(d).append(y);
-            $(outerD).append(d);
+            let span = document.createElement('span');
+            span.className = 'amount';
+            $(span).text(keys2.length);
+            $(div).append(x);
+            $(div).append(span);
+            $(outerD).append(div);
         }
         $('#content #inventory').append(outerD);
+    }).done(() => {
+        console.log("fading out..");
+        $("#optionals #loading").fadeOut('fast');
     });
+
 }

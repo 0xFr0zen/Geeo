@@ -1,6 +1,6 @@
 import express from 'express';
 import User from '../../Entity/User';
-import Safe from '../../Entity/Safe';
+import Safe, { Safes } from '../../Entity/Safe';
 import { GeeoMap } from '../../GeeoMap';
 namespace user {
     export async function profile(req: express.Request, res: express.Response) {
@@ -17,31 +17,12 @@ namespace user {
         res: express.Response
     ) {
         let name = req.params.name;
-        let user = await User.findFirst({ username: name });
-
-        let showcase_safes: any[] = [];
-        if (user != null) {
-            let safes = user.getSafes();
-            if (safes.length > 0) {
-                console.log(safes);
-
-                safes.forEach(async (safe: Safe) => {
-                    if (safe.getLastLoaded() != null) {
-                        let storage: IStorage = {
-                            name: safe.getName(),
-                            created: await safe.getCreated(),
-                            last_loaded: await safe.getLastLoaded(),
-                            space: await safe.getSpace(),
-                        };
-                        showcase_safes.push(storage);
-                    }
-                });
-            } else {
-                return res.json([]);
-            }
-        }
-
-        return res.json(showcase_safes);
+        
+        Safes.listof(name).then(list=> {
+            return res.json(list);
+        }).catch(()=>{
+            return res.status(404).json({});
+        });
     }
     export async function storage(req: express.Request, res: express.Response) {
         let username = req.params.name;

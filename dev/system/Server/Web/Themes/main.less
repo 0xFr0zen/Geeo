@@ -38,14 +38,15 @@ body {
             height: 100%;
             background: transparent;
             padding: 10px;
-            #inventories {
+            #inventories,
+            #optionals {
                 float: left;
                 width: 50px;
                 height: auto;
 
-                .inventory {
+                .circle {
                     vertical-align: middle;
-                    display: inline-table;
+                    display: table-cell;
                     float: left;
                     width: 50px;
                     height: 50px;
@@ -68,6 +69,30 @@ body {
                         background: #08f;
                         color: white;
                     }
+                    &.highlighted2 {
+                        background: rgb(255, 208, 0);
+                        color: white;
+                    }
+                }
+                #loading {
+                    height: 50px !important;
+                    width: 50px !important;
+                    background: transparent;
+                    padding: 10px;
+                    #loadercircle {
+                        width: 30px;
+                        height: 30px;
+                        display: inline-block;
+                        padding: 0px;
+                        border-radius: 100%;
+                        border: 2px solid;
+                        border-top-color: rgba(0, 0, 0, 0.65);
+                        border-bottom-color: rgba(0, 0, 0, 0.15);
+                        border-left-color: rgba(0, 0, 0, 0.65);
+                        border-right-color: rgba(0, 0, 0, 0.15);
+                        -webkit-animation: loader 0.8s linear infinite;
+                        animation: loader 0.8s linear infinite;
+                    }
                 }
                 #add {
                     float: left;
@@ -89,6 +114,18 @@ body {
                 cursor: pointer;
                 padding: 2px;
                 transition: all 0.1s ease-in-out;
+                &[state='overview'] {
+                    border-color: rgba(0, 136, 255);
+                    #state {
+                        background: rgba(0, 136, 255);
+                    }
+                }
+                &[state='cashier'] {
+                    border-color: rgb(0, 255, 170);
+                    #state {
+                        background: rgba(0, 255, 170);
+                    }
+                }
                 &:hover {
                     border-width: 4px;
                     padding: 2px;
@@ -101,12 +138,6 @@ body {
                     height: 100%;
                     background: #777;
                     border-radius: 100%;
-                    &[state='overview'] {
-                        background: rgba(0, 136, 255);
-                    }
-                    &[state='cashier'] {
-                        background: rgb(255, 38, 0);
-                    }
                 }
             }
             #user {
@@ -323,5 +354,21 @@ button {
             color: white;
             margin-left: 7px;
         }
+    }
+}
+@keyframes loader {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes loader {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
     }
 }
