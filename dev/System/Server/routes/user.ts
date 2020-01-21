@@ -17,12 +17,16 @@ namespace user {
         res: express.Response
     ) {
         let name = req.params.name;
-        
-        Safes.listof(name).then(list=> {
-            return res.json(list);
-        }).catch(()=>{
-            return res.status(404).json({});
-        });
+
+        Safes.listof(name)
+            .then(list => {
+                console.log('done safes list');
+
+                res.json(list);
+            })
+            .catch(message => {
+                res.status(500).json({ error: { message: message } });
+            });
     }
     export async function storage(req: express.Request, res: express.Response) {
         let username = req.params.name;

@@ -45,8 +45,8 @@ export default class Database {
                 insecureAuth: false,
                 multipleStatements: true,
                 localAddress: '127.0.0.1',
-                connectTimeout: 10000,
-                acquireTimeout: 10000,
+                connectTimeout: 5000,
+                acquireTimeout: 5000,
                 user: options.username,
                 password: options.password,
                 port: Database.MYSQL_PORT!,
@@ -68,29 +68,19 @@ export default class Database {
             Database.db_life = Date.now();
 
             Database.cluster.on('error', error => {
+                console.log('db-error', error);
                 console.error(error);
             });
 
-            Database.cluster.on('enqueue', () => {
-                console.log('Waiting for available connection slot');
-            });
-
-            Database.cluster.on('acquire', connection => {
-                console.log('Connection %d acquired', connection.threadId);
-            });
-
-            Database.cluster.on('connection', connection => {
-                console.log('Connection %d connected', connection.threadId);
-            });
-            Database.cluster.on('release', connection => {
-                console.log('Connection %d released', connection.threadId);
+            Database.cluster.on('offline', e => {
+                console.log('Removed node: ', e);
             });
             console.log(
                 'Updater set for: ' +
                     new Date(new Date().getTime() + 60000).toISOString()
             );
             if (Database.idleChecker != null) {
-                Database.idleChecker = setInterval(Database.updater, 60 * 1000);
+                Database.idleChecker = setInterval(Database.updater, 30 * 1000);
             }
         } else {
             // console.log('Already has pool.');
@@ -128,7 +118,7 @@ export default class Database {
         }
         console.log(
             'Next Updater set for: ' +
-                new Date(new Date().getTime() + 60000).toISOString()
+                new Date(new Date().getTime() + 30000).toISOString()
         );
     }
     private static lifetime(): Promise<string> {
@@ -154,65 +144,92 @@ export default class Database {
         });
     }
     public query(syntax: string, values?: any[]): Promise<Result[]> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             Database.lastQueried = Date.now();
             console.log('Last Queried: ' + new Date().toISOString());
             let retresults: Result[] = [];
-            if (await this.isValidQuery(syntax, values)) {
+            this.isValidQuery(syntax, values).then(goodQuery => {
+                if (goodQuery) {
+                    if (Database.cluster != null) {
+                        try {
+                            let myerror: any = null;
+                            this.getConnection()
+                                .then((connection: mysql.PoolConnection) => {                                    
+                                    if (values) {
+                                        console.log('with values')
+                                        let c_q:mysql.Query = connection
+                                            .query(syntax, values)
+                                            .on('result', (row, index) => {
+                                                console.log('row', row);
 
-                if (Database.cluster != null) {
-                    try {
-                        let myerror: any = null;
-                        this.getConnection()
-                            .then((connection: mysql.PoolConnection) => {
-                                if (values) {
-                                    let q = connection
-                                        .query(syntax, values)
-                                        .on('result', async (row, index) => {
-                                            let resultBox = await this.parseResult(
-                                                row
+                                                this.parseResult(row)
+                                                    .then(resultBox => {
+                                                        retresults.push(
+                                                            resultBox
+                                                        );
+                                                        resolve(retresults);
+                                                    })
+                                                    .catch(e => {
+                                                        reject(e);
+                                                    });
+                                            })
+                                            .on('packet', (packet) => {
+                                                console.log('packet', packet);
+
+                                            })
+                                            .on(
+                                                'error',
+                                                (error: mysql.MysqlError) => {
+                                                    console.log(error);
+
+                                                    myerror = error.sqlMessage;
+                                                }
                                             );
-                                            retresults.push(resultBox);
-                                            resolve(retresults);
-                                        })
-                                        .on('error', error => {
-                                            myerror = error.message;
-                                            console.log('error', myerror);
-                                        });
-                                    console.log(q.sql);
-                                } else {
-                                    connection
-                                        .query(syntax)
-                                        .on('result', async (row, index) => {
-                                            let resultBox = await this.parseResult(
-                                                row
+                                        console.log(c_q.sql);
+                                    } else {
+                                        let c_q = connection
+                                            .query(syntax)
+                                            .on('result', (row, index) => {
+                                                this.parseResult(row)
+                                                    .then(resultBox => {
+                                                        retresults.push(
+                                                            resultBox
+                                                        );
+                                                        resolve(retresults);
+                                                    })
+                                                    .catch(e => {
+                                                        reject(e);
+                                                    });
+                                            })
+                                            .on(
+                                                'error',
+                                                (error: mysql.MysqlError) => {
+                                                    console.log(error);
+                                                    myerror = error.sqlMessage;
+                                                }
                                             );
-                                            retresults.push(resultBox);
-                                            resolve(retresults);
-                                        })
-                                        .on('error', error => {
-                                            myerror = error.message;
-                                        });
-                                }
+                                        console.log(c_q.sql);
+                                    }
 
-                                connection.release();
+                                    connection.release();
 
-                                if (myerror != null) {
-                                    reject(myerror || 'No Results');
-                                }
-                            })
-                            .catch(e => {
-                                reject(e);
-                            });
-                    } catch (e) {
-                        reject(e);
+                                    if (myerror != null) {
+                                        throw myerror;
+                                    }
+                                })
+                                .catch(e => {
+                                    throw e;
+                                });
+                        } catch (e) {
+                            reject(e);
+                        }
+                    } else {
+                        reject('no connection');
                     }
                 } else {
-                    reject('no connection');
+                    reject('Bad Query, Check syntax (missing values)');
                 }
-            } else {
-                reject('Bad Query, Check syntax (missing values)');
-            }
+            });
         });
     }
     public format(obj: any): Promise<string> {
@@ -240,7 +257,6 @@ export default class Database {
             } else {
                 let placeholderAmount = syntax.split('?').length - 1;
                 let valuesAmount = values.length;
-
                 return resolve(placeholderAmount === valuesAmount);
             }
         });
@@ -252,16 +268,19 @@ export default class Database {
                 pool.getConnection((err, connection) => {
                     if (err) {
                         console.error(err);
-                        return reject(err.message);
+                        reject(err.message);
                     }
                     if (connection != null) {
-                        return resolve(connection);
+                        resolve(connection);
                     } else {
-                        return reject('No connection!');
+                        console.error('No connection!');
+
+                        reject('No connection!');
                     }
                 });
             } else {
-                return reject('No pool found');
+                console.error('No pool found!');
+                reject('No pool found!');
             }
         });
     }
@@ -271,6 +290,8 @@ export default class Database {
             if (!givenresult) {
                 return reject('No Result');
             } else {
+                console.log(givenresult);
+
                 let s: any = {};
                 for (const key in givenresult) {
                     s[key] = givenresult[key];

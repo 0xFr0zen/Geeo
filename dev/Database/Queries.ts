@@ -38,7 +38,7 @@ namespace Queries {
         TRIGGERS = '',
     }
     export enum STORAGE {
-        LOAD = 'SELECT safe.safeID as safeid, safe.safename as safename, safe.safedescription as safedescription, user.username as username FROM safe INNER JOIN user_has_safe on safe.safeid = user_has_safe.safeid INNER JOIN user on user.username = ?',
+        LOAD = 'SELECT safe.safeID as safeid, safe.safename as safename, safe.safedescription as safedescription, user.username as username FROM safe INNER JOIN user_has_safe on safe.safeid = user_has_safe.safeid INNER JOIN user on user.username = ?;',
         ADD =  'INSERT INTRO safe(safename, safedescription, spaceID) VALUES(?, ?, ?);',
     }
     export enum DOCUMENTS {}

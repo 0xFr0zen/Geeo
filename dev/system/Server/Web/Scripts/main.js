@@ -64,22 +64,25 @@ function prompter(question, defaultanswer) {
 
 }
 function getInventories() {
-    $("#optionals #loading").fadeIn('fast');
+    $("#optionals #loading").fadeIn();
+    let url = `/user/${username}/storages`;
+    console.log('url', url);
 
-    $.getJSON(`user/${username}/storages/`, (data) => {
+    $.get(url, (data) => {
         console.log(data);
         if (data.length == 0) {
             $("#optionals #add").addClass("highlighted2");
         }
-        $("#optionals #loading").fadeOut('fast');
 
-    }).catch((e) => {
+    }).fail((e, textStatus, errorThrown) => {
+        console.log(errorThrown);
 
-        $("#optionals #loading").fadeOut('fast');
-        // $("#optionals #error").fadeIn('fast');
-        console.log(e);
+
+    }).done((...args) => {
+        console.log('args', args);
 
     });
+    $("#optionals #loading").fadeOut();
 
 }
 function createInventory(username, inventoryname) {

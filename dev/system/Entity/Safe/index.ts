@@ -142,12 +142,17 @@ export namespace Safes {
                     for (const key in resultlist) {
                         let s = resultlist[key];
                         list.push(s.getRow('safeid'));
-                        
                     }
-                    return resolve(list);
+                    console.log('done did it yaaay', list);
+                    
+                    resolve(list);
+                    db.close();
                 })
                 .catch(e => {
-                    return reject(e);
+                    console.log('safes error', e);
+
+                    reject(e);
+                    db.close();
                 });
         });
     }
