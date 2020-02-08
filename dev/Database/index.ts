@@ -73,15 +73,15 @@ export default class Database {
             });
 
             Database.cluster.on('offline', e => {
-                console.log('Removed node: ', e);
+                // console.log('Removed node: ', e);
             });
             console.log(
                 'Updater set for: ' +
                     new Date(new Date().getTime() + 60000).toISOString()
             );
-            if (Database.idleChecker != null) {
-                Database.idleChecker = setInterval(Database.updater, 30 * 1000);
-            }
+            // if (Database.idleChecker != null) {
+            //     Database.idleChecker = setInterval(Database.updater, 30 * 1000);
+            // }
         } else {
             // console.log('Already has pool.');
         }
