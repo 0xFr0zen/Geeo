@@ -1,6 +1,6 @@
 import express from 'express';
 
-namespace indexsite {
+namespace cashier {
     export function get(req: express.Request, res: express.Response) {
         return res.render('index', {
             username: 'admin',
@@ -8,4 +8,4 @@ namespace indexsite {
         });
     }
 }
-export default indexsite;
+export default cashier;

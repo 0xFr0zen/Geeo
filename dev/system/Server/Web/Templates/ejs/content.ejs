@@ -1,6 +1,10 @@
 <div id="content">
     <div class="mod" class="overlay hidden">
-        <%- include('mods/cashier', {mode:'light'}) %>
+        <% if(load){ %>
+            <%- include('mods/'+load, {mode:'light'}) %>
+        <% }else {%>
+            <%- include('mods/cashier', {mode:'light'}) %>
+        <% }%>
     </div>
     <div id="inventory" class="overlay ">
     </div>

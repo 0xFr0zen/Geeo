@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $("#content").fadeIn('fast', function () {
+        console.log("loaded content");
+    });
     getInventories();
     $('#menu #optionals .circle#add').on('click', () => {
         prompter('Storage name?', 'newStorage').then((invname) => {

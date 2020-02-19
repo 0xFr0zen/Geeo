@@ -220,6 +220,7 @@ body {
   width: calc(100% - 70px);
   height: 100%;
   background-color: transparent;
+  display: none;
 }
 #main #main_inner #content .mod {
   position: relative;
