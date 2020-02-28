@@ -5,10 +5,9 @@ import System from '..';
 import bodyParser = require('body-parser');
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
-import user from './routes/user';
 import headers from './routes/headers';
 import indexsite from './routes/indexsite';
-import routelogic from './routes/index';
+import routelogic from './routes';
 
 export default class Server {
     private static DEFAULT_PORT: number =
