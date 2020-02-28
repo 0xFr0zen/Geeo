@@ -86,40 +86,40 @@ export default class Server {
             });
         }
     }
-    private prepareRoutes(r: express.Router): express.Router {
-        r.use(headers.load).get('/$', indexsite.get);
-        let _r = routelogic.all;
-        for (const iterator in _r) {
-            // console.log();
-            let entries = Object.entries(_r[iterator]);
+    // private prepareRoutes(r: express.Router): express.Router {
+    //     r.use(headers.load).get('/$', indexsite.get);
+    //     let _r = routelogic.all;
+    //     for (const iterator in _r) {
+    //         // console.log();
+    //         let entries = Object.entries(_r[iterator]);
 
-            entries.forEach((_route: any) => {
-                const y = Object.keys(_route);
-                y.forEach((s: any) => {
-                    if (typeof _route[y[s]] === 'string') {
-                        let d: string = _route[y[s]];
-                        let rr = _route[1]();
-                        let linkname = rr[0];
-                        let fn = rr[1];
-                        console.log(d, linkname);
+    //         entries.forEach((_route: any) => {
+    //             const y = Object.keys(_route);
+    //             y.forEach((s: any) => {
+    //                 if (typeof _route[y[s]] === 'string') {
+    //                     let d: string = _route[y[s]];
+    //                     let rr = _route[1]();
+    //                     let linkname = rr[0];
+    //                     let fn = rr[1];
+    //                     console.log(d, linkname);
 
-                        switch (d) {
-                            case 'post':
-                                r.post(linkname, fn);
-                                break;
-                            case 'get':
-                                r.get(linkname, fn);
-                                break;
-                            default:
-                                r.use(linkname, fn);
-                                break;
-                        }
-                    }
-                });
-            });
-        }
-        return r;
-    }
+    //                     switch (d) {
+    //                         case 'post':
+    //                             r.post(linkname, fn);
+    //                             break;
+    //                         case 'get':
+    //                             r.get(linkname, fn);
+    //                             break;
+    //                         default:
+    //                             r.use(linkname, fn);
+    //                             break;
+    //                     }
+    //                 }
+    //             });
+    //         });
+    //     }
+    //     return r;
+    // }
 }
 
 export async function createAccessToken(obj: any): Promise<string> {
