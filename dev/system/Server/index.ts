@@ -86,7 +86,6 @@ export default class Server {
             });
         }
     }
-<<<<<<< HEAD
     private prepareRoutes(r: express.Router): express.Router {
         r.use(headers.load).get('/$', indexsite.get);
         let _r = routelogic.all;
@@ -103,7 +102,7 @@ export default class Server {
                         let linkname = rr[0];
                         let fn = rr[1];
                         console.log(d, linkname);
-                        
+
                         switch (d) {
                             case 'post':
                                 r.post(linkname, fn);
@@ -121,8 +120,6 @@ export default class Server {
         }
         return r;
     }
-=======
->>>>>>> parent of efe8465... changes and updates
 }
 
 export async function createAccessToken(obj: any): Promise<string> {
