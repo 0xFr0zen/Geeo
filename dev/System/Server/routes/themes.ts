@@ -2,6 +2,7 @@ import express from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 namespace themes {
+<<<<<<< HEAD
     export function load() {
         return [
             '/themes/:file',
@@ -13,15 +14,22 @@ namespace themes {
                 );
                 res.setHeader('Content-Type', 'text/css');
                 console.log(req.params.file);
+=======
+    export function load(req: express.Request, res: express.Response) {
+        let p = path.join(
+            process.cwd(),
+            './dev/System/Server/Web/Themes/',
+            req.params.file
+        );
+        res.setHeader('Content-Type', 'text/css');
+>>>>>>> parent of efe8465... changes and updates
 
-                if (fs.existsSync(p)) {
-                    res.sendFile(p);
-                } else {
-                    res.status(404);
-                    res.send(`File '${p}' not found`);
-                }
-            },
-        ];
+        if (fs.existsSync(p)) {
+            res.sendFile(p);
+        } else {
+            res.status(404);
+            res.send(`File '${p}' not found`);
+        }
     }
 }
 export default themes;

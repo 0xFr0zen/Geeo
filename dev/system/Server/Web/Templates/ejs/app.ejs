@@ -1,13 +1,9 @@
 <div id="main">
     <div id="main_inner">
-        <%- include('menu');%>
-        <% if(!load) { %>
+        <%- include('menu'); %>
         <%  incs.forEach(function(inc){ %>
         <%-     include(inc); %>
-        <%  }); %>
-        <% }else { %>
-        <%- include('content', {load:load}); %>
-        <% }%>
+        <%  });%>
     </div>
 </div>
 <div id="prompter">
