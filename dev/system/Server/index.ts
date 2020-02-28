@@ -5,17 +5,10 @@ import System from '..';
 import bodyParser = require('body-parser');
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
-import Database from '../../Database/index';
-import login from './routes/login';
-import logout from './routes/logout';
 import user from './routes/user';
-import themes from './routes/themes';
-import scripts from './routes/scripts';
-import images from './routes/images';
-import register from './routes/register';
-import fonts from './routes/fonts';
 import headers from './routes/headers';
 import indexsite from './routes/indexsite';
+import routelogic from './routes/index';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -59,23 +52,8 @@ export default class Server {
                 `./dev/System/Server/Web/Templates/${view_engine}/`
             )
         );
-        this.router
-            .use(headers.load)
-            .get('/$', indexsite.get)
-            .get('/login$', login.get)
-            .post('/login$', login.post)
-            .get('/logout$', logout.get)
-            .get('/register$', register.get)
-            .post('/register$', register.post)
-            .use('/user/:name$', user.profile)
-            .use('/user/:name/storages', user.storages)
-            .use('/user/:name/storage/:invname', user.storage)
-            .post('/user/:name/storages/:operation/:invname', user.operate)
-            .use('/themes/:file', themes.load)
-            .use('/fonts/:file', fonts.load)
-            .use('/scripts/:file', scripts.load)
-            .use('/images/:file(.*)', images.load);
-        this.application.use(this.router);
+        this.router.use(headers.load).get('/$', indexsite.get);
+        this.application.use(this.prepareRoutes(this.router));
         this.start();
     }
     public start(): void {
@@ -86,40 +64,40 @@ export default class Server {
             });
         }
     }
-    // private prepareRoutes(r: express.Router): express.Router {
-    //     r.use(headers.load).get('/$', indexsite.get);
-    //     let _r = routelogic.all;
-    //     for (const iterator in _r) {
-    //         // console.log();
-    //         let entries = Object.entries(_r[iterator]);
+    private prepareRoutes(r: express.Router): express.Router {
+        r.use(headers.load).get('/$', indexsite.get);
+        let _r: any = routelogic.all;
+        for (const iterator in _r) {
+            // console.log();
+            let entries = Object.entries(_r[iterator]);
 
-    //         entries.forEach((_route: any) => {
-    //             const y = Object.keys(_route);
-    //             y.forEach((s: any) => {
-    //                 if (typeof _route[y[s]] === 'string') {
-    //                     let d: string = _route[y[s]];
-    //                     let rr = _route[1]();
-    //                     let linkname = rr[0];
-    //                     let fn = rr[1];
-    //                     console.log(d, linkname);
+            entries.forEach((_route: any) => {
+                const y = Object.keys(_route);
+                y.forEach((s: any) => {
+                    if (typeof _route[y[s]] === 'string') {
+                        let d: string = _route[y[s]];
+                        let rr = _route[1]();
+                        let linkname = rr[0];
+                        let fn = rr[1];
+                        console.log(d, linkname);
 
-    //                     switch (d) {
-    //                         case 'post':
-    //                             r.post(linkname, fn);
-    //                             break;
-    //                         case 'get':
-    //                             r.get(linkname, fn);
-    //                             break;
-    //                         default:
-    //                             r.use(linkname, fn);
-    //                             break;
-    //                     }
-    //                 }
-    //             });
-    //         });
-    //     }
-    //     return r;
-    // }
+                        switch (d) {
+                            case 'post':
+                                r.post(linkname, fn);
+                                break;
+                            case 'get':
+                                r.get(linkname, fn);
+                                break;
+                            default:
+                                r.use(linkname, fn);
+                                break;
+                        }
+                    }
+                });
+            });
+        }
+        return r;
+    }
 }
 
 export async function createAccessToken(obj: any): Promise<string> {
