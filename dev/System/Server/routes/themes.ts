@@ -12,6 +12,7 @@ namespace themes {
                     req.params.file
                 );
                 res.setHeader('Content-Type', 'text/css');
+                console.log(req.params.file);
 
                 if (fs.existsSync(p)) {
                     res.sendFile(p);

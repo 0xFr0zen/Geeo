@@ -11,7 +11,7 @@ import indexsite from './routes/indexsite';
 import routelogic from './routes';
 export default class Server {
     private static DEFAULT_PORT: number =
-        parseInt(dotenv.config().parsed.DEFAULT_WEBSERVER_PORT) || 80;
+        parseInt(dotenv.config().parsed.DEFAULT_WEBSERVER_PORT) || 443;
     private static DEFAULT_HOSTNAME: string = 'geeo';
     private static DEFAULT_VIEW_ENGINE: string = 'vash';
     private router: express.Router = null;
@@ -74,10 +74,11 @@ export default class Server {
                 y.forEach((s: any) => {
                     if (typeof _route[y[s]] === 'string') {
                         let d: string = _route[y[s]];
-
                         let rr = _route[1]();
                         let linkname = rr[0];
                         let fn = rr[1];
+                        console.log(d, linkname);
+                        
                         switch (d) {
                             case 'post':
                                 r.post(linkname, fn);
