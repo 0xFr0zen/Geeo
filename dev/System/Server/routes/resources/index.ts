@@ -11,7 +11,7 @@ namespace resources {
         fonts: fonts,
     };
     export function find(name: string) {
-        if (resourcelist.includes(name)) {
+        if (Object.keys(resourcelist).includes(name)) {
             return resourcelist[name];
         }
     }

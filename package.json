@@ -49,13 +49,13 @@
         "typescript": "^3.7.4"
     },
     "scripts": {
-        "test": "npm install . && tsc && node ./output/test.js",
         "db": "nodemon --exec ts-node ./db_test.ts",
         "startserver": "nodemon --exec ts-node ./index.ts",
         "prestart": "npm install .",
         "start": "nodemon --exec ts-node ./index.ts",
         "reset": "ts-node ./reset.ts",
-        "compile": "tsc"
+        "compile": "tsc",
+        "test": "ts-node ./tests/index.ts"
     },
     "keywords": [],
     "author": "",
