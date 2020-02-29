@@ -6,5 +6,4 @@ let files = fs.readdirSync(testfolder).filter((v, i) => {
 });
 files.forEach((v, i) => {
     console.log(v);
-    import 
 });
