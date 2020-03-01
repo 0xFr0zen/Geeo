@@ -15,8 +15,8 @@ namespace Inventories {
             super();
             this.user = user;
         }
-        public getList(filter?: ItemFilter): ItemList {
-            return this.items;
+        public getList(filter?: ItemFilter): Array<Item> {
+            return this.items.list();
         }
         public addAll(itemslist: ItemList): GeeoInventory {
             this.items.addAll(itemslist);
@@ -90,6 +90,9 @@ namespace Inventories {
         }
         public addAll(itemslist: ItemList) {
             this.items.push(...itemslist.items);
+        }
+        public list(): Array<Item> {
+            return this.items;
         }
     }
     abstract class ItemListFormatter {
