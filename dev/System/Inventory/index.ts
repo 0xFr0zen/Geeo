@@ -1,28 +1,39 @@
 import User from '../Entity/User/index';
 import { GeeoMap } from '../GeeoMap/index';
+import { EventEmitter } from 'events';
 namespace Inventories {
     export interface Item {
         name: string;
+        type: ItemType;
         value: any;
     }
 
-    export class GeeoInventory {
+    export class GeeoInventory extends EventEmitter {
         private user: User = null;
-        private items: GeeoMap<string, any> = new GeeoMap<string, any>();
+        private items: ItemList = new ItemList();
         constructor(user?: User) {
+            super();
             this.user = user;
         }
-        public getItemList(filter?: ItemFilter): ItemList {
+        public getList(filter?: ItemFilter): ItemList {
             return this.items;
         }
-        public addAll(itemslist: ItemList) {
-            itemslist.forEach((v: Item, i) => {
-                this.items.addItem(v.name, v.value);
-            });
+        public addAll(itemslist: ItemList): GeeoInventory {
+            this.items.addAll(itemslist);
+            this.emit('listadded', itemslist.length());
             return this;
         }
-        public add(itemname: string, item: any) {
-            this.items.addItem(itemname, item);
+        public getItem(name: string) {
+            return this.items.getItem(name);
+        }
+        public add(item: Item): GeeoInventory {
+            this.items = this.items.addItem(item);
+            this.emit('added', item);
+            return this;
+        }
+        public remove(filter: string | Item): GeeoInventory {
+            this.items = this.items.removeItem(filter);
+            this.emit('removed', filter);
             return this;
         }
         public static from(items: ItemList | any[]): GeeoInventory {
@@ -42,19 +53,50 @@ namespace Inventories {
         index?: number;
     }
     export enum ItemType {
-        ANY,
-        DOCUMENT,
-        PRODUCT,
-        MAIL,
+        ANY = 'ANY',
+        DOCUMENT = 'DOCUMENT',
+        PRODUCT = 'PRODUCT',
+        MAIL = 'MAIL',
     }
-    export class ItemList extends GeeoMap<string, any> {}
+    export class ItemList {
+        private items: Item[] = [];
+        public length(): number {
+            return this.items.length;
+        }
+        public addItem(item: Item): ItemList {
+            this.items.push(item);
+            return this;
+        }
+        public getItem(name: string): Item {
+            return this.items.find(item => {
+                return item.name === name;
+            });
+        }
+        public removeItem(element: string | Item): ItemList {
+            let filter: any = null;
+            if (typeof element === 'string') {
+                filter = (item: Item) => {
+                    return item.name === element;
+                };
+            } else {
+                filter = (item: Item) => {
+                    return item === element;
+                };
+            }
+            let foundItemIndex = this.items.findIndex(filter);
+            this.items = this.items.splice(foundItemIndex, 1);
+            this.items.sort();
+            return this;
+        }
+        public addAll(itemslist: ItemList) {
+            this.items.push(...itemslist.items);
+        }
+    }
     abstract class ItemListFormatter {
         public static format(array: Array<Item>): ItemList {
             let il: ItemList = new ItemList();
-            // console.log();
-
             array.forEach((v, i) => {
-                il.addItem(v.name, v.value);
+                il = il.addItem(v);
             });
             return il;
         }
