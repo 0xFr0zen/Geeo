@@ -2,10 +2,10 @@ import User from '../Entity/User/index';
 import { GeeoMap } from '../GeeoMap/index';
 import { EventEmitter } from 'events';
 namespace Inventories {
-    export interface Item {
-        name: string;
-        type: ItemType;
-        value: any;
+    export class Item {
+        public name: string;
+        public type: ItemType;
+        public value: any;
     }
 
     export class GeeoInventory extends EventEmitter {
@@ -15,12 +15,21 @@ namespace Inventories {
             super();
             this.user = user;
         }
+        public assignUser(user: User): GeeoInventory {
+            this.user = user;
+            return this;
+        }
         public getList(filter?: ItemFilter): Array<Item> {
             return this.items.list();
         }
-        public addAll(itemslist: ItemList): GeeoInventory {
-            this.items.addAll(itemslist);
-            this.emit('listadded', itemslist.length());
+        public addAll(itemslist: ItemList | Item[]): GeeoInventory {
+            if (itemslist instanceof ItemList) {
+                this.items.addAll(itemslist);
+                this.emit('listadded', itemslist.length());
+            } else {
+                this.items.addAll(ItemListFormatter.format(itemslist));
+                this.emit('listadded', itemslist.length);
+            }
             return this;
         }
         public getItem(name: string) {
@@ -31,9 +40,10 @@ namespace Inventories {
             this.emit('added', item);
             return this;
         }
-        public remove(filter: string | Item): GeeoInventory {
+        public remove(filter: string): GeeoInventory {
+            let item = this.items.getItem(filter);
             this.items = this.items.removeItem(filter);
-            this.emit('removed', filter);
+            this.emit('removed', item);
             return this;
         }
         public static from(items: ItemList | any[]): GeeoInventory {
@@ -45,6 +55,12 @@ namespace Inventories {
             }
 
             return inv;
+        }
+        public getUser(): User {
+            return this.user;
+        }
+        public hasUser(): boolean {
+            return this.user !== null;
         }
     }
     export interface ItemFilter {

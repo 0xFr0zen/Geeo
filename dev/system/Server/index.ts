@@ -78,7 +78,6 @@ export default class Server {
                         let rr = _route[1]();
                         let linkname = rr[0];
                         let fn = rr[1];
-                        console.log(d, linkname);
 
                         switch (d) {
                             case 'post':
