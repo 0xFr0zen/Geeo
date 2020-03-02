@@ -56,7 +56,8 @@
         "reset": "ts-node ./reset.ts",
         "compile": "tsc",
         "test": "ts-node ./tests/index.ts",
-        "test-inv": "ts-node ./tests/inventory.ts"
+        "test-inv": "ts-node ./tests/inventory.ts",
+        "test-geeopage": "ts-node ./tests/geeoweb.ts"
     },
     "keywords": [],
     "author": "",
