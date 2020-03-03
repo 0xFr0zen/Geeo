@@ -9,13 +9,14 @@ export default class GeeoWebPage {
     private page: GeeoPage = null;
     private static DEFAULT_LOCATION: string =
         './dev/System/Server/Web/Templates/gjs/';
-    private templateFolder = dotenv.config().parsed.templateFolder || GeeoWebPage.DEFAULT_LOCATION;
+    private templateFolder =
+        dotenv.config().parsed.templateFolder || GeeoWebPage.DEFAULT_LOCATION;
     constructor(text: string) {
         if (
             fs.existsSync(
                 path.join(
                     process.cwd(),
-                    `${}`,
+                    `${templateFolder}`,
                     text.endsWith('.gjs') ? text : text.concat('.gjs')
                 )
             )
