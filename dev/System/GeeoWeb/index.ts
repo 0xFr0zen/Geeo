@@ -16,7 +16,7 @@ export default class GeeoWebPage {
             fs.existsSync(
                 path.join(
                     process.cwd(),
-                    `${templateFolder}`,
+                    `${this.templateFolder}`,
                     text.endsWith('.gjs') ? text : text.concat('.gjs')
                 )
             )
