@@ -275,12 +275,14 @@
   background: transparent;
   outline: none;
   opacity: 0.6;
+  transition: all 0.05s ease-in-out;
 }
 #cashier #cashiermain #list #items .item .options button:hover {
   opacity: 0.8;
 }
 #cashier #cashiermain #list #items .item .options button:active {
   opacity: 1;
+  transform: scale(0.9);
 }
 #cashier #cashiermain #list #items .item .options button:focus {
   opacity: 1;
