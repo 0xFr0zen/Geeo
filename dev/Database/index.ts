@@ -146,7 +146,7 @@ export default class Database {
     public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise((resolve, reject) => {
             Database.lastQueried = Date.now();
-            console.log('Last Queried: ' + new Date().toISOString());
+            // console.log('Last Queried: ' + new Date().toISOString());
             let retresults: Result[] = [];
             this.isValidQuery(syntax, values).then(goodQuery => {
                 if (goodQuery) {
@@ -154,10 +154,10 @@ export default class Database {
                         try {
                             let myerror: any = null;
                             this.getConnection()
-                                .then((connection: mysql.PoolConnection) => {                                    
+                                .then((connection: mysql.PoolConnection) => {
                                     if (values) {
-                                        console.log('with values')
-                                        let c_q:mysql.Query = connection
+                                        console.log('with values');
+                                        let c_q: mysql.Query = connection
                                             .query(syntax, values)
                                             .on('result', (row, index) => {
                                                 console.log('row', row);
@@ -173,9 +173,8 @@ export default class Database {
                                                         reject(e);
                                                     });
                                             })
-                                            .on('packet', (packet) => {
+                                            .on('packet', packet => {
                                                 console.log('packet', packet);
-
                                             })
                                             .on(
                                                 'error',

@@ -1,69 +1,28 @@
-<link rel="stylesheet" href="/themes/cashier_<%= mode %>.css">
+<link rel="stylesheet" href="/themes/cashier.css" />
+<script defer src="scripts/cashier.js"></script>
 <div id="cashier">
     <div id="cashiermain">
         <div id="list">
-            <div id="current"></div>
+            <div id="history">
+                <div id="past">
+                    <div class="item">0.00</div>
+                </div>
+                <div id="current">
+                    <div class="item">
+                        <div class="amount">4</div>
+                        <div class="title">TestItem</div>
+                        <div class="price">0.00</div>
+                    </div>
+                </div>
+            </div>
             <div id="items">
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
-                <div class="item">
-                    <div class="title"></div>
-                    <div class="price"></div>
-                    <div class="options"></div>
-                </div>
+                <%- include("item", { title:'TestItem', type:'A', price:'0.00'
+                }); %>
             </div>
             <div id="total">
                 <div id="total_inner">
                     <div id="currency">CHF</div>
-                    <div id="price"></div>
+                    <div id="price">200.00</div>
                 </div>
             </div>
         </div>

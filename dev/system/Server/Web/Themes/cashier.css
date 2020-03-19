@@ -1,0 +1,395 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxP.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc9.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc9.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Roboto Black'), local('Roboto-Black'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmYUtfBBc9.ttf) format('truetype');
+}
+:root {
+  --background: #fff;
+  --background-dark: #111;
+  --mode-color: --background-dark;
+  --mode-color-light: --background;
+  --accent-color: rgba(0, 0, 0, 0.1);
+  --accent-color-hover: rgba(0, 0, 0, 0.15);
+  --accent-color-active: rgba(0, 0, 0, 0.2);
+  --accent-color-focus: rgba(0, 0, 0, 0.225);
+  --accent-color-checked: rgba(0, 0, 0, 0.5);
+  --accent-color-light: rgba(255, 255, 255, 0.1);
+  --accent-color-hover-light: rgba(255, 255, 255, 0.15);
+  --accent-color-active-light: rgba(255, 255, 255, 0.2);
+  --accent-color-focus-light: rgba(255, 255, 255, 0.225);
+  --deccent-color: rgba(0, 0, 0, 0.05);
+  --deccent-color-light: rgba(255, 255, 255, 0.05);
+  --border-radius: 4px;
+  --font-family: 'Lato', sans-serif;
+  --transition-timing: cubic-bezier(1, 0.26, 0.46, 1.15);
+  --transition-timing-2: cubic-bezier(0.55, -0.19, 0.62, 1.19);
+  --transition-duration: 0.2s;
+  --transition-duration-long: 1s;
+  --highlight-color: #0984e3;
+  --info-color: #0984e3;
+  --button-submit-bgcolor: #0984e3;
+  --button-submit-bgcolor-hover: #0876ca;
+  --button-submit-bgcolor-active: #0767b2;
+  --button-submit-bgcolor-light: #69abdd;
+  --button-submit-bgcolor-hover-light: #549fd8;
+  --button-submit-bgcolor-active-light: #3f94d4;
+  --button-cancel-color: #ff0000;
+  --button-cancel-color-active: #ffffff;
+  --button-cancel-bgcolor-hover: rgba(255, 0, 0, 0.1);
+  --button-cancel-bgcolor-active: rgba(255, 0, 0, 0.5);
+  --button-cancel-color-light: #ff2d2d;
+  --button-cancel-color-active-light: #ffffff;
+  --button-cancel-bgcolor-hover-light: rgba(255, 79, 79, 0.1);
+  --button-cancel-bgcolor-active-light: rgba(255, 79, 79, 0.5);
+  --label-color: rgba(0, 0, 0, 0.4);
+  --label-color-focus: rgba(0, 0, 0, 0.8);
+  --label-color-light: rgba(255, 255, 255, 0.4);
+  --label-color-light-focus: rgba(255, 255, 255, 0.8);
+  --caret-color: rgba(0, 0, 0, 0.8);
+  --caret-color-light: rgba(255, 255, 255, 0.8);
+  --button-cancel-shadow: 0 1px 3px rgba(255, 45, 45, 0.12),
+        0 1px 2px rgba(255, 45, 45, 0.24);
+  --button-cancel-dark-shadow: 0 1px 3px rgba(255, 45, 45, 0.06),
+        0 1px 2px rgba(255, 45, 45, 0.12);
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --box-shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --box-shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19),
+        0 6px 6px rgba(0, 0, 0, 0.23);
+  --box-shadow-light: 0 1px 3px rgba(255, 255, 255, 0.12),
+        0 1px 2px rgba(255, 255, 255, 0.24);
+  --box-shadow-2-light: 0 3px 6px rgba(255, 255, 255, 0.16),
+        0 3px 6px rgba(255, 255, 255, 0.23);
+  --box-shadow-3-light: 0 10px 20px rgba(255, 255, 255, 0.19),
+        0 6px 6px rgba(255, 255, 255, 0.23);
+  --h-color-light: white;
+  --p-color-light: grey;
+  --title-color: #065999;
+  --loader-border-top-color: rgba(0, 0, 0, 0.65);
+  --loader-border-bottom-color: rgba(0, 0, 0, 0.15);
+  --loader-border-left-color: rgba(0, 0, 0, 0.65);
+  --loader-border-right-color: rgba(0, 0, 0, 0.15);
+  --loader-border-top-color-light: rgba(9, 132, 227, 0.65);
+  --loader-border-bottom-color-light: rgba(9, 132, 227, 0.15);
+  --loader-border-left-color-light: rgba(9, 132, 227, 0.65);
+  --loader-border-right-color-light: rgba(9, 132, 227, 0.15);
+  --switcher-color: rgba(0, 136, 255);
+  --user-profile-background: #777;
+  --user-profile-background-hover: #555;
+  --user-profile-background-light: #eee;
+  --user-profile-background-light-hover: #ddd;
+  --item-background-color: #fff;
+  --item-background-color-light: --background-dark;
+  --input-background-color: #ddd;
+  --input-background-color-focus: #ccc;
+  --input-background-color-light: #444;
+  --input-background-color-focus-light: #555;
+  --box-background: rgba(0, 0, 0, 0.075);
+  --box-background-light: rgba(255, 255, 255, 0.075);
+  --box-color: rgba(0, 0, 0, 0.1);
+  --box-color-low: rgba(0, 0, 0, 0.5);
+  --box-color-strong: #000000;
+  --box-color-strong-light: #ffffff;
+  --box-color-low-light: rgba(255, 255, 255, 0.5);
+}
+@font-face {
+  font-family: 'pass';
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAAATsAA8AAAAAB2QAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABWAAAABwAAAAcg9+z70dERUYAAAF0AAAAHAAAAB4AJwANT1MvMgAAAZAAAAA/AAAAYH7AkBhjbWFwAAAB0AAAAFkAAAFqZowMx2N2dCAAAAIsAAAABAAAAAQAIgKIZ2FzcAAAAjAAAAAIAAAACAAAABBnbHlmAAACOAAAALkAAAE0MwNYJ2hlYWQAAAL0AAAAMAAAADYPA2KgaGhlYQAAAyQAAAAeAAAAJAU+ATJobXR4AAADRAAAABwAAAAcCPoA6mxvY2EAAANgAAAAEAAAABAA5gFMbWF4cAAAA3AAAAAaAAAAIAAKAE9uYW1lAAADjAAAARYAAAIgB4hZ03Bvc3QAAASkAAAAPgAAAE5Ojr8ld2ViZgAABOQAAAAGAAAABuK7WtIAAAABAAAAANXulPUAAAAA1viLwQAAAADW+JM4eNpjYGRgYOABYjEgZmJgBEI2IGYB8xgAA+AANXjaY2BifMg4gYGVgYVBAwOeYEAFjMgcp8yiFAYHBl7VP8wx/94wpDDHMIoo2DP8B8kx2TLHACkFBkYA8/IL3QB42mNgYGBmgGAZBkYGEEgB8hjBfBYGDyDNx8DBwMTABmTxMigoKKmeV/3z/z9YJTKf8f/X/4/vP7pldosLag4SYATqhgkyMgEJJnQFECcMOGChndEAfOwRuAAAAAAiAogAAQAB//8AD3jaY2BiUGJgYDRiWsXAzMDOoLeRkUHfZhM7C8Nbo41srHdsNjEzAZkMG5lBwqwg4U3sbIx/bDYxgsSNBRUF1Y0FlZUYBd6dOcO06m+YElMa0DiGJIZUxjuM9xjkGRhU2djZlJXU1UDQ1MTcDASNjcTFQFBUBGjYEkkVMJCU4gcCKRTeHCk+fn4+KSllsJiUJEhMUgrMUQbZk8bgz/iA8SRR9qzAY087FjEYD2QPDDAzMFgyAwC39TCRAAAAeNpjYGRgYADid/fqneL5bb4yyLMwgMC1H90HIfRkCxDN+IBpFZDiYGAC8QBbSwuceNpjYGRgYI7594aBgcmOAQgYHzAwMqACdgBbWQN0AAABdgAiAAAAAAAAAAABFAAAAj4AYgI+AGYB9AAAAAAAKgAqACoAKgBeAJIAmnjaY2BkYGBgZ1BgYGIAAUYGBNADEQAFQQBaAAB42o2PwUrDQBCGvzVV9GAQDx485exBY1CU3PQgVgIFI9prlVqDwcZNC/oSPoKP4HNUfQLfxYN/NytCe5GwO9/88+/MBAh5I8C0VoAtnYYNa8oaXpAn9RxIP/XcIqLreZENnjwvyfPieVVdXj2H7DHxPJH/2/M7sVn3/MGyOfb8SWjOGv4K2DRdctpkmtqhos+D6ISh4kiUUXDj1Fr3Bc/Oc0vPqec6A8aUyu1cdTaPZvyXyqz6Fm5axC7bxHOv/r/dnbSRXCk7+mpVrOqVtFqdp3NKxaHUgeod9cm40rtrzfrt2OyQa8fppCO9tk7d1x0rpiQcuDuRkjjtkHt16ctbuf/radZY52/PnEcphXpZOcofiEZNcQAAeNpjYGIAg///GBgZsAF2BgZGJkZmBmaGdkYWRla29JzKggxD9tK8TAMDAxc2D0MLU2NjENfI1M0ZACUXCrsAAAABWtLiugAA) format('woff');
+}
+#cashier {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+#cashier #cashiermain {
+  float: left;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+#cashier #cashiermain #list {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+  float: left;
+  width: 400px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+#cashier #cashiermain #list #history {
+  position: relative;
+  top: 0px;
+  float: left;
+  width: 100%;
+  height: 80px;
+  background-color: var(--box-background);
+  cursor: default;
+  border-radius: 5px;
+}
+#cashier #cashiermain #list #history #past {
+  float: left;
+  width: 100%;
+  height: calc(40%);
+  padding: 7px;
+  text-align: right;
+  opacity: 0.4;
+}
+#cashier #cashiermain #list #history #current {
+  float: left;
+  width: 100%;
+  height: calc(60%);
+  padding: 7px 15px;
+}
+#cashier #cashiermain #list #history #current .item {
+  width: 100%;
+  font-size: 20pt;
+  font-weight: bold;
+}
+#cashier #cashiermain #list #history #current .item .amount {
+  width: 40px;
+  height: 100%;
+  float: left;
+  color: var(--box-color-strong);
+  opacity: 0.5;
+}
+#cashier #cashiermain #list #history #current .item .amount::after {
+  content: 'x';
+}
+#cashier #cashiermain #list #history #current .item .amount:empty::after {
+  content: '0x';
+}
+#cashier #cashiermain #list #history #current .item .title {
+  width: calc(100% - 140px);
+  height: 100%;
+  float: left;
+  color: var(--box-color-strong);
+}
+#cashier #cashiermain #list #history #current .item .price {
+  width: 100px;
+  height: 100%;
+  float: right;
+  color: var(--box-color-strong);
+  text-align: right;
+}
+#cashier #cashiermain #list #items {
+  float: left;
+  width: 100%;
+  height: calc(100% - 190px);
+  padding: 7px 0px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+#cashier #cashiermain #list #items .item {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--box-background);
+  border-radius: 5px;
+  margin-bottom: 7px;
+  overflow: hidden;
+  height: 60px;
+  transition: all 0.1s ease-in-out;
+}
+#cashier #cashiermain #list #items .item.open {
+  height: 110px;
+}
+#cashier #cashiermain #list #items .item.open .information {
+  border-bottom: 2px dashed var(--accent-color);
+}
+#cashier #cashiermain #list #items .item .information {
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+  font-size: 16pt;
+}
+#cashier #cashiermain #list #items .item .information .title {
+  width: auto;
+  max-width: calc(100% - 140px);
+  height: 100%;
+  float: left;
+  color: var(--box-color-strong);
+  padding: 5px;
+}
+#cashier #cashiermain #list #items .item .information .type {
+  width: 40px;
+  height: 100%;
+  float: left;
+  color: var(--box-color-low);
+  padding: 5px;
+}
+#cashier #cashiermain #list #items .item .information .price {
+  width: 100px;
+  height: 100%;
+  float: right;
+  color: var(--box-color-strong);
+  text-align: right;
+  padding: 5px;
+}
+#cashier #cashiermain #list #items .item .options {
+  width: 100%;
+  height: 50px;
+  padding: 15px 10px;
+}
+#cashier #cashiermain #list #items .item .options button {
+  float: right;
+  cursor: pointer;
+  width: auto;
+  margin-left: 20px;
+  padding: 0px;
+  background: transparent;
+  outline: none;
+  opacity: 0.6;
+}
+#cashier #cashiermain #list #items .item .options button:hover {
+  opacity: 0.8;
+}
+#cashier #cashiermain #list #items .item .options button:active {
+  opacity: 1;
+}
+#cashier #cashiermain #list #items .item .options button:focus {
+  opacity: 1;
+}
+#cashier #cashiermain #list #items .item .options .delete {
+  color: #d91e18;
+}
+#cashier #cashiermain #list #items .item .options .edit {
+  color: var(--box-color-strong);
+}
+#cashier #cashiermain #list #total {
+  position: relative;
+  top: 100%;
+  margin-top: -100px;
+  width: 100%;
+  height: 100px;
+  background-color: var(--background);
+}
+#cashier #cashiermain #list #total #total_inner {
+  width: 100%;
+  height: 100px;
+  background-color: var(--accent-color);
+  border-radius: 5px;
+}
+#cashier #cashiermain #list #total #total_inner #currency {
+  position: absolute;
+  top: 0px;
+  float: left;
+  width: 50%;
+  height: 100%;
+  padding: 40px;
+  line-height: 20px;
+  font-size: 20px;
+  color: var(--box-color-low);
+}
+#cashier #cashiermain #list #total #total_inner #price {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  float: right;
+  width: 50%;
+  height: 100%;
+  padding: 35px 10px;
+  line-height: 205x;
+  font-size: 25px;
+  text-align: right;
+}
+#cashier #cashiermain #list #total #total_inner #price::before {
+  content: 'Total: ';
+  position: relative;
+}
+#cashier #cashiermain #list #total #total_inner #price:empty::before {
+  content: 'Total: 0.00';
+  position: relative;
+}
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+}
+body[dark] #cashier #cashiermain #list #history {
+  background-color: var(--box-background-light);
+}
+body[dark] #cashier #cashiermain #list #history #current .item .amount {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #history #current .item .title {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #history #current .item .price {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #items .item {
+  background-color: var(--box-background-light);
+}
+body[dark] #cashier #cashiermain #list #items .item.open .information {
+  border-color: var(--accent-color-light);
+}
+body[dark] #cashier #cashiermain #list #items .item .information .title {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #items .item .information .type {
+  color: var(--box-color-low-light);
+}
+body[dark] #cashier #cashiermain #list #items .item .information .price {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #items .item .options .delete {
+  color: #f64747;
+}
+body[dark] #cashier #cashiermain #list #items .item .options .edit {
+  color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #total {
+  background-color: var(--background-dark);
+}
+body[dark] #cashier #cashiermain #list #total #total_inner {
+  background-color: var(--accent-color-light);
+}
+body[dark] #cashier #cashiermain #list #total #total_inner #currency {
+  color: var(--box-color-low-light);
+}

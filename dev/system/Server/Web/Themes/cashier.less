@@ -1,0 +1,279 @@
+@import url('./variables');
+#cashier {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    #cashiermain {
+        float: left;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        border-radius: 5px;
+        #list {
+            .noselect();
+            float: left;
+            width: 400px;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 5px;
+            #history {
+                position: relative;
+                top: 0px;
+                float: left;
+                width: 100%;
+                height: 80px;
+                background-color: var(--box-background);
+
+                cursor: default;
+                border-radius: 5px;
+                #past {
+                    float: left;
+                    width: 100%;
+                    height: ~'calc(40%)';
+                    padding: 7px;
+                    text-align: right;
+                    opacity: 0.4;
+                }
+                #current {
+                    float: left;
+                    width: 100%;
+                    height: ~'calc(60%)';
+                    padding: 7px 15px;
+
+                    .item {
+                        width: 100%;
+                        font-size: 20pt;
+                        font-weight: bold;
+                        .amount {
+                            width: 40px;
+                            height: 100%;
+                            float: left;
+                            color: var(--box-color-strong);
+                            opacity: 0.5;
+                            &::after {
+                                content: 'x';
+                            }
+                            &:empty::after {
+                                content: '0x';
+                            }
+                        }
+                        .title {
+                            width: ~'calc(100% - 140px)';
+                            height: 100%;
+                            float: left;
+                            color: var(--box-color-strong);
+                        }
+                        .price {
+                            width: 100px;
+                            height: 100%;
+                            float: right;
+                            color: var(--box-color-strong);
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+            #items {
+                float: left;
+                width: 100%;
+                height: ~'calc(100% - 190px)';
+                padding: 7px 0px;
+                border-radius: 5px;
+                overflow: hidden;
+                .item {
+                    width: 100%;
+                    padding: 10px;
+
+                    background-color: var(--box-background);
+                    border-radius: 5px;
+                    margin-bottom: 7px;
+                    overflow: hidden;
+                    height: 60px;
+                    transition: all 0.1s ease-in-out;
+                    &.open {
+                        height: 110px;
+                        .information {
+                            border-bottom: 2px dashed var(--accent-color);
+                        }
+                    }
+                    .information {
+                        width: 100%;
+                        height: 40px;
+                        cursor: pointer;
+                        font-size: 16pt;
+
+                        .title {
+                            width: auto;
+                            max-width: ~'calc(100% - 140px)';
+                            height: 100%;
+                            float: left;
+                            color: var(--box-color-strong);
+                            padding: 5px;
+                        }
+                        .type {
+                            width: 40px;
+                            height: 100%;
+                            float: left;
+                            color: var(--box-color-low);
+                            padding: 5px;
+                        }
+                        .price {
+                            width: 100px;
+                            height: 100%;
+                            float: right;
+                            color: var(--box-color-strong);
+                            text-align: right;
+                            padding: 5px;
+                        }
+                    }
+                    .options {
+                        width: 100%;
+                        height: 50px;
+                        padding: 15px 10px;
+                        button {
+                            float: right;
+                            cursor: pointer;
+                            width: auto;
+                            margin-left: 20px;
+                            padding: 0px;
+                            background: transparent;
+                            outline: none;
+                            opacity: 0.6;
+                            &:hover {
+                                opacity: 0.8;
+                            }
+                            &:active {
+                                opacity: 1;
+                            }
+                            &:focus {
+                                opacity: 1;
+                            }
+                        }
+                        .delete {
+                            color: rgb(217, 30, 24);
+                        }
+                        .edit {
+                            color: var(--box-color-strong);
+                        }
+                    }
+                }
+            }
+            #total {
+                position: relative;
+                top: 100%;
+                margin-top: -100px;
+                width: 100%;
+                height: 100px;
+                background-color: var(--background);
+                #total_inner {
+                    width: 100%;
+                    height: 100px;
+                    background-color: var(--accent-color);
+                    border-radius: 5px;
+                    #currency {
+                        position: absolute;
+                        top: 0px;
+                        float: left;
+                        width: 50%;
+                        height: 100%;
+                        padding: 40px;
+                        line-height: 20px;
+                        font-size: 20px;
+                        color: var(--box-color-low);
+                    }
+                    #price {
+                        position: absolute;
+                        top: 0px;
+                        right: 0px;
+                        float: right;
+                        width: 50%;
+                        height: 100%;
+                        padding: 35px 10px;
+                        line-height: 205x;
+                        font-size: 25px;
+                        text-align: right;
+                        &::before {
+                            content: 'Total: ';
+                            position: relative;
+                        }
+                        &:empty::before {
+                            content: 'Total: 0.00';
+                            position: relative;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+}
+body[dark] #cashier {
+    #cashiermain {
+        #list {
+            #history {
+                background-color: var(--box-background-light);
+                #current {
+                    .item {
+                        .amount {
+                            color: var(--box-color-strong-light);
+                        }
+                        .title {
+                            color: var(--box-color-strong-light);
+                        }
+                        .price {
+                            color: var(--box-color-strong-light);
+                        }
+                    }
+                }
+            }
+            #items {
+                .item {
+                    background-color: var(--box-background-light);
+                    &.open {
+                        .information {
+                            border-color: var(--accent-color-light);
+                        }
+                    }
+                    .information {
+                        .title {
+                            color: var(--box-color-strong-light);
+                        }
+                        .type {
+                            color: var(--box-color-low-light);
+                        }
+                        .price {
+                            color: var(--box-color-strong-light);
+                        }
+                    }
+                    .options {
+                        .delete {
+                            color: rgb(246, 71, 71);
+                        }
+                        .edit {
+                            color: var(--box-color-strong-light);
+                        }
+                    }
+                }
+            }
+            #total {
+                background-color: var(--background-dark);
+                #total_inner {
+                    background-color: var(--accent-color-light);
+                    #currency {
+                        color: var(--box-color-low-light);
+                    }
+                }
+            }
+        }
+    }
+}

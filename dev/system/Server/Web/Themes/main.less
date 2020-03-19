@@ -1,8 +1,9 @@
-//@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,900&display=swap&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,900&display=swap&subset=latin-ext');
 @import url('./font');
+@import url('./variables');
 * {
     box-sizing: border-box;
-    font-family: 'Lato', sans-serif;
+    font-family: var(--font-family);
 }
 .disablehighlighting {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -12,254 +13,374 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
-@dark: #222;
-@light: #fff;
-@mode: @light;
-@background: @mode;
 body {
     margin: 0px;
-    background: @background;
-}
-#main {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    #main_inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        #menu {
-            .disablehighlighting();
-            position: relative;
-            float: left;
-            width: 70px;
-            height: 100%;
-            background: transparent;
-            padding: 10px;
-            #inventories,
-            #optionals {
-                float: left;
-                width: 50px;
-                height: auto;
+    background: var(--background);
+    transition: all 0.1s ease-in-out;
 
-                .circle {
-                    vertical-align: middle;
-                    display: table-cell;
+    #main {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        #main_inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            #menu {
+                .disablehighlighting();
+                position: relative;
+                float: left;
+                width: 70px;
+                height: 100%;
+                background: transparent;
+                padding: 10px;
+                #inventories,
+                #optionals {
                     float: left;
                     width: 50px;
+                    height: auto;
+                    .circle {
+                        vertical-align: middle;
+                        display: table-cell;
+                        float: left;
+                        width: 50px;
+                        height: 50px;
+                        margin-right: 10px;
+                        color: var(--info-color);
+                        background: var(--accent-color);
+                        text-align: center;
+                        border-radius: 25px;
+                        margin-bottom: 10px;
+                        padding: 12px 10px;
+                        box-shadow: none;
+                        border: var(--accent-color);
+                        cursor: pointer;
+                        &:hover {
+                            background: var(--accent-color-hover);
+                            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                        }
+                        &:active {
+                            background: var(--accent-color-active);
+                        }
+
+                        &.highlighted {
+                            background: var(--highlight-color);
+                            color: white;
+                        }
+                        &.highlighted2 {
+                            background: rgb(255, 208, 0);
+                            color: white;
+                        }
+                    }
+                    #loading {
+                        height: 50px !important;
+                        width: 50px !important;
+                        background: transparent;
+                        padding: 10px;
+                        box-shadow: none;
+                        border: none;
+                        #loadercircle {
+                            width: 30px;
+                            height: 30px;
+                            display: inline-block;
+                            padding: 0px;
+                            border-radius: 100%;
+                            border: 2px solid;
+                            box-shadow: none;
+
+                            border-top-color: var(--loader-border-top-color);
+                            border-bottom-color: var(
+                                --loader-border-bottom-color
+                            );
+                            border-left-color: var(--loader-border-left-color);
+                            border-right-color: var(
+                                --loader-border-right-color
+                            );
+
+                            -webkit-animation: loader 0.8s linear infinite;
+                            animation: loader 0.8s linear infinite;
+                        }
+                    }
+                    #add {
+                        float: left;
+                        height: 50px !important;
+                        width: 50px !important;
+                        text-align: center;
+                        cursor: pointer;
+                    }
+                }
+                #mode {
+                    position: absolute;
+                    bottom: 140px;
+                    width: 50px;
                     height: 50px;
-                    margin-right: 10px;
-                    color: black;
-                    background: #ddd;
-                    text-align: center;
-                    border-radius: 25px;
-                    margin-bottom: 10px;
-                    padding: 12px 10px;
-                    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-                    border: 1px solid rgba(0, 0, 0, 0.05);
-                    cursor: pointer;
-                    &:hover {
-                        background: #ccc;
-                    }
-                    &:active {
-                        background: #c5c5c5;
-                    }
-
-                    &.highlighted {
-                        background: #08f;
-                        color: white;
-                    }
-                    &.highlighted2 {
-                        background: rgb(255, 208, 0);
-                        color: white;
-                    }
-                }
-                #loading {
-                    height: 50px !important;
-                    width: 50px !important;
                     background: transparent;
-                    padding: 10px;
-                    #loadercircle {
-                        width: 30px;
-                        height: 30px;
-                        display: inline-block;
-                        padding: 0px;
-                        border-radius: 100%;
-                        border: 2px solid;
-                        border-top-color: rgba(0, 0, 0, 0.65);
-                        border-bottom-color: rgba(0, 0, 0, 0.15);
-                        border-left-color: rgba(0, 0, 0, 0.65);
-                        border-right-color: rgba(0, 0, 0, 0.15);
-                        -webkit-animation: loader 0.8s linear infinite;
-                        animation: loader 0.8s linear infinite;
-                    }
-                }
-                #add {
-                    float: left;
-                    height: 50px !important;
-                    width: 50px !important;
-                    text-align: center;
+                    border-radius: 40px;
                     cursor: pointer;
+                    padding: 11px;
+                    text-align: center;
+                    border: 2px solid var(--accent-color);
+                    color: var(--mode-color);
+                    transition: all 0.1s ease-in-out;
                 }
-            }
-            #switcher {
-                position: absolute;
-                bottom: 80px;
-                width: 50px;
-                height: 50px;
-                background: transparent;
-                border: 2px solid rgba(0, 136, 255);
-                border-radius: 40px;
-                overflow: hidden;
-                cursor: pointer;
-                padding: 2px;
-                transition: all 0.1s ease-in-out;
-
-                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-                &[state='overview'] {
-                    border-color: rgba(0, 136, 255);
-                    #state {
-                        background: rgba(0, 136, 255);
-                    }
-                }
-                &[state='cashier'] {
-                    border-color: rgb(0, 255, 170);
-                    #state {
-                        background: rgba(0, 255, 170);
-                    }
-                }
-                &:hover {
-                    border-width: 4px;
-                    padding: 2px;
-                }
-                &:active {
-                    padding: 4px;
-                }
-                #state {
-                    width: 100%;
-                    height: 100%;
-                    background: #777;
-                    border-radius: 100%;
-                }
-            }
-            #user {
-                position: absolute;
-                bottom: 20px;
-                width: 50px;
-                height: 50px;
-                background: #777;
-                border-radius: 40px;
-                overflow: hidden;
-                cursor: pointer;
-                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-                #profile {
-                    width: 100%;
-                    height: 100%;
+                #switcher {
+                    position: absolute;
+                    bottom: 80px;
+                    width: 50px;
+                    height: 50px;
+                    background: transparent;
+                    border: 2px solid var(--switcher-color);
                     border-radius: 40px;
                     overflow: hidden;
-                    text-align: center;
-                    color: white;
-                    padding: 12px 10px;
-                    &:hover {
-                        background: #555;
+                    cursor: pointer;
+                    padding: 2px;
+                    transition: all 0.1s ease-in-out;
+
+                    &[state='overview'] {
+                        border-color: rgba(0, 136, 255);
+                        #state {
+                            background: rgba(0, 136, 255);
+                        }
                     }
+                    &[state='cashier'] {
+                        border-color: rgb(0, 255, 170);
+                        #state {
+                            background: rgba(0, 255, 170);
+                        }
+                    }
+                    &:hover {
+                        border-width: 4px;
+                        padding: 2px;
+                    }
+                    &:active {
+                        padding: 4px;
+                    }
+                    #state {
+                        width: 100%;
+                        height: 100%;
+                        background: #777;
+                        border-radius: 100%;
+                    }
+                }
+                #user {
+                    position: absolute;
+                    bottom: 20px;
+                    width: 50px;
+                    height: 50px;
+                    background: var(--user-profile-background);
+                    border-radius: 40px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    box-shadow: var(--box-shadow);
+                    #profile {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 40px;
+                        overflow: hidden;
+                        text-align: center;
+                        color: white;
+                        padding: 12px 10px;
+                        &:hover {
+                            background: var(--user-profile-background-hover);
+                        }
+                    }
+                }
+            }
+            #content {
+                position: relative;
+                float: left;
+                width: ~'calc(100% - 70px)';
+                height: 100%;
+                background-color: transparent;
+                .mod {
+                    position: relative;
+                    float: left;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                }
+                #inventory {
+                    float: left;
+                    .item {
+                        float: left;
+                        width: 120px;
+                        height: 30px;
+                        padding: 4px 7px;
+                        background-color: var(--item-background-color);
+                        margin-right: 5px;
+                        margin-bottom: 5px;
+                        border-radius: 3px;
+                        border: var(--accent-color);
+
+                        .name {
+                            font-size: medium;
+                        }
+                        .amount {
+                            margin-top: 2px;
+                            float: right;
+                            font-size: small;
+                            &::after {
+                                content: 'x';
+                            }
+                        }
+                    }
+                }
+            }
+
+            #register {
+                position: fixed;
+                width: 250px;
+                height: 450px;
+                top: 50%;
+                left: 50%;
+                margin-left: -125px;
+                margin-top: -225px;
+                h2 {
+                    text-align: center;
+                    width: 100%;
                 }
             }
         }
-        #content {
-            position: relative;
-            float: left;
-            width: ~'calc(100% - 70px)';
-            height: 100%;
-            background-color: transparent;
-            .mod {
-                position: relative;
-                float: left;
-                width: 100%;
-                height: 100%;
-                background-color: transparent;
-            }
-            #inventory {
-                float: left;
-                .item {
-                    float: left;
-                    width: 120px;
-                    height: 30px;
-                    padding: 4px 7px;
-                    background-color: white;
-                    margin-right: 5px;
-                    margin-bottom: 5px;
-                    border-radius: 3px;
-                    border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    &[dark] {
+        background: var(--background-dark);
+        color: white;
+        #main {
+            #main_inner {
+                #menu {
+                    .disablehighlighting();
+                    #inventories,
+                    #optionals {
+                        .circle {
+                            color: var(--info-color);
+                            background: var(--accent-color-light);
+                            border: var(--accent-color-light);
+                            &:hover {
+                                background: var(--accent-color-hover-light);
+                                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                            }
+                            &:active {
+                                background: var(--accent-color-active-light);
+                            }
 
-                    .name {
-                        font-size: medium;
+                            &.highlighted {
+                                background: var(--highlight-color);
+                                color: white;
+                            }
+                            &.highlighted2 {
+                                background: rgb(255, 208, 0);
+                                color: white;
+                            }
+                        }
+                        #loading {
+                            #loadercircle {
+                                border-top-color: var(
+                                    --loader-border-top-color-light
+                                );
+                                border-bottom-color: var(
+                                    --loader-border-bottom-color-light
+                                );
+                                border-left-color: var(
+                                    --loader-border-left-color-light
+                                );
+                                border-right-color: var(
+                                    --loader-border-right-color-light
+                                );
+                            }
+                        }
                     }
-                    .amount {
-                        margin-top: 2px;
-                        float: right;
-                        font-size: small;
-                        &::after {
-                            content: 'x';
+                    #mode {
+                        border-color: var(--accent-color-light);
+                        color: var(--mode-color-light);
+                    }
+                    #switcher {
+                        border: 2px solid var(--switcher-color);
+
+                        &[state='overview'] {
+                            border-color: rgba(0, 136, 255);
+                            #state {
+                                background: rgba(0, 136, 255);
+                            }
+                        }
+                        &[state='cashier'] {
+                            border-color: rgb(0, 255, 170);
+                            #state {
+                                background: rgba(0, 255, 170);
+                            }
+                        }
+                        #state {
+                            width: 100%;
+                            height: 100%;
+                            background: #777;
+                            border-radius: 100%;
+                        }
+                    }
+                    #user {
+                        background: var(--user-profile-background-light);
+                        box-shadow: var(--box-shadow-light);
+                        #profile {
+                            color: black;
+                            &:hover {
+                                background: var(
+                                    --user-profile-background-hover-light
+                                );
+                            }
+                        }
+                    }
+                }
+                #content {
+                    #inventory {
+                        .item {
+                            background-color: var(
+                                --item-background-color-light
+                            );
+                            border: var(--accent-color-light);
                         }
                     }
                 }
             }
         }
-
-        #register {
-            position: fixed;
-            width: 250px;
-            height: 450px;
-            top: 50%;
-            left: 50%;
-            margin-left: -125px;
-            margin-top: -225px;
-            h2 {
-                text-align: center;
-                width: 100%;
-            }
-        }
     }
 }
+
 input {
     width: 100%;
     height: 50px;
     padding: 5px 12px;
     border: none;
-    background: #ddd;
+    background: var(--input-background-color);
     margin-bottom: 10px;
     outline: none !important;
     border-radius: 5px;
     font-size: 13pt;
     &:focus {
-        background: #ccc;
+        background: var(--input-background-color-focus);
     }
     &:last-child {
         margin-bottom: 0px;
     }
     &[type='submit'] {
-        color: white;
-        background: #08f;
+        color: var(--background);
+        background: var(--button-submit-bgcolor);
         cursor: pointer;
         &:hover {
-            background: lighten(#08f, 10%);
+            background: var(--button-submit-bgcolor-hover);
         }
         &:active {
-            background: lighten(#08f, 20%);
+            background: var(--button-submit-bgcolor-active);
         }
     }
     &#signup {
-        color: white;
-        background: #08f;
+        color: var(--background);
+        background: var(--button-submit-bgcolor);
         cursor: pointer;
         &:hover {
-            background: lighten(#08f, 10%);
+            background: var(--button-submit-bgcolor-hover);
         }
         &:active {
-            background: lighten(#08f, 20%);
+            background: var(--button-submit-bgcolor-active);
         }
     }
 }

@@ -1,4 +1,32 @@
 @font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v16/S6u8w4BMUTPHjxsAUi-v.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v16/S6uyw4BMUTPHjxAwWw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v16/S6u9w4BMUTPHh6UVSwaPHA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Lato Black'), local('Lato-Black'), url(https://fonts.gstatic.com/s/lato/v16/S6u9w4BMUTPHh50XSwaPHA.ttf) format('truetype');
+}
+@font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
@@ -28,9 +56,129 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxP.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc9.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc9.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Roboto Black'), local('Roboto-Black'), url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmYUtfBBc9.ttf) format('truetype');
+}
+:root {
+  --background: #fff;
+  --background-dark: #111;
+  --mode-color: --background-dark;
+  --mode-color-light: --background;
+  --accent-color: rgba(0, 0, 0, 0.1);
+  --accent-color-hover: rgba(0, 0, 0, 0.15);
+  --accent-color-active: rgba(0, 0, 0, 0.2);
+  --accent-color-focus: rgba(0, 0, 0, 0.225);
+  --accent-color-checked: rgba(0, 0, 0, 0.5);
+  --accent-color-light: rgba(255, 255, 255, 0.1);
+  --accent-color-hover-light: rgba(255, 255, 255, 0.15);
+  --accent-color-active-light: rgba(255, 255, 255, 0.2);
+  --accent-color-focus-light: rgba(255, 255, 255, 0.225);
+  --deccent-color: rgba(0, 0, 0, 0.05);
+  --deccent-color-light: rgba(255, 255, 255, 0.05);
+  --border-radius: 4px;
+  --font-family: 'Lato', sans-serif;
+  --transition-timing: cubic-bezier(1, 0.26, 0.46, 1.15);
+  --transition-timing-2: cubic-bezier(0.55, -0.19, 0.62, 1.19);
+  --transition-duration: 0.2s;
+  --transition-duration-long: 1s;
+  --highlight-color: #0984e3;
+  --info-color: #0984e3;
+  --button-submit-bgcolor: #0984e3;
+  --button-submit-bgcolor-hover: #0876ca;
+  --button-submit-bgcolor-active: #0767b2;
+  --button-submit-bgcolor-light: #69abdd;
+  --button-submit-bgcolor-hover-light: #549fd8;
+  --button-submit-bgcolor-active-light: #3f94d4;
+  --button-cancel-color: #ff0000;
+  --button-cancel-color-active: #ffffff;
+  --button-cancel-bgcolor-hover: rgba(255, 0, 0, 0.1);
+  --button-cancel-bgcolor-active: rgba(255, 0, 0, 0.5);
+  --button-cancel-color-light: #ff2d2d;
+  --button-cancel-color-active-light: #ffffff;
+  --button-cancel-bgcolor-hover-light: rgba(255, 79, 79, 0.1);
+  --button-cancel-bgcolor-active-light: rgba(255, 79, 79, 0.5);
+  --label-color: rgba(0, 0, 0, 0.4);
+  --label-color-focus: rgba(0, 0, 0, 0.8);
+  --label-color-light: rgba(255, 255, 255, 0.4);
+  --label-color-light-focus: rgba(255, 255, 255, 0.8);
+  --caret-color: rgba(0, 0, 0, 0.8);
+  --caret-color-light: rgba(255, 255, 255, 0.8);
+  --button-cancel-shadow: 0 1px 3px rgba(255, 45, 45, 0.12),
+        0 1px 2px rgba(255, 45, 45, 0.24);
+  --button-cancel-dark-shadow: 0 1px 3px rgba(255, 45, 45, 0.06),
+        0 1px 2px rgba(255, 45, 45, 0.12);
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --box-shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --box-shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19),
+        0 6px 6px rgba(0, 0, 0, 0.23);
+  --box-shadow-light: 0 1px 3px rgba(255, 255, 255, 0.12),
+        0 1px 2px rgba(255, 255, 255, 0.24);
+  --box-shadow-2-light: 0 3px 6px rgba(255, 255, 255, 0.16),
+        0 3px 6px rgba(255, 255, 255, 0.23);
+  --box-shadow-3-light: 0 10px 20px rgba(255, 255, 255, 0.19),
+        0 6px 6px rgba(255, 255, 255, 0.23);
+  --h-color-light: white;
+  --p-color-light: grey;
+  --title-color: #065999;
+  --loader-border-top-color: rgba(0, 0, 0, 0.65);
+  --loader-border-bottom-color: rgba(0, 0, 0, 0.15);
+  --loader-border-left-color: rgba(0, 0, 0, 0.65);
+  --loader-border-right-color: rgba(0, 0, 0, 0.15);
+  --loader-border-top-color-light: rgba(9, 132, 227, 0.65);
+  --loader-border-bottom-color-light: rgba(9, 132, 227, 0.15);
+  --loader-border-left-color-light: rgba(9, 132, 227, 0.65);
+  --loader-border-right-color-light: rgba(9, 132, 227, 0.15);
+  --switcher-color: rgba(0, 136, 255);
+  --user-profile-background: #777;
+  --user-profile-background-hover: #555;
+  --user-profile-background-light: #eee;
+  --user-profile-background-light-hover: #ddd;
+  --item-background-color: #fff;
+  --item-background-color-light: --background-dark;
+  --input-background-color: #ddd;
+  --input-background-color-focus: #ccc;
+  --input-background-color-light: #444;
+  --input-background-color-focus-light: #555;
+  --box-background: rgba(0, 0, 0, 0.075);
+  --box-background-light: rgba(255, 255, 255, 0.075);
+  --box-color: rgba(0, 0, 0, 0.1);
+  --box-color-strong: #000000;
+  --box-color-strong-light: #ffffff;
+}
+@font-face {
+  font-family: 'pass';
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAAATsAA8AAAAAB2QAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABWAAAABwAAAAcg9+z70dERUYAAAF0AAAAHAAAAB4AJwANT1MvMgAAAZAAAAA/AAAAYH7AkBhjbWFwAAAB0AAAAFkAAAFqZowMx2N2dCAAAAIsAAAABAAAAAQAIgKIZ2FzcAAAAjAAAAAIAAAACAAAABBnbHlmAAACOAAAALkAAAE0MwNYJ2hlYWQAAAL0AAAAMAAAADYPA2KgaGhlYQAAAyQAAAAeAAAAJAU+ATJobXR4AAADRAAAABwAAAAcCPoA6mxvY2EAAANgAAAAEAAAABAA5gFMbWF4cAAAA3AAAAAaAAAAIAAKAE9uYW1lAAADjAAAARYAAAIgB4hZ03Bvc3QAAASkAAAAPgAAAE5Ojr8ld2ViZgAABOQAAAAGAAAABuK7WtIAAAABAAAAANXulPUAAAAA1viLwQAAAADW+JM4eNpjYGRgYOABYjEgZmJgBEI2IGYB8xgAA+AANXjaY2BifMg4gYGVgYVBAwOeYEAFjMgcp8yiFAYHBl7VP8wx/94wpDDHMIoo2DP8B8kx2TLHACkFBkYA8/IL3QB42mNgYGBmgGAZBkYGEEgB8hjBfBYGDyDNx8DBwMTABmTxMigoKKmeV/3z/z9YJTKf8f/X/4/vP7pldosLag4SYATqhgkyMgEJJnQFECcMOGChndEAfOwRuAAAAAAiAogAAQAB//8AD3jaY2BiUGJgYDRiWsXAzMDOoLeRkUHfZhM7C8Nbo41srHdsNjEzAZkMG5lBwqwg4U3sbIx/bDYxgsSNBRUF1Y0FlZUYBd6dOcO06m+YElMa0DiGJIZUxjuM9xjkGRhU2djZlJXU1UDQ1MTcDASNjcTFQFBUBGjYEkkVMJCU4gcCKRTeHCk+fn4+KSllsJiUJEhMUgrMUQbZk8bgz/iA8SRR9qzAY087FjEYD2QPDDAzMFgyAwC39TCRAAAAeNpjYGRgYADid/fqneL5bb4yyLMwgMC1H90HIfRkCxDN+IBpFZDiYGAC8QBbSwuceNpjYGRgYI7594aBgcmOAQgYHzAwMqACdgBbWQN0AAABdgAiAAAAAAAAAAABFAAAAj4AYgI+AGYB9AAAAAAAKgAqACoAKgBeAJIAmnjaY2BkYGBgZ1BgYGIAAUYGBNADEQAFQQBaAAB42o2PwUrDQBCGvzVV9GAQDx485exBY1CU3PQgVgIFI9prlVqDwcZNC/oSPoKP4HNUfQLfxYN/NytCe5GwO9/88+/MBAh5I8C0VoAtnYYNa8oaXpAn9RxIP/XcIqLreZENnjwvyfPieVVdXj2H7DHxPJH/2/M7sVn3/MGyOfb8SWjOGv4K2DRdctpkmtqhos+D6ISh4kiUUXDj1Fr3Bc/Oc0vPqec6A8aUyu1cdTaPZvyXyqz6Fm5axC7bxHOv/r/dnbSRXCk7+mpVrOqVtFqdp3NKxaHUgeod9cm40rtrzfrt2OyQa8fppCO9tk7d1x0rpiQcuDuRkjjtkHt16ctbuf/radZY52/PnEcphXpZOcofiEZNcQAAeNpjYGIAg///GBgZsAF2BgZGJkZmBmaGdkYWRla29JzKggxD9tK8TAMDAxc2D0MLU2NjENfI1M0ZACUXCrsAAAABWtLiugAA) format('woff');
+}
 * {
   box-sizing: border-box;
-  font-family: 'Lato', sans-serif;
+  font-family: var(--font-family);
 }
 .disablehighlighting {
   -webkit-touch-callout: none;
@@ -47,21 +195,22 @@
 }
 body {
   margin: 0px;
-  background: #fff;
+  background: var(--background);
+  transition: all 0.1s ease-in-out;
 }
-#main {
+body #main {
   position: fixed;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
 }
-#main #main_inner {
+body #main #main_inner {
   position: relative;
   width: 100%;
   height: 100%;
 }
-#main #main_inner #menu {
+body #main #main_inner #menu {
   -webkit-touch-callout: none;
   /* iOS Safari */
   -webkit-user-select: none;
@@ -80,129 +229,146 @@ body {
   background: transparent;
   padding: 10px;
 }
-#main #main_inner #menu #inventories,
-#main #main_inner #menu #optionals {
+body #main #main_inner #menu #inventories,
+body #main #main_inner #menu #optionals {
   float: left;
   width: 50px;
   height: auto;
 }
-#main #main_inner #menu #inventories .circle,
-#main #main_inner #menu #optionals .circle {
+body #main #main_inner #menu #inventories .circle,
+body #main #main_inner #menu #optionals .circle {
   vertical-align: middle;
   display: table-cell;
   float: left;
   width: 50px;
   height: 50px;
   margin-right: 10px;
-  color: black;
-  background: #ddd;
+  color: var(--info-color);
+  background: var(--accent-color);
   text-align: center;
   border-radius: 25px;
   margin-bottom: 10px;
   padding: 12px 10px;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+  border: var(--accent-color);
   cursor: pointer;
 }
-#main #main_inner #menu #inventories .circle:hover,
-#main #main_inner #menu #optionals .circle:hover {
-  background: #ccc;
+body #main #main_inner #menu #inventories .circle:hover,
+body #main #main_inner #menu #optionals .circle:hover {
+  background: var(--accent-color-hover);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
-#main #main_inner #menu #inventories .circle:active,
-#main #main_inner #menu #optionals .circle:active {
-  background: #c5c5c5;
+body #main #main_inner #menu #inventories .circle:active,
+body #main #main_inner #menu #optionals .circle:active {
+  background: var(--accent-color-active);
 }
-#main #main_inner #menu #inventories .circle.highlighted,
-#main #main_inner #menu #optionals .circle.highlighted {
-  background: #08f;
+body #main #main_inner #menu #inventories .circle.highlighted,
+body #main #main_inner #menu #optionals .circle.highlighted {
+  background: var(--highlight-color);
   color: white;
 }
-#main #main_inner #menu #inventories .circle.highlighted2,
-#main #main_inner #menu #optionals .circle.highlighted2 {
+body #main #main_inner #menu #inventories .circle.highlighted2,
+body #main #main_inner #menu #optionals .circle.highlighted2 {
   background: #ffd000;
   color: white;
 }
-#main #main_inner #menu #inventories #loading,
-#main #main_inner #menu #optionals #loading {
+body #main #main_inner #menu #inventories #loading,
+body #main #main_inner #menu #optionals #loading {
   height: 50px !important;
   width: 50px !important;
   background: transparent;
   padding: 10px;
+  box-shadow: none;
+  border: none;
 }
-#main #main_inner #menu #inventories #loading #loadercircle,
-#main #main_inner #menu #optionals #loading #loadercircle {
+body #main #main_inner #menu #inventories #loading #loadercircle,
+body #main #main_inner #menu #optionals #loading #loadercircle {
   width: 30px;
   height: 30px;
   display: inline-block;
   padding: 0px;
   border-radius: 100%;
   border: 2px solid;
-  border-top-color: rgba(0, 0, 0, 0.65);
-  border-bottom-color: rgba(0, 0, 0, 0.15);
-  border-left-color: rgba(0, 0, 0, 0.65);
-  border-right-color: rgba(0, 0, 0, 0.15);
+  box-shadow: none;
+  border-top-color: var(--loader-border-top-color);
+  border-bottom-color: var(--loader-border-bottom-color);
+  border-left-color: var(--loader-border-left-color);
+  border-right-color: var(--loader-border-right-color);
   -webkit-animation: loader 0.8s linear infinite;
   animation: loader 0.8s linear infinite;
 }
-#main #main_inner #menu #inventories #add,
-#main #main_inner #menu #optionals #add {
+body #main #main_inner #menu #inventories #add,
+body #main #main_inner #menu #optionals #add {
   float: left;
   height: 50px !important;
   width: 50px !important;
   text-align: center;
   cursor: pointer;
 }
-#main #main_inner #menu #switcher {
+body #main #main_inner #menu #mode {
+  position: absolute;
+  bottom: 140px;
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border-radius: 40px;
+  cursor: pointer;
+  padding: 11px;
+  text-align: center;
+  border: 2px solid var(--accent-color);
+  color: var(--mode-color);
+  transition: all 0.1s ease-in-out;
+}
+body #main #main_inner #menu #switcher {
   position: absolute;
   bottom: 80px;
   width: 50px;
   height: 50px;
   background: transparent;
-  border: 2px solid rgba(0, 136, 255);
+  border: 2px solid var(--switcher-color);
   border-radius: 40px;
   overflow: hidden;
   cursor: pointer;
   padding: 2px;
   transition: all 0.1s ease-in-out;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
-#main #main_inner #menu #switcher[state='overview'] {
+body #main #main_inner #menu #switcher[state='overview'] {
   border-color: rgba(0, 136, 255);
 }
-#main #main_inner #menu #switcher[state='overview'] #state {
+body #main #main_inner #menu #switcher[state='overview'] #state {
   background: rgba(0, 136, 255);
 }
-#main #main_inner #menu #switcher[state='cashier'] {
+body #main #main_inner #menu #switcher[state='cashier'] {
   border-color: #00ffaa;
 }
-#main #main_inner #menu #switcher[state='cashier'] #state {
+body #main #main_inner #menu #switcher[state='cashier'] #state {
   background: rgba(0, 255, 170);
 }
-#main #main_inner #menu #switcher:hover {
+body #main #main_inner #menu #switcher:hover {
   border-width: 4px;
   padding: 2px;
 }
-#main #main_inner #menu #switcher:active {
+body #main #main_inner #menu #switcher:active {
   padding: 4px;
 }
-#main #main_inner #menu #switcher #state {
+body #main #main_inner #menu #switcher #state {
   width: 100%;
   height: 100%;
   background: #777;
   border-radius: 100%;
 }
-#main #main_inner #menu #user {
+body #main #main_inner #menu #user {
   position: absolute;
   bottom: 20px;
   width: 50px;
   height: 50px;
-  background: #777;
+  background: var(--user-profile-background);
   border-radius: 40px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow);
 }
-#main #main_inner #menu #user #profile {
+body #main #main_inner #menu #user #profile {
   width: 100%;
   height: 100%;
   border-radius: 40px;
@@ -211,49 +377,49 @@ body {
   color: white;
   padding: 12px 10px;
 }
-#main #main_inner #menu #user #profile:hover {
-  background: #555;
+body #main #main_inner #menu #user #profile:hover {
+  background: var(--user-profile-background-hover);
 }
-#main #main_inner #content {
+body #main #main_inner #content {
   position: relative;
   float: left;
   width: calc(100% - 70px);
   height: 100%;
   background-color: transparent;
 }
-#main #main_inner #content .mod {
+body #main #main_inner #content .mod {
   position: relative;
   float: left;
   width: 100%;
   height: 100%;
   background-color: transparent;
 }
-#main #main_inner #content #inventory {
+body #main #main_inner #content #inventory {
   float: left;
 }
-#main #main_inner #content #inventory .item {
+body #main #main_inner #content #inventory .item {
   float: left;
   width: 120px;
   height: 30px;
   padding: 4px 7px;
-  background-color: white;
+  background-color: var(--item-background-color);
   margin-right: 5px;
   margin-bottom: 5px;
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: var(--accent-color);
 }
-#main #main_inner #content #inventory .item .name {
+body #main #main_inner #content #inventory .item .name {
   font-size: medium;
 }
-#main #main_inner #content #inventory .item .amount {
+body #main #main_inner #content #inventory .item .amount {
   margin-top: 2px;
   float: right;
   font-size: small;
 }
-#main #main_inner #content #inventory .item .amount::after {
+body #main #main_inner #content #inventory .item .amount::after {
   content: 'x';
 }
-#main #main_inner #register {
+body #main #main_inner #register {
   position: fixed;
   width: 250px;
   height: 450px;
@@ -262,48 +428,136 @@ body {
   margin-left: -125px;
   margin-top: -225px;
 }
-#main #main_inner #register h2 {
+body #main #main_inner #register h2 {
   text-align: center;
   width: 100%;
+}
+body[dark] {
+  background: var(--background-dark);
+  color: white;
+}
+body[dark] #main #main_inner #menu {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+}
+body[dark] #main #main_inner #menu #inventories .circle,
+body[dark] #main #main_inner #menu #optionals .circle {
+  color: var(--info-color);
+  background: var(--accent-color-light);
+  border: var(--accent-color-light);
+}
+body[dark] #main #main_inner #menu #inventories .circle:hover,
+body[dark] #main #main_inner #menu #optionals .circle:hover {
+  background: var(--accent-color-hover-light);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+body[dark] #main #main_inner #menu #inventories .circle:active,
+body[dark] #main #main_inner #menu #optionals .circle:active {
+  background: var(--accent-color-active-light);
+}
+body[dark] #main #main_inner #menu #inventories .circle.highlighted,
+body[dark] #main #main_inner #menu #optionals .circle.highlighted {
+  background: var(--highlight-color);
+  color: white;
+}
+body[dark] #main #main_inner #menu #inventories .circle.highlighted2,
+body[dark] #main #main_inner #menu #optionals .circle.highlighted2 {
+  background: #ffd000;
+  color: white;
+}
+body[dark] #main #main_inner #menu #inventories #loading #loadercircle,
+body[dark] #main #main_inner #menu #optionals #loading #loadercircle {
+  border-top-color: var(--loader-border-top-color-light);
+  border-bottom-color: var(--loader-border-bottom-color-light);
+  border-left-color: var(--loader-border-left-color-light);
+  border-right-color: var(--loader-border-right-color-light);
+}
+body[dark] #main #main_inner #menu #mode {
+  border-color: var(--accent-color-light);
+  color: var(--mode-color-light);
+}
+body[dark] #main #main_inner #menu #switcher {
+  border: 2px solid var(--switcher-color);
+}
+body[dark] #main #main_inner #menu #switcher[state='overview'] {
+  border-color: rgba(0, 136, 255);
+}
+body[dark] #main #main_inner #menu #switcher[state='overview'] #state {
+  background: rgba(0, 136, 255);
+}
+body[dark] #main #main_inner #menu #switcher[state='cashier'] {
+  border-color: #00ffaa;
+}
+body[dark] #main #main_inner #menu #switcher[state='cashier'] #state {
+  background: rgba(0, 255, 170);
+}
+body[dark] #main #main_inner #menu #switcher #state {
+  width: 100%;
+  height: 100%;
+  background: #777;
+  border-radius: 100%;
+}
+body[dark] #main #main_inner #menu #user {
+  background: var(--user-profile-background-light);
+  box-shadow: var(--box-shadow-light);
+}
+body[dark] #main #main_inner #menu #user #profile {
+  color: black;
+}
+body[dark] #main #main_inner #menu #user #profile:hover {
+  background: var(--user-profile-background-hover-light);
+}
+body[dark] #main #main_inner #content #inventory .item {
+  background-color: var(--item-background-color-light);
+  border: var(--accent-color-light);
 }
 input {
   width: 100%;
   height: 50px;
   padding: 5px 12px;
   border: none;
-  background: #ddd;
+  background: var(--input-background-color);
   margin-bottom: 10px;
   outline: none !important;
   border-radius: 5px;
   font-size: 13pt;
 }
 input:focus {
-  background: #ccc;
+  background: var(--input-background-color-focus);
 }
 input:last-child {
   margin-bottom: 0px;
 }
 input[type='submit'] {
-  color: white;
-  background: #08f;
+  color: var(--background);
+  background: var(--button-submit-bgcolor);
   cursor: pointer;
 }
 input[type='submit']:hover {
-  background: #33a0ff;
+  background: var(--button-submit-bgcolor-hover);
 }
 input[type='submit']:active {
-  background: #66b8ff;
+  background: var(--button-submit-bgcolor-active);
 }
 input#signup {
-  color: white;
-  background: #08f;
+  color: var(--background);
+  background: var(--button-submit-bgcolor);
   cursor: pointer;
 }
 input#signup:hover {
-  background: #33a0ff;
+  background: var(--button-submit-bgcolor-hover);
 }
 input#signup:active {
-  background: #66b8ff;
+  background: var(--button-submit-bgcolor-active);
 }
 button {
   background: #eee;

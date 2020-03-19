@@ -1,5 +1,8 @@
 <head>
-    
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
     <meta http-equiv="cache-control" content="no-cache" />
     <title>Geeo</title>
     <!-- Insert this line above script imports  -->
@@ -14,11 +17,9 @@
     <script>
         var username = '<%-username%>';
     </script>
-    <% } %> <% if(scripts) { %>
-    <% scripts.forEach(function(script){ %>
+    <% } %> <% if(scripts) { %> <% scripts.forEach(function(script){ %>
     <script defer src="/scripts/<%= script %>.js"></script>
-    <% }); %>
-    <% } %>
+    <% }); %> <% } %>
     <script>
         if (window.module) module = window.module;
     </script>
