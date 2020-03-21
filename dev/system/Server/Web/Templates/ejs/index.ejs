@@ -1,6 +1,8 @@
+<% var modus = "dark"; %>
 <html>
-    <%- include('header', {username: username, scripts: ['main']}); %>
-    <body>
-        <%- include('app', {incs:['content']}); %>
+    <%- include('header', {username: username, scripts: ['main'], mode:modus});
+    %>
+    <body <%- modus %>
+        > <%- include('app', {incs:['content'], mode:modus}); %>
     </body>
 </html>

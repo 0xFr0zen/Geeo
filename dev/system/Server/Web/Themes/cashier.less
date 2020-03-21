@@ -97,7 +97,11 @@
                         .information {
                             border-bottom: 2px dashed var(--accent-color);
                         }
+                        .options {
+                            opacity: 1;
+                        }
                     }
+
                     .information {
                         width: 100%;
                         height: 40px;
@@ -132,25 +136,47 @@
                         width: 100%;
                         height: 50px;
                         padding: 15px 10px;
-                        button {
+                        opacity: 0;
+                        transition: all 0.1s ease-in-out;
+                        .left {
+                            float: left;
+                            width: auto;
+                            max-width: 50%;
+                            height: 100%;
+                            button {
+                                float: left;
+                                margin-right: 20px;
+                            }
+                        }
+                        .right {
                             float: right;
+                            width: auto;
+                            max-width: 50%;
+                            height: 100%;
+                            button {
+                                float: right;
+                                margin-left: 20px;
+                            }
+                        }
+                        button {
                             cursor: pointer;
                             width: auto;
-                            margin-left: 20px;
                             padding: 0px;
                             background: transparent;
                             outline: none;
                             opacity: 0.6;
                             transition: all 0.05s ease-in-out;
-                            &:hover {
-                                opacity: 0.8;
-                            }
-                            &:active {
-                                opacity: 1;
-                                transform: scale(0.9);
-                            }
-                            &:focus {
-                                opacity: 1;
+                            &:not(:disabled) {
+                                &:hover {
+                                    opacity: 0.8;
+                                }
+                                &:active {
+                                    opacity: 1;
+                                    transform: scale(0.9);
+                                }
+                                &:focus {
+                                    opacity: 1;
+                                }
                             }
                         }
                         .delete {
@@ -246,6 +272,7 @@ body[dark] #cashier {
                             border-color: var(--accent-color-light);
                         }
                     }
+
                     .information {
                         .title {
                             color: var(--box-color-strong-light);
@@ -258,6 +285,11 @@ body[dark] #cashier {
                         }
                     }
                     .options {
+                        .left {
+                            button {
+                                color: var(--background);
+                            }
+                        }
                         .delete {
                             color: rgb(246, 71, 71);
                         }

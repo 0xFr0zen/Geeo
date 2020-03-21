@@ -11,4 +11,6 @@ $(document).ready(() => {
                 .toggleClass('open');
         });
     });
+
+    let pastHistoryContainer = $('.history .past');
 });

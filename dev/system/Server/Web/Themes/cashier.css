@@ -232,6 +232,9 @@
 #cashier #cashiermain #list #items .item.open .information {
   border-bottom: 2px dashed var(--accent-color);
 }
+#cashier #cashiermain #list #items .item.open .options {
+  opacity: 1;
+}
 #cashier #cashiermain #list #items .item .information {
   width: 100%;
   height: 40px;
@@ -265,26 +268,46 @@
   width: 100%;
   height: 50px;
   padding: 15px 10px;
+  opacity: 0;
+  transition: all 0.1s ease-in-out;
+}
+#cashier #cashiermain #list #items .item .options .left {
+  float: left;
+  width: auto;
+  max-width: 50%;
+  height: 100%;
+}
+#cashier #cashiermain #list #items .item .options .left button {
+  float: left;
+  margin-right: 20px;
+}
+#cashier #cashiermain #list #items .item .options .right {
+  float: right;
+  width: auto;
+  max-width: 50%;
+  height: 100%;
+}
+#cashier #cashiermain #list #items .item .options .right button {
+  float: right;
+  margin-left: 20px;
 }
 #cashier #cashiermain #list #items .item .options button {
-  float: right;
   cursor: pointer;
   width: auto;
-  margin-left: 20px;
   padding: 0px;
   background: transparent;
   outline: none;
   opacity: 0.6;
   transition: all 0.05s ease-in-out;
 }
-#cashier #cashiermain #list #items .item .options button:hover {
+#cashier #cashiermain #list #items .item .options button:not(:disabled):hover {
   opacity: 0.8;
 }
-#cashier #cashiermain #list #items .item .options button:active {
+#cashier #cashiermain #list #items .item .options button:not(:disabled):active {
   opacity: 1;
   transform: scale(0.9);
 }
-#cashier #cashiermain #list #items .item .options button:focus {
+#cashier #cashiermain #list #items .item .options button:not(:disabled):focus {
   opacity: 1;
 }
 #cashier #cashiermain #list #items .item .options .delete {
@@ -379,6 +402,9 @@ body[dark] #cashier #cashiermain #list #items .item .information .type {
 }
 body[dark] #cashier #cashiermain #list #items .item .information .price {
   color: var(--box-color-strong-light);
+}
+body[dark] #cashier #cashiermain #list #items .item .options .left button {
+  color: var(--background);
 }
 body[dark] #cashier #cashiermain #list #items .item .options .delete {
   color: #f64747;
