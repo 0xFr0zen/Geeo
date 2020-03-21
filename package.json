@@ -33,7 +33,6 @@
         "jquery": "^3.4.1",
         "jsonwebtoken": "^8.5.1",
         "mysql": "^2.17.1",
-        "nodemon": "^2.0.2",
         "path": "^0.12.7",
         "pg": "^7.3.0",
         "reflect-metadata": "^0.1.10",
@@ -45,6 +44,7 @@
     "devDependencies": {
         "@types/cookie-session": "^2.0.37",
         "@types/node": "^12.12.24",
+        "nodemon": "^2.0.2",
         "ts-node": "8.5.4",
         "typescript": "^3.7.4"
     },
