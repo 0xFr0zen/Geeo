@@ -24,6 +24,11 @@ body {
         left: 0px;
         right: 0px;
         bottom: 0px;
+        transition: all 0.1s ease-in-out;
+        &.hidden {
+            transform: scale(0.98);
+            opacity: 0;
+        }
         #main_inner {
             position: relative;
             width: 100%;
@@ -244,6 +249,57 @@ body {
             }
         }
     }
+    #loader {
+        position: fixed;
+        z-index: 999;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        transition: all 0.1s ease-in-out;
+        &.hidden {
+            transform: scale(0.98);
+            opacity: 0;
+        }
+        #loaderbox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 100px;
+            margin-left: -100px;
+            margin-top: -50px;
+            #loadinganimation {
+                width: 100%;
+                height: 50px;
+                float: left;
+                padding: 20px 0px;
+                #laholder {
+                    border: 1px solid var(--background-dark);
+                    height: 10px;
+                    width: 100%;
+                    border-radius: 5px;
+                    overflow: hidden;
+                    #la {
+                        width: 0%;
+                        height: 100%;
+                        transition: all 0.4s cubic-bezier(0.9, 0.28, 0.32, 1);
+                        background: var(--background-dark);
+                        border-top-right-radius: 5px;
+                        border-bottom-right-radius: 5px;
+                    }
+                }
+            }
+            #loadingtext {
+                width: 100%;
+                height: 50px;
+                float: left;
+                text-align: center;
+                letter-spacing: 0.3em;
+                color: var(--background-dark);
+            }
+        }
+    }
     &[dark] {
         background: var(--background-dark);
         color: white;
@@ -339,6 +395,21 @@ body {
                             border: var(--accent-color-light);
                         }
                     }
+                }
+            }
+        }
+        #loader {
+            #loaderbox {
+                #loadinganimation {
+                    #laholder {
+                        border: 1px solid var(--background);
+                        #la {
+                            background: var(--background);
+                        }
+                    }
+                }
+                #loadingtext {
+                    color: var(--background);
                 }
             }
         }

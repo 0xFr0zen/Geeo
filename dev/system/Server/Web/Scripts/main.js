@@ -45,6 +45,17 @@ $(document).ready(function() {
             $('#prompter').fadeOut(100);
         }
     });
+    setTimeout(() => {
+        $('#loader #loadinganimation #la').css('width', '100%');
+        setTimeout(() => {
+            $('#main').toggleClass('hidden');
+
+            $('#loader').toggleClass('hidden');
+            setTimeout(() => {
+                $('#loader').css('display', 'none');
+            }, 100);
+        }, 700);
+    }, 100);
 });
 function prompter(question, defaultanswer) {
     return new Promise((resolve, reject) => {

@@ -167,8 +167,10 @@
   --box-background: rgba(0, 0, 0, 0.075);
   --box-background-light: rgba(255, 255, 255, 0.075);
   --box-color: rgba(0, 0, 0, 0.1);
+  --box-color-low: rgba(0, 0, 0, 0.5);
   --box-color-strong: #000000;
   --box-color-strong-light: #ffffff;
+  --box-color-low-light: rgba(255, 255, 255, 0.5);
 }
 @font-face {
   font-family: 'pass';
@@ -204,6 +206,11 @@ body #main {
   left: 0px;
   right: 0px;
   bottom: 0px;
+  transition: all 0.1s ease-in-out;
+}
+body #main.hidden {
+  transform: scale(0.98);
+  opacity: 0;
 }
 body #main #main_inner {
   position: relative;
@@ -432,6 +439,57 @@ body #main #main_inner #register h2 {
   text-align: center;
   width: 100%;
 }
+body #loader {
+  position: fixed;
+  z-index: 999;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  transition: all 0.1s ease-in-out;
+}
+body #loader.hidden {
+  transform: scale(0.98);
+  opacity: 0;
+}
+body #loader #loaderbox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 100px;
+  margin-left: -100px;
+  margin-top: -50px;
+}
+body #loader #loaderbox #loadinganimation {
+  width: 100%;
+  height: 50px;
+  float: left;
+  padding: 20px 0px;
+}
+body #loader #loaderbox #loadinganimation #laholder {
+  border: 1px solid var(--background-dark);
+  height: 10px;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+body #loader #loaderbox #loadinganimation #laholder #la {
+  width: 0%;
+  height: 100%;
+  transition: all 0.4s cubic-bezier(0.9, 0.28, 0.32, 1);
+  background: var(--background-dark);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+body #loader #loaderbox #loadingtext {
+  width: 100%;
+  height: 50px;
+  float: left;
+  text-align: center;
+  letter-spacing: 0.3em;
+  color: var(--background-dark);
+}
 body[dark] {
   background: var(--background-dark);
   color: white;
@@ -519,6 +577,15 @@ body[dark] #main #main_inner #menu #user #profile:hover {
 body[dark] #main #main_inner #content #inventory .item {
   background-color: var(--item-background-color-light);
   border: var(--accent-color-light);
+}
+body[dark] #loader #loaderbox #loadinganimation #laholder {
+  border: 1px solid var(--background);
+}
+body[dark] #loader #loaderbox #loadinganimation #laholder #la {
+  background: var(--background);
+}
+body[dark] #loader #loaderbox #loadingtext {
+  color: var(--background);
 }
 input {
   width: 100%;

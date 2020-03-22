@@ -1,9 +1,17 @@
-<div id="main">
+<div id="main" class="hidden">
     <div id="main_inner">
-        <%- include('menu'); %>
-        <%  incs.forEach(function(inc){ %>
-        <%-     include(inc); %>
-        <%  });%>
+        <%- include('menu'); %> <% incs.forEach(function(inc){ %> <%-
+        include(inc); %> <% });%>
+    </div>
+</div>
+<div id="loader">
+    <div id="loaderbox">
+        <div id="loadinganimation">
+            <div id="laholder">
+                <div id="la"></div>
+            </div>
+        </div>
+        <div id="loadingtext">loading...</div>
     </div>
 </div>
 <div id="prompter">

@@ -13,4 +13,10 @@ $(document).ready(() => {
     });
 
     let pastHistoryContainer = $('.history .past');
+
+    let currencySelector = $('#currency #selector');
+    currencySelector.on('change', e => {
+        let value = $(e.target).val();
+        console.log(value);
+    });
 });
