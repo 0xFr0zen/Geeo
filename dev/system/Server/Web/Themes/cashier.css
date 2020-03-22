@@ -193,7 +193,7 @@
   content: 'x';
 }
 #cashier #cashiermain #list #history #current .item .amount:empty::after {
-  content: '0x';
+  content: '';
 }
 #cashier #cashiermain #list #history #current .item .title {
   width: calc(100% - 140px);

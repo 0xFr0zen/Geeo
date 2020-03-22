@@ -1,5 +1,3 @@
-<% function aInfo(title){ return `title=${title}`; } %>
-
 <div class="item">
     <div class="information">
         <div class="type"><%- type %></div>
@@ -8,7 +6,11 @@
     </div>
     <div class="options">
         <div class="left">
-            <button disabled <%= aInfo('lol');%> class="material-icons">info</button>
+            <% if(typeof(info) != 'undefined') { %>
+            <button disabled title="<%- info %>" class="material-icons">
+                info
+            </button>
+            <% } %>
         </div>
         <div class="right">
             <button class="material-icons delete">

@@ -3,6 +3,7 @@ import register from './register';
 import user from './user';
 import logout from './logout';
 import resources from './resources';
+import cashieritem from './cashieritem';
 namespace routeslist {
     export const all = {
         themes: resources.find('themes'),
@@ -13,6 +14,7 @@ namespace routeslist {
         logout: logout,
         register: register,
         user: user,
+        cashieritem:cashieritem
     };
 }
 
