@@ -28,6 +28,7 @@
         "electron": "^7.1.7",
         "express": "^4.17.1",
         "express-session": "^1.17.0",
+        "express-subdomain": "^1.0.5",
         "getmac": "^5.0.0",
         "inquirer": "^7.0.2",
         "jquery": "^3.4.1",
@@ -51,7 +52,7 @@
     "scripts": {
         "db": "nodemon --exec ts-node ./db_test.ts",
         "startserver": "nodemon --exec ts-node ./index.ts",
-        "prestart": "npm install .",
+        "prestart": "npm prune & npm install .",
         "start": "nodemon --exec ts-node ./index.ts",
         "reset": "ts-node ./reset.ts",
         "compile": "tsc",

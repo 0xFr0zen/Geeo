@@ -8,7 +8,7 @@ namespace themes {
             (req: express.Request, res: express.Response) => {
                 let p = path.join(
                     process.cwd(),
-                    './dev/System/Server/Web/Themes/',
+                    './dev/System/Web/Themes/',
                     req.params.file
                 );
                 res.setHeader('Content-Type', 'text/css');

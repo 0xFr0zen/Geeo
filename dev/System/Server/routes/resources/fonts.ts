@@ -8,7 +8,7 @@ namespace fonts {
             (req: express.Request, res: express.Response) => {
                 let p = path.join(
                     process.cwd(),
-                    './dev/System/Server/Web/Fonts/',
+                    './dev/System/Web/Fonts/',
                     req.params.file
                 );
                 res.setHeader('Content-Type', 'text/css');

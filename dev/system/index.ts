@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import Entity from './Entity';
 import Server from './Server';
+import API from './API';
 import getMAC from 'getmac';
 import Node from '../Crypt';
 import ConsoleIO from './ConsoleIO';
@@ -11,10 +12,12 @@ import ConsoleIO from './ConsoleIO';
 export default class System extends Entity {
     private static device: Device = new Device();
     private server: Server = null;
+    private api: API = null;
     private consoleIO: ConsoleIO;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
         this.server = new Server(this);
+        this.api = new API(this);
     }
     public static getDevice(): Device {
         return this.device;

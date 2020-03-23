@@ -40,12 +40,12 @@ body {
                 width: 70px;
                 height: 100%;
                 background: transparent;
-                padding: 10px;
                 #inventories,
                 #optionals {
                     float: left;
                     width: 50px;
                     height: auto;
+                    padding: 10px;
                     .circle {
                         vertical-align: middle;
                         display: table-cell;
@@ -116,79 +116,94 @@ body {
                         cursor: pointer;
                     }
                 }
-                #mode {
-                    position: absolute;
-                    bottom: 140px;
-                    width: 50px;
-                    height: 50px;
-                    background: transparent;
-                    border-radius: 40px;
-                    cursor: pointer;
-                    padding: 11px;
-                    text-align: center;
-                    border: 2px solid var(--accent-color);
-                    color: var(--mode-color);
-                    transition: all 0.1s ease-in-out;
-                }
-                #switcher {
-                    position: absolute;
-                    bottom: 80px;
-                    width: 50px;
-                    height: 50px;
-                    background: transparent;
-                    border: 2px solid var(--switcher-color);
-                    border-radius: 40px;
-                    overflow: hidden;
-                    cursor: pointer;
-                    padding: 2px;
-                    transition: all 0.1s ease-in-out;
-
-                    &[state='overview'] {
-                        border-color: rgba(0, 136, 255);
-                        #state {
-                            background: rgba(0, 136, 255);
-                        }
-                    }
-                    &[state='cashier'] {
-                        border-color: rgb(0, 255, 170);
-                        #state {
-                            background: rgba(0, 255, 170);
-                        }
-                    }
-                    &:hover {
-                        border-width: 4px;
-                        padding: 2px;
-                    }
-                    &:active {
-                        padding: 4px;
-                    }
-                    #state {
-                        width: 100%;
-                        height: 100%;
-                        background: #777;
-                        border-radius: 100%;
-                    }
-                }
-                #user {
+                #bottom {
                     position: absolute;
                     bottom: 20px;
-                    width: 50px;
-                    height: 50px;
-                    background: var(--user-profile-background);
-                    border-radius: 40px;
-                    overflow: hidden;
-                    cursor: pointer;
-                    box-shadow: var(--box-shadow);
-                    #profile {
-                        width: 100%;
-                        height: 100%;
+                    width: 100%;
+                    padding: 10px;
+
+                    .settingoption {
+                        &:not(:last-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+
+                    #mode {
+                        position: relative;
+                        float: right;
+                        width: 50px;
+                        height: 50px;
+                        background: transparent;
+                        border-radius: 40px;
+                        cursor: pointer;
+                        padding: 11px;
+                        text-align: center;
+                        border: 2px solid var(--accent-color);
+                        color: var(--mode-color);
+                        transition: all 0.1s ease-in-out;
+                    }
+                    #switcher {
+                        position: relative;
+                        float: right;
+                        width: 50px;
+                        height: 50px;
+                        background: transparent;
+                        border: 2px solid var(--switcher-color);
                         border-radius: 40px;
                         overflow: hidden;
-                        text-align: center;
-                        color: white;
-                        padding: 12px 10px;
+                        cursor: pointer;
+                        padding: 2px;
+                        transition: all 0.1s ease-in-out;
+
+                        &[state='overview'] {
+                            border-color: rgba(0, 136, 255);
+                            #state {
+                                background: rgba(0, 136, 255);
+                            }
+                        }
+                        &[state='cashier'] {
+                            border-color: rgb(0, 255, 170);
+                            #state {
+                                background: rgba(0, 255, 170);
+                            }
+                        }
                         &:hover {
-                            background: var(--user-profile-background-hover);
+                            border-width: 4px;
+                            padding: 2px;
+                        }
+                        &:active {
+                            padding: 4px;
+                        }
+                        #state {
+                            width: 100%;
+                            height: 100%;
+                            background: #777;
+                            border-radius: 100%;
+                        }
+                    }
+                    #user {
+                        position: relative;
+                        float: right;
+                        width: 50px;
+                        height: 50px;
+                        background: var(--user-profile-background);
+                        border-radius: 40px;
+                        overflow: hidden;
+                        cursor: pointer;
+                        box-shadow: var(--box-shadow);
+                        #profile {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 40px;
+                            overflow: hidden;
+                            text-align: center;
+                            color: white;
+                            padding: 12px 10px;
+                            &:hover {
+                                background: var(
+                                    --user-profile-background-hover
+                                );
+                            }
                         }
                     }
                 }
@@ -347,41 +362,43 @@ body {
                             }
                         }
                     }
-                    #mode {
-                        border-color: var(--accent-color-light);
-                        color: var(--mode-color-light);
-                    }
-                    #switcher {
-                        border: 2px solid var(--switcher-color);
+                    #bottom {
+                        #mode {
+                            border-color: var(--accent-color-light);
+                            color: var(--mode-color-light);
+                        }
+                        #switcher {
+                            border: 2px solid var(--switcher-color);
 
-                        &[state='overview'] {
-                            border-color: rgba(0, 136, 255);
+                            &[state='overview'] {
+                                border-color: rgba(0, 136, 255);
+                                #state {
+                                    background: rgba(0, 136, 255);
+                                }
+                            }
+                            &[state='cashier'] {
+                                border-color: rgb(0, 255, 170);
+                                #state {
+                                    background: rgba(0, 255, 170);
+                                }
+                            }
                             #state {
-                                background: rgba(0, 136, 255);
+                                width: 100%;
+                                height: 100%;
+                                background: #777;
+                                border-radius: 100%;
                             }
                         }
-                        &[state='cashier'] {
-                            border-color: rgb(0, 255, 170);
-                            #state {
-                                background: rgba(0, 255, 170);
-                            }
-                        }
-                        #state {
-                            width: 100%;
-                            height: 100%;
-                            background: #777;
-                            border-radius: 100%;
-                        }
-                    }
-                    #user {
-                        background: var(--user-profile-background-light);
-                        box-shadow: var(--box-shadow-light);
-                        #profile {
-                            color: black;
-                            &:hover {
-                                background: var(
-                                    --user-profile-background-hover-light
-                                );
+                        #user {
+                            background: var(--user-profile-background-light);
+                            box-shadow: var(--box-shadow-light);
+                            #profile {
+                                color: black;
+                                &:hover {
+                                    background: var(
+                                        --user-profile-background-hover-light
+                                    );
+                                }
                             }
                         }
                     }

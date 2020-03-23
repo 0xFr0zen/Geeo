@@ -30,9 +30,9 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(/fonts/MaterialIcons-Regular.eot);
+  src: url(../Fonts/MaterialIcons-Regular.eot);
   /* For IE6-8 */
-  src: local('Material Icons'), local('MaterialIcons-Regular'), url(/fonts/MaterialIcons-Regular.woff2) format('woff2'), url(/fonts/MaterialIcons-Regular.woff) format('woff'), url(/fonts/MaterialIcons-Regular.ttf) format('truetype');
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(../Fonts/MaterialIcons-Regular.woff2) format('woff2'), url(../Fonts/MaterialIcons-Regular.woff) format('woff'), url(../Fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
 .material-icons {
   font-family: 'Material Icons';
@@ -234,13 +234,13 @@ body #main #main_inner #menu {
   width: 70px;
   height: 100%;
   background: transparent;
-  padding: 10px;
 }
 body #main #main_inner #menu #inventories,
 body #main #main_inner #menu #optionals {
   float: left;
   width: 50px;
   height: auto;
+  padding: 10px;
 }
 body #main #main_inner #menu #inventories .circle,
 body #main #main_inner #menu #optionals .circle {
@@ -312,9 +312,18 @@ body #main #main_inner #menu #optionals #add {
   text-align: center;
   cursor: pointer;
 }
-body #main #main_inner #menu #mode {
+body #main #main_inner #menu #bottom {
   position: absolute;
-  bottom: 140px;
+  bottom: 20px;
+  width: 100%;
+  padding: 10px;
+}
+body #main #main_inner #menu #bottom .settingoption:not(:last-child) {
+  margin-bottom: 10px;
+}
+body #main #main_inner #menu #bottom #mode {
+  position: relative;
+  float: right;
   width: 50px;
   height: 50px;
   background: transparent;
@@ -326,9 +335,9 @@ body #main #main_inner #menu #mode {
   color: var(--mode-color);
   transition: all 0.1s ease-in-out;
 }
-body #main #main_inner #menu #switcher {
-  position: absolute;
-  bottom: 80px;
+body #main #main_inner #menu #bottom #switcher {
+  position: relative;
+  float: right;
   width: 50px;
   height: 50px;
   background: transparent;
@@ -339,34 +348,34 @@ body #main #main_inner #menu #switcher {
   padding: 2px;
   transition: all 0.1s ease-in-out;
 }
-body #main #main_inner #menu #switcher[state='overview'] {
+body #main #main_inner #menu #bottom #switcher[state='overview'] {
   border-color: rgba(0, 136, 255);
 }
-body #main #main_inner #menu #switcher[state='overview'] #state {
+body #main #main_inner #menu #bottom #switcher[state='overview'] #state {
   background: rgba(0, 136, 255);
 }
-body #main #main_inner #menu #switcher[state='cashier'] {
+body #main #main_inner #menu #bottom #switcher[state='cashier'] {
   border-color: #00ffaa;
 }
-body #main #main_inner #menu #switcher[state='cashier'] #state {
+body #main #main_inner #menu #bottom #switcher[state='cashier'] #state {
   background: rgba(0, 255, 170);
 }
-body #main #main_inner #menu #switcher:hover {
+body #main #main_inner #menu #bottom #switcher:hover {
   border-width: 4px;
   padding: 2px;
 }
-body #main #main_inner #menu #switcher:active {
+body #main #main_inner #menu #bottom #switcher:active {
   padding: 4px;
 }
-body #main #main_inner #menu #switcher #state {
+body #main #main_inner #menu #bottom #switcher #state {
   width: 100%;
   height: 100%;
   background: #777;
   border-radius: 100%;
 }
-body #main #main_inner #menu #user {
-  position: absolute;
-  bottom: 20px;
+body #main #main_inner #menu #bottom #user {
+  position: relative;
+  float: right;
   width: 50px;
   height: 50px;
   background: var(--user-profile-background);
@@ -375,7 +384,7 @@ body #main #main_inner #menu #user {
   cursor: pointer;
   box-shadow: var(--box-shadow);
 }
-body #main #main_inner #menu #user #profile {
+body #main #main_inner #menu #bottom #user #profile {
   width: 100%;
   height: 100%;
   border-radius: 40px;
@@ -384,7 +393,7 @@ body #main #main_inner #menu #user #profile {
   color: white;
   padding: 12px 10px;
 }
-body #main #main_inner #menu #user #profile:hover {
+body #main #main_inner #menu #bottom #user #profile:hover {
   background: var(--user-profile-background-hover);
 }
 body #main #main_inner #content {
@@ -539,39 +548,39 @@ body[dark] #main #main_inner #menu #optionals #loading #loadercircle {
   border-left-color: var(--loader-border-left-color-light);
   border-right-color: var(--loader-border-right-color-light);
 }
-body[dark] #main #main_inner #menu #mode {
+body[dark] #main #main_inner #menu #bottom #mode {
   border-color: var(--accent-color-light);
   color: var(--mode-color-light);
 }
-body[dark] #main #main_inner #menu #switcher {
+body[dark] #main #main_inner #menu #bottom #switcher {
   border: 2px solid var(--switcher-color);
 }
-body[dark] #main #main_inner #menu #switcher[state='overview'] {
+body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] {
   border-color: rgba(0, 136, 255);
 }
-body[dark] #main #main_inner #menu #switcher[state='overview'] #state {
+body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] #state {
   background: rgba(0, 136, 255);
 }
-body[dark] #main #main_inner #menu #switcher[state='cashier'] {
+body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] {
   border-color: #00ffaa;
 }
-body[dark] #main #main_inner #menu #switcher[state='cashier'] #state {
+body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] #state {
   background: rgba(0, 255, 170);
 }
-body[dark] #main #main_inner #menu #switcher #state {
+body[dark] #main #main_inner #menu #bottom #switcher #state {
   width: 100%;
   height: 100%;
   background: #777;
   border-radius: 100%;
 }
-body[dark] #main #main_inner #menu #user {
+body[dark] #main #main_inner #menu #bottom #user {
   background: var(--user-profile-background-light);
   box-shadow: var(--box-shadow-light);
 }
-body[dark] #main #main_inner #menu #user #profile {
+body[dark] #main #main_inner #menu #bottom #user #profile {
   color: black;
 }
-body[dark] #main #main_inner #menu #user #profile:hover {
+body[dark] #main #main_inner #menu #bottom #user #profile:hover {
   background: var(--user-profile-background-hover-light);
 }
 body[dark] #main #main_inner #content #inventory .item {

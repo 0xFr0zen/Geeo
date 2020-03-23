@@ -13,7 +13,7 @@ namespace images {
                     let fname = file[1];
                     p = path.join(
                         process.cwd(),
-                        './dev/System/Server/Web/Images/',
+                        './dev/System/Web/Images/',
                         type,
                         fname
                     );
@@ -22,7 +22,7 @@ namespace images {
                     let fname = file[1];
                     p = path.join(
                         process.cwd(),
-                        './dev/system/Server/Web/Images/default/',
+                        './dev/system/Web/Images/default/',
                         req.params.file
                     );
                 }

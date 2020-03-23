@@ -9,7 +9,7 @@ namespace scripts {
             (req: express.Request, res: express.Response) => {
                 let p = path.join(
                     process.cwd(),
-                    './dev/System/Server/Web/Scripts/',
+                    './dev/System/Web/Scripts/',
                     req.params.file
                 );
                 res.setHeader('Content-Type', 'application/javascript');

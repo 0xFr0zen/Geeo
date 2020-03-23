@@ -5,72 +5,52 @@ import System from '..';
 import bodyParser = require('body-parser');
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
-import headers from './routes/headers';
-import indexsite from './routes/indexsite';
-import routelogic from './routes';
 import apilogic from './routes';
+import indexsite from '../API/routes/indexsite';
 
-export default class Server {
-    private static DEFAULT_PORT: number =
-        parseInt(dotenv.config().parsed.DEFAULT_WEBSERVER_PORT) || 443;
+export default class API {
+    private static DEFAULT_PORT: number = 81;
     private static DEFAULT_HOSTNAME: string = 'geeo';
     private static DEFAULT_VIEW_ENGINE: string = 'ejs';
     private router: express.Router = null;
+    private apiRouter: express.Router = null;
     private application: express.Application = null;
     private listen: import('http').Server = null;
     private system: System = null;
     constructor(system: System) {
         this.system = system;
         this.application = express();
-        // this.application.set('trust proxy', 1);
-        // this.application.use(
-        //     session({
-        //         name: 'sid',
-        //         resave: true,
-        //         saveUninitialized: true,
-        //         secret: dotenv.config().parsed.SECRET!,
-        //         cookie: {
-        //             maxAge:
-        //                 parseInt(dotenv.config().parsed.COOKIE_EXPIRATION!) *
-        //                 60000,
-        //             sameSite: true,
-        //             secure: false,
-        //         },
-        //     })
-        // );
         this.application.use(bodyParser.json());
-        this.router = express.Router({ mergeParams: true });
 
         let view_engine =
-            dotenv.config().parsed.webrenderer || Server.DEFAULT_VIEW_ENGINE;
+            dotenv.config().parsed.webrenderer || API.DEFAULT_VIEW_ENGINE;
         this.application.set('view engine', view_engine);
-
         this.application.set(
             'views',
             path.join(
                 process.cwd(),
-                `./dev/System/Templates/main/`
+                `./dev/System/Templates/api/`
             )
         );
-        this.router.use(headers.load).get('/$', indexsite.get);
-        this.application.use(this.prepareRoutes(this.router));
+        // this.apiRouter = subdomain('api', );
+        this.apiRouter = this.prepareAPIRoutes();
+        this.apiRouter.get('/', indexsite.get);
+        this.application.use(this.apiRouter);
         this.start();
     }
     public start(): void {
         if (this.application) {
-            let port = Server.DEFAULT_PORT;
+            let port = API.DEFAULT_PORT;
             this.listen = this.application.listen(port, () => {
                 this.system.emit('ready', port);
             });
         }
     }
-    private prepareRoutes(r: express.Router): express.Router {
-        r.use(headers.load).get('/$', indexsite.get);
-        let _r: any = routelogic.all;
+    private prepareAPIRoutes(): express.Router {
+        let r = express.Router();
+        let _r: any = apilogic.all;
         for (const iterator in _r) {
-            // console.log();
             let entries = Object.entries(_r[iterator]);
-
             entries.forEach((_route: any) => {
                 const y = Object.keys(_route);
                 y.forEach((s: any) => {
