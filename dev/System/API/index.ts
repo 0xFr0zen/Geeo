@@ -27,10 +27,7 @@ export default class API {
         this.application.set('view engine', view_engine);
         this.application.set(
             'views',
-            path.join(
-                process.cwd(),
-                `./dev/System/Templates/api/`
-            )
+            path.join(process.cwd(), `./dev/System/Templates/`)
         );
         // this.apiRouter = subdomain('api', );
         this.apiRouter = this.prepareAPIRoutes();

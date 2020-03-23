@@ -49,7 +49,7 @@ export default class Server {
             'views',
             path.join(
                 process.cwd(),
-                `./dev/System/Templates/main/`
+                `./dev/System/Templates/`
             )
         );
         this.router.use(headers.load).get('/$', indexsite.get);

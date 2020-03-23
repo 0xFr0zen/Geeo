@@ -15,8 +15,9 @@
     <script defer src="/scripts/jquery.js"></script>
     <% if(typeof username !== 'undefined'){ %>
     <script>
-        var username = '<%-username%>';
+        var username = '<%- username %>';
     </script>
+    <script defer src="/scripts/essentials.js"></script>
     <% } %> <% if(scripts) { %> <% scripts.forEach(function(script){ %>
     <script defer src="/scripts/<%= script %>.js"></script>
     <% }); %> <% } %>

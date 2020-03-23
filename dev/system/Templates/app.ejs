@@ -1,8 +1,8 @@
 <div id="main" class="hidden">
     <div id="main_inner">
-        <%- include('menu'); %> <% incs.forEach(function(inc){ %> <%-
-        include(inc); %> <% });%>
+        <%- include('menu'); %>
     </div>
+    <%- include(`bodies/${content}/content`, {});%>
 </div>
 <div id="loader">
     <div id="loaderbox">
