@@ -1,0 +1,74 @@
+#wrapper {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  padding: 20px;
+}
+#wrapper #tabs {
+  float: left;
+  width: 100%;
+  height: 60px;
+  border-radius: var(--border-radius);
+  background: var(--box-color);
+  overflow: hidden;
+  padding: 10px;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+}
+#wrapper #tabs .tab {
+  cursor: pointer;
+  float: left;
+  width: auto;
+  max-width: 100px;
+  height: 100%;
+  padding: 10px 20px;
+  text-align: center;
+  margin-right: 5px;
+  border-radius: var(--border-radius);
+}
+#wrapper #tabs .tab:hover {
+  background-color: var(--box-color);
+}
+#wrapper #tabs .tab:active {
+  background-color: var(--box-color-low);
+  color: var(--background);
+}
+#wrapper #tabs .tab.focus {
+  background-color: var(--box-color-strong);
+  color: var(--background);
+}
+#wrapper #section {
+  margin-top: 10px;
+  float: left;
+  width: 100%;
+  height: calc(100% - 70px);
+  background: var(--box-color-low-low);
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+body[dark] #wrapper #tabs {
+  background: var(--box-color-light);
+}
+body[dark] #wrapper #tabs .tab:hover {
+  background-color: var(--box-color-light);
+}
+body[dark] #wrapper #tabs .tab:active {
+  background-color: var(--box-color-low-light);
+  color: var(--background-dark);
+}
+body[dark] #wrapper #tabs .tab.focus {
+  background-color: var(--box-color-strong-light);
+  color: var(--background-dark);
+}
+body[dark] #wrapper #section {
+  background: var(--box-color-low-low-light);
+}

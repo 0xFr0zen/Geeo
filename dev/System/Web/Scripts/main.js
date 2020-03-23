@@ -67,12 +67,11 @@ $(document).ready(function() {
         $('#loader #loadinganimation #la').css('width', '100%');
         setTimeout(() => {
             $('#main').toggleClass('hidden');
-
             $('#loader').toggleClass('hidden');
             setTimeout(() => {
                 $('#loader').css('display', 'none');
-            }, 100);
-        }, 700);
+            }, 200);
+        }, 500);
     }, 100);
 });
 function prompter(question, defaultanswer) {
