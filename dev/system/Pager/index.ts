@@ -4,17 +4,29 @@ import express from 'express';
 namespace Pager {
     export class Page {
         private pathurl: PageVersion;
-        private resourcepack: Resource[] = null;
+        private resourcepack: Resource[] = [];
         private bodyPack: Body;
-        constructor(pathurl: PageVersion, resourcePack: Resource[]) {
+        constructor(
+            pathurl: PageVersion,
+            ...resourcePack: Resource[] | string[]
+        ) {
             this.pathurl = pathurl;
-            this.resourcepack = resourcePack;
+            resourcePack.forEach((v: Resource | string) => {
+                if (v instanceof Resource) {
+                    this.resourcepack.push(v);
+                } else {
+                    this.resourcepack.push(
+                        new Resource(v, ResourceType.UNKNOWN)
+                    );
+                }
+            });
             this.bodyPack = new Body(pathurl);
         }
         public render(response: express.Response) {
             let s = {
                 header: ResourcePackager.compile(this.resourcepack),
                 content: this.bodyPack.compile(),
+                pathurl: this.pathurl,
             };
             return response.render('starter', s);
         }
@@ -77,6 +89,7 @@ namespace Pager {
         CSV = 'CSV',
         FONT = 'Fonts',
         JS = 'Scripts',
+        UNKNOWN = 'unknown',
     }
     export class Body {
         private versionType: PageVersion;

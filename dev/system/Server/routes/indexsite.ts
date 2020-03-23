@@ -8,7 +8,7 @@ namespace indexsite {
             new Pager.Resource('essentials.js', Pager.ResourceType.JS)
         );
         resources.push(new Pager.Resource('main.js', Pager.ResourceType.JS));
-        let page = new Pager.Page(Pager.PageVersion.MAIN, resources);
+        let page = new Pager.Page(Pager.PageVersion.MAIN, ...resources);
         return page.render(res);
     }
 }
