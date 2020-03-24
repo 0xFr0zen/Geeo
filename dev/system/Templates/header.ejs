@@ -13,15 +13,13 @@
         }
     </script>
     <script defer src="/scripts/jquery.js"></script>
-    <% if(typeof username !== 'undefined'){ %>
-    <script>
-        var username = '<%-username%>';
-    </script>
-    <% } %> <% if(scripts) { %> <% scripts.forEach(function(script){ %>
+    <% if(scripts) { %> <% scripts.forEach(function(script){ %>
     <script defer src="<%= script %>"></script>
     <% }); %> <% } %>
     <script>
         if (window.module) module = window.module;
     </script>
-    <link rel="stylesheet" href="/themes/main.css" />
+    <% if(themes) { %> <% themes.forEach(function(theme){ %>
+    <link rel="stylesheet" href="<%= theme %>" />
+    <% }); %> <% } %>
 </head>

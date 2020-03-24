@@ -78,17 +78,14 @@ namespace Pager {
         private pathurl: string;
         private type: ResourceType;
         constructor(pathurl: string, type: ResourceType) {
+            let p: string = path.join(
+                process.cwd(),
+                `./dev/System/Web/${type}/${pathurl}`
+            );
             this.pathurl = pathurl;
             this.type = type;
-            if (
-                !existsSync(
-                    path.join(
-                        process.cwd(),
-                        `./dev/System/Web/${type}/${this.pathurl}`
-                    )
-                )
-            ) {
-                throw new Error('This file doesnt exist');
+            if (!existsSync(p)) {
+                throw new Error(`This file '${this.pathurl}' doesnt exist`);
             }
         }
         public getType(): string {
@@ -110,7 +107,14 @@ namespace Pager {
                     rp[res.getType().toLowerCase()] = [];
                 }
                 rp[res.getType().toLowerCase()].push(
-                    path.join(res.getType().toLowerCase(), res.getPath())
+                    '/'
+                        .concat(
+                            path.join(
+                                res.getType().toLowerCase(),
+                                res.getPath()
+                            )
+                        )
+                        .replace('\\', '/')
                 );
             }
 
@@ -136,17 +140,15 @@ namespace Pager {
     }
     export class Body {
         private versionType: PageVersion;
+        private path: string = '';
         constructor(version: PageVersion) {
             this.versionType = version;
-            if (
-                !existsSync(
-                    path.join(
-                        process.cwd(),
-                        `./dev/System/Templates/bodies/${this.versionType}.ejs`
-                    )
-                )
-            ) {
-                throw new Error('This file doesnt exist');
+            this.path = path.join(
+                process.cwd(),
+                `./dev/System/Templates/bodies/${this.versionType}/content.ejs`
+            );
+            if (!existsSync(this.path)) {
+                throw new Error(`This file '${this.path}' doesnt exist`);
             }
         }
         public compile(): any {
