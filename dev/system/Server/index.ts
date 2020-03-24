@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken';
 import headers from './routes/headers';
 import indexsite from './routes/indexsite';
 import routelogic from './routes';
-import apilogic from './routes';
 
 export default class Server {
     private static DEFAULT_PORT: number =
@@ -22,22 +21,6 @@ export default class Server {
     constructor(system: System) {
         this.system = system;
         this.application = express();
-        // this.application.set('trust proxy', 1);
-        // this.application.use(
-        //     session({
-        //         name: 'sid',
-        //         resave: true,
-        //         saveUninitialized: true,
-        //         secret: dotenv.config().parsed.SECRET!,
-        //         cookie: {
-        //             maxAge:
-        //                 parseInt(dotenv.config().parsed.COOKIE_EXPIRATION!) *
-        //                 60000,
-        //             sameSite: true,
-        //             secure: false,
-        //         },
-        //     })
-        // );
         this.application.use(bodyParser.json());
         this.router = express.Router({ mergeParams: true });
 

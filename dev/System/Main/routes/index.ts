@@ -1,18 +1,18 @@
-import user from './user';
-import resources from '../../Server/routes/resources';
-import cashieritem from './cashieritem';
-import sections from './sections';
+import login from './login';
+import register from './register';
+import logout from './logout';
+import resources from './resources';
 import indexsite from './indexsite';
 namespace routeslist {
     export const all = {
+        indexsite: indexsite,
         themes: resources.find('themes'),
         scripts: resources.find('scripts'),
         images: resources.find('images'),
         fonts: resources.find('fonts'),
-        user: user,
-        cashieritem: cashieritem,
-        sections: sections,
-        indexsite: indexsite,
+        login: login,
+        logout: logout,
+        register: register,
     };
 }
 

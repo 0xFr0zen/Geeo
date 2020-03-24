@@ -7,9 +7,9 @@ namespace indexsite {
             '/$',
             (req: express.Request, res: express.Response) => {
                 let page = new Pager.Page(
-                    Pager.PageVersion.API,
+                    Pager.PageVersion.MAIN,
                     'essentials.js',
-                    'api.js',
+                    'main.js',
                     'main.css'
                 );
                 return page.render(res);
