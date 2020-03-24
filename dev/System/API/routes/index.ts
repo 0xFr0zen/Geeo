@@ -1,6 +1,7 @@
 import user from './user';
 import resources from '../../Server/routes/resources';
 import cashieritem from './cashieritem';
+import sections from './sections';
 namespace routeslist {
     export const all = {
         themes: resources.find('themes'),
@@ -8,7 +9,8 @@ namespace routeslist {
         images: resources.find('images'),
         fonts: resources.find('fonts'),
         user: user,
-        cashieritem:cashieritem
+        cashieritem: cashieritem,
+        sections: sections,
     };
 }
 
