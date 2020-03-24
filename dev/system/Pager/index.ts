@@ -74,6 +74,7 @@ namespace Pager {
             return response.render('starter', s);
         }
     }
+
     export class Resource {
         private pathurl: string;
         private type: ResourceType;
@@ -95,6 +96,7 @@ namespace Pager {
             return this.pathurl;
         }
     }
+
     export abstract class ResourcePackager {
         public static compile(resources: Resource[]): ResourcePackage {
             let rp: ResourcePackage = {};
@@ -121,6 +123,7 @@ namespace Pager {
             return rp;
         }
     }
+
     export interface ResourcePackage {
         scripts?: [];
         themes?: [];
@@ -128,6 +131,7 @@ namespace Pager {
         fonts?: [];
         [name: string]: any;
     }
+
     export enum ResourceType {
         IMAGE = 'Images',
         CSS = 'Themes',
@@ -138,6 +142,7 @@ namespace Pager {
         JS = 'Scripts',
         UNKNOWN = 'unknown',
     }
+
     export class Body {
         private versionType: PageVersion;
         private path: string = '';
@@ -155,9 +160,11 @@ namespace Pager {
             return this.versionType;
         }
     }
+
     export interface BodyContent {
         content: PageVersion;
     }
+
     export enum PageVersion {
         API = 'api',
         MAIN = 'main',

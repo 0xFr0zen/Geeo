@@ -1,9 +1,6 @@
 import express, { NextFunction } from 'express';
 import path from 'path';
-import dotenv from 'dotenv';
 import bodyParser = require('body-parser');
-import session from 'express-session';
-import jwt from 'jsonwebtoken';
 import System from '../System';
 import headers from './routes/headers';
 import { prepareRoutes } from './preparer';
@@ -25,7 +22,6 @@ export default class Server {
             mergeParams: true,
         });
         this.application.set('view engine', 'ejs');
-
         this.application.set(
             'views',
             path.join(process.cwd(), `./dev/System/Templates/`)
@@ -41,6 +37,7 @@ export default class Server {
         );
         this.application.use(this.router);
     }
+
     public start(port?: number): void {
         if (this.application) {
             if (port) {
@@ -54,6 +51,7 @@ export default class Server {
             }
         }
     }
+
     public stop() {
         this.listen.close();
         this.system.emit('closed', this.ownPort);

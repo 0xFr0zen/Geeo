@@ -3,7 +3,6 @@ export function prepareRoutes(r: express.Router, logic: any): express.Router {
     let all_logics: any = logic.all;
     for (const iterator in all_logics) {
         let entries = Object.entries(all_logics[iterator]);
-
         entries.forEach((route: any) => {
             const y = Object.keys(route);
             y.forEach((s: any) => {
