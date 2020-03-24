@@ -15,9 +15,52 @@ namespace Pager {
                 if (v instanceof Resource) {
                     this.resourcepack.push(v);
                 } else {
-                    this.resourcepack.push(
-                        new Resource(v, ResourceType.UNKNOWN)
-                    );
+                    let splittedFileConstr = v.split('.');
+                    let fileExtension =
+                        splittedFileConstr[splittedFileConstr.length - 1];
+                    let resType: ResourceType = null;
+                    switch (fileExtension) {
+                        case 'js':
+                            resType = ResourceType.JS;
+                            break;
+                        case 'json':
+                            resType = ResourceType.JSON;
+                            break;
+                        case 'txt':
+                            resType = ResourceType.TXT;
+                            break;
+                        case 'csv':
+                            resType = ResourceType.CSV;
+                            break;
+                        case 'png':
+                            resType = ResourceType.IMAGE;
+                            break;
+                        case 'jpg':
+                            resType = ResourceType.IMAGE;
+                            break;
+                        case 'svg':
+                            resType = ResourceType.IMAGE;
+                            break;
+                        case 'css':
+                            resType = ResourceType.CSS;
+                            break;
+                        case 'ttf':
+                            resType = ResourceType.FONT;
+                            break;
+                        case 'woff':
+                            resType = ResourceType.FONT;
+                            break;
+                        case 'woff2':
+                            resType = ResourceType.FONT;
+                            break;
+                        case 'eot':
+                            resType = ResourceType.FONT;
+                            break;
+                        default:
+                            resType = ResourceType.UNKNOWN;
+                            break;
+                    }
+                    this.resourcepack.push(new Resource(v, resType));
                 }
             });
             this.bodyPack = new Body(pathurl);
