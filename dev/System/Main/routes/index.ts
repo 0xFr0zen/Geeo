@@ -1,7 +1,7 @@
 import login from './login';
 import register from './register';
 import logout from './logout';
-import resources from './resources';
+import resources from '../../../Server/routes/resources';
 import indexsite from './indexsite';
 namespace routeslist {
     export const all = {

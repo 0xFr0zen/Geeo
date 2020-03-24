@@ -1,5 +1,5 @@
 import user from './user';
-import resources from '../../Server/routes/resources';
+import resources from '../../../Server/routes/resources';
 import cashieritem from './cashieritem';
 import sections from './sections';
 import indexsite from './indexsite';

@@ -75,7 +75,12 @@ namespace Pager {
         }
     }
 
-    export class Resource {
+    export enum PageVersion {
+        API = 'api',
+        MAIN = 'main',
+        RESOURCE = 'res',
+    }
+    class Resource {
         private pathurl: string;
         private type: ResourceType;
         constructor(pathurl: string, type: ResourceType) {
@@ -97,7 +102,7 @@ namespace Pager {
         }
     }
 
-    export abstract class ResourcePackager {
+    abstract class ResourcePackager {
         public static compile(resources: Resource[]): ResourcePackage {
             let rp: ResourcePackage = {};
             for (const res of resources) {
@@ -124,7 +129,7 @@ namespace Pager {
         }
     }
 
-    export interface ResourcePackage {
+    interface ResourcePackage {
         scripts?: [];
         themes?: [];
         images?: [];
@@ -132,7 +137,7 @@ namespace Pager {
         [name: string]: any;
     }
 
-    export enum ResourceType {
+    enum ResourceType {
         IMAGE = 'Images',
         CSS = 'Themes',
         JSON = 'JSON',
@@ -143,7 +148,7 @@ namespace Pager {
         UNKNOWN = 'unknown',
     }
 
-    export class Body {
+    class Body {
         private versionType: PageVersion;
         private path: string = '';
         constructor(version: PageVersion) {
@@ -161,14 +166,8 @@ namespace Pager {
         }
     }
 
-    export interface BodyContent {
+    interface BodyContent {
         content: PageVersion;
-    }
-
-    export enum PageVersion {
-        API = 'api',
-        MAIN = 'main',
-        RESOURCE = 'res',
     }
 }
 export default Pager;

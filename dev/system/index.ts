@@ -1,12 +1,7 @@
 import Device, { PK_IDENTITY } from './Device';
-import * as path from 'path';
-import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import Entity from './Entity';
-import Server from './Server';
 import API from './API';
-import getMAC from 'getmac';
-import Node from '../Crypt';
 import ConsoleIO from './ConsoleIO';
 import Main from './Main/index';
 
