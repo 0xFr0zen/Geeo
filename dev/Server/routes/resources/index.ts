@@ -2,9 +2,10 @@ import themes from './themes';
 import scripts from './scripts';
 import images from './images';
 import fonts from './fonts';
-
+import resourceprotecter from './resourceprotecter';
 namespace resources {
     const resourcelist: Resource = {
+        resourceprotecter: resourceprotecter,
         themes: themes,
         scripts: scripts,
         images: images,

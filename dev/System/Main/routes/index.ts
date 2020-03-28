@@ -6,6 +6,7 @@ import indexsite from './indexsite';
 namespace routeslist {
     export const all = {
         indexsite: indexsite,
+        resourceprotecter: resources.find('resourceprotecter'),
         themes: resources.find('themes'),
         scripts: resources.find('scripts'),
         images: resources.find('images'),

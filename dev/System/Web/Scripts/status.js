@@ -1,19 +1,29 @@
 let resources = ['themes', 'scripts'];
 let prms = [];
 resources.forEach(v => {
-    prms.push(Ping(`localhost/${v}`));
+    let url = `http://localhost/${v}`;
+    prms.push(new PingBox(url));
 });
-
-Promise.all(prms)
-    .then(status => {
-        console.log(status);
-    })
-    .catch(rej => {
-        console.error(rej);
-    })
-    .finally(_of => {
-        console.log(_of);
-    });
+function PingBox(url) {
+    let that = this;
+    Ping(url)
+        .then(s => {
+            that.status = s;
+            this.url = url;
+        })
+        .catch(e => {
+            that.status = 'error';
+        })
+        .finally(f => {
+            if (!this.status) {
+                this.error = `Resource '${url}' not responding.`;
+            } else {
+                if (this.status == 'error') {
+                    this.error = `Resource '${url}' not responding.`;
+                }
+            }
+        });
+}
 console.log(prms);
 function Ping(ip) {
     return new Promise((resolve, reject) => {

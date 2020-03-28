@@ -2,3 +2,19 @@ GET http://localhost/user/admin/storages
 
 
 ###
+
+
+GET http://localhost/scripts/../../index.ts
+
+
+###
+
+
+GET http://localhost/scripts/essentials
+
+
+
+###
+
+
+GET http://localhost/themes/main
