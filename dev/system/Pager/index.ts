@@ -79,6 +79,7 @@ namespace Pager {
         API = 'api',
         MAIN = 'main',
         RESOURCE = 'res',
+        DEV = 'dev',
     }
     class Resource {
         private pathurl: string;

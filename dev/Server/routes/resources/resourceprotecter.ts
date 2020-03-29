@@ -22,7 +22,7 @@ namespace resourceprotecter {
                     req.params.file
                 );
                 let rel = path.relative(p, p2);
-                if (rel.includes('../') && fs.existsSync(p2)) {
+                if (rel.match(/\.\.(?:\\)?/g) != null) {
                     return res.status(403).send('Hey, what you looking for?');
                 } else {
                     next();

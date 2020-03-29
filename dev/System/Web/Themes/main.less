@@ -17,7 +17,7 @@ body {
         left: 0px;
         right: 0px;
         bottom: 0px;
-        transition: all 0.1s ease-in-out;
+        transition: all 0.3s ease-in-out;
         &.hidden {
             transform: scale(0.98);
             opacity: 0;
@@ -265,47 +265,25 @@ body {
         right: 0px;
         bottom: 0px;
         background: var(--background);
-        transition: all 0.1s ease-in-out;
+        transition: all 0.3s ease-in-out;
         &.hidden {
-            transform: scale(0.98);
+            transform: scale(1.05);
             opacity: 0;
         }
-        #loaderbox {
-            position: absolute;
+        #logoloader {
+            position: relative;
             top: 50%;
             left: 50%;
-            width: 200px;
+            width: 100px;
             height: 100px;
-            margin-left: -100px;
             margin-top: -50px;
-            #loadinganimation {
+            margin-left: -50px;
+            #loaderbox {
+                animation: loader 2.25s linear infinite;
+                position: absolute;
                 width: 100%;
-                height: 50px;
+                height: 100%;
                 float: left;
-                padding: 20px 0px;
-                #laholder {
-                    border: 1px solid var(--background-dark);
-                    height: 10px;
-                    width: 100%;
-                    border-radius: 5px;
-                    overflow: hidden;
-                    #la {
-                        width: 0%;
-                        height: 100%;
-                        transition: all 0.4s cubic-bezier(0.9, 0.28, 0.32, 1);
-                        background: var(--background-dark);
-                        border-top-right-radius: 5px;
-                        border-bottom-right-radius: 5px;
-                    }
-                }
-            }
-            #loadingtext {
-                width: 100%;
-                height: 50px;
-                float: left;
-                text-align: center;
-                letter-spacing: 0.3em;
-                color: var(--background-dark);
             }
         }
     }
@@ -411,18 +389,8 @@ body {
         }
         #loader {
             background: var(--background-dark);
-            #loaderbox {
-                #loadinganimation {
-                    #laholder {
-                        border: 1px solid var(--background);
-                        #la {
-                            background: var(--background);
-                        }
-                    }
-                }
-                #loadingtext {
-                    color: var(--background);
-                }
+            #loaderbox * {
+                stroke: var(--background);
             }
         }
     }
@@ -571,18 +539,24 @@ button {
     }
 }
 @keyframes loader {
-    from {
-        transform: rotate(0deg);
+    0% {
+        transform: rotate(0deg) scale(1);
     }
-    to {
-        transform: rotate(360deg);
+    50% {
+        transform: rotate(180deg) scale(1.5);
+    }
+    100% {
+        transform: rotate(360deg) scale(3);
     }
 }
 @-webkit-keyframes loader {
-    from {
-        -webkit-transform: rotate(0deg);
+    0% {
+        -webkit-transform: rotate(0deg) scale(1);
     }
-    to {
-        -webkit-transform: rotate(360deg);
+    50% {
+        -webkit-transform: rotate(180deg) scale(1.5);
+    }
+    100% {
+        -webkit-transform: rotate(360deg) scale(3);
     }
 }

@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $('#main').css('opacity', '1');
     $('#menu #mode').on('click', e => {
         let modes = {
             dark: { goto: 'light', text: 'brightness_2' },
@@ -42,13 +43,12 @@ $(document).ready(function() {
                 document.body.removeAttribute('dark');
             }
         }
-        $('#loader #loadinganimation #la').css('width', '100%');
         setTimeout(() => {
-            $('#main').toggleClass('hidden');
             $('#loader').toggleClass('hidden');
+            $('#main').toggleClass('hidden');
             setTimeout(() => {
                 $('#loader').css('display', 'none');
-            }, 200);
+            }, 300);
         }, 500);
-    }, 100);
+    }, 500);
 });

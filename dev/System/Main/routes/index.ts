@@ -3,6 +3,7 @@ import register from './register';
 import logout from './logout';
 import resources from '../../../Server/routes/resources';
 import indexsite from './indexsite';
+import dev from './dev';
 namespace routeslist {
     export const all = {
         indexsite: indexsite,
@@ -14,6 +15,7 @@ namespace routeslist {
         login: login,
         logout: logout,
         register: register,
+        dev: dev,
     };
 }
 
