@@ -4,12 +4,6 @@ GET http://localhost/user/admin/storages
 ###
 
 
-GET http://localhost/themes/\.\.\/
-
-
-###
-
-
 GET http://localhost/scripts
 
 
