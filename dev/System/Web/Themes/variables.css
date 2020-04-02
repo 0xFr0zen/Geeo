@@ -110,9 +110,11 @@
   --box-background-light: rgba(255, 255, 255, 0.075);
   --box-color: rgba(0, 0, 0, 0.1);
   --box-color-low: rgba(0, 0, 0, 0.5);
+  --box-color-half-low: rgba(0, 0, 0, 0.25);
   --box-color-low-low: rgba(0, 0, 0, 0.05);
   --box-color-strong: #000000;
   --box-color-light: rgba(255, 255, 255, 0.1);
+  --box-color-half-low-light: rgba(255, 255, 255, 0.25);
   --box-color-low-light: rgba(255, 255, 255, 0.5);
   --box-color-strong-light: #ffffff;
   --box-color-low-low-light: rgba(255, 255, 255, 0.05);
