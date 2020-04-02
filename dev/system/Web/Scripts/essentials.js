@@ -20,11 +20,6 @@ function prepareResourceLoader() {
     window.ResourceLoaderPackage.push(
         ResourceLoader(() => {
             $('#main').css('opacity', '1');
-            return true;
-        })
-    );
-    window.ResourceLoaderPackage.push(
-        ResourceLoader(() => {
             $('#menu #mode').on('click', e => {
                 let modes = {
                     dark: { goto: 'light', text: 'brightness_2' },
@@ -43,11 +38,6 @@ function prepareResourceLoader() {
                 elem.text(modes[currentState].text);
                 document.body.toggleAttribute('dark');
             });
-            return true;
-        })
-    );
-    window.ResourceLoaderPackage.push(
-        ResourceLoader(() => {
             $('#switcher').on('click', () => {
                 let laststate = $('#switcher').attr('state');
                 if (laststate === 'cashier') {
