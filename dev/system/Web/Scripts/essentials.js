@@ -5,7 +5,7 @@ $(document).ready(async function() {
         $('#main').toggleClass('hidden');
         setTimeout(() => {
             $('#loader').css('display', 'none');
-        }, 300);
+        }, 500);
     });
 });
 function PageLoader() {
@@ -13,11 +13,7 @@ function PageLoader() {
 }
 function ResourceLoader(fn) {
     return new Promise((resolve, reject) => {
-        if (fn()) {
-            resolve(true);
-        } else {
-            reject('failed');
-        }
+        resolve(fn());
     });
 }
 function prepareResourceLoader() {
