@@ -19,7 +19,6 @@ function ResourceLoader(fn) {
 function prepareResourceLoader() {
     window.ResourceLoaderPackage.push(
         ResourceLoader(() => {
-            $('#main').css('opacity', '1');
             $('#menu #mode').on('click', e => {
                 let modes = {
                     dark: { goto: 'light', text: 'brightness_2' },
