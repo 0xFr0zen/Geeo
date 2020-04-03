@@ -26,16 +26,23 @@ function prepareResourceLoader() {
                         $('#prompter #selector #title').text(title);
                         $('#prompter #selector #chooser').empty();
                         elements.forEach(element => {
-                            console.log(element);
                             let d = document.createElement('div');
                             d.className = 'option';
                             $(d).attr('value', element);
                             $(d).on('click', e => {
                                 $('#prompter').hide();
-                                resolve($(e.target));
+                                resolve(element);
                             });
                             $('#prompter #selector #chooser').append(d);
                         });
+                        let d2 = document.createElement('div');
+                        d2.className = 'option cancel';
+                        $(d2).attr('value', 'Cancel');
+                        $(d2).on('click', e => {
+                            $('#prompter').hide();
+                            reject('User rejected');
+                        });
+                        $('#prompter #selector #chooser').append(d2);
 
                         $('#prompter').show();
                     });
@@ -63,23 +70,20 @@ function prepareResourceLoader() {
                 elem.text(modes[currentState].text);
                 document.body.toggleAttribute('dark');
             });
-            $('.geeoselector').attr(
-                'data-value',
-                $('.geeoselector .geeoselectoroption[selected]').text()
-            );
             $('.geeoselector').on('click', function(e) {
-                let preparedSelector = [];
-                $(this)
-                    .children()
-                    .each((option, element) =>
-                        preparedSelector.push($(element).attr('value'))
-                    );
                 let title = $(this).attr('title');
-                Selector.choose(title, preparedSelector).then(element => {
-                    let result = element.attr('value');
-                    console.log(result);
-                    $(this).attr('data-value', result);
-                });
+                Selector.choose(
+                    title,
+                    $(this)
+                        .attr('data-options')
+                        .split(',')
+                )
+                    .then(element => {
+                        $(this).attr('data-value', element);
+                    })
+                    .catch(e => {
+                        console.error(e);
+                    });
             });
             $('#switcher').on('click', () => {
                 let laststate = $('#switcher').attr('state');

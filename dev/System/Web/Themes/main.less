@@ -338,7 +338,7 @@ body {
             }
         }
         #selector {
-            width: 300px;
+            width: max-content;
             height: max-content;
             background-color: var(--background);
             border-radius: var(--border-radius);
@@ -348,7 +348,7 @@ body {
             transform: translateY(-50%) translateX(-50%);
             padding: 5px;
             #title {
-                width: 100%;
+                width: max-content;
                 height: 60px;
                 font-size: 28px;
                 color: var(--background-dark);
@@ -366,9 +366,8 @@ body {
                     background-color: transparent;
                     color: var(--background-dark);
                     padding: 10px;
-                    &:not(:last-child) {
-                        border-bottom: 1px solid var(--box-color-half-low);
-                    }
+                    border-radius: var(--border-radius);
+                    margin-bottom: 5px;
                     &::before {
                         content: attr(value);
                     }
@@ -377,6 +376,20 @@ body {
                     }
                     &:active {
                         background-color: var(--box-color-half-low);
+                    }
+                    &.cancel {
+                        background-color: var(--button-cancel-bgcolor);
+                        &:hover {
+                            background-color: var(
+                                --button-cancel-bgcolor-hover
+                            );
+                        }
+                        &:active {
+                            background-color: var(
+                                --button-cancel-bgcolor-active
+                            );
+                            color: var(--button-cancel-color-active);
+                        }
                     }
                 }
             }
@@ -504,15 +517,27 @@ body {
                 #chooser {
                     .option {
                         color: var(--background);
-                        &:not(:last-child) {
-                            border-bottom: 1px solid
-                                var(--box-color-half-low-light);
-                        }
                         &:hover {
                             background-color: var(--box-color-low-low-light);
                         }
                         &:active {
                             background-color: var(--box-color-half-low-light);
+                        }
+                        &.cancel {
+                            background-color: var(
+                                --button-cancel-bgcolor-light
+                            );
+                            &:hover {
+                                background-color: var(
+                                    --button-cancel-bgcolor-hover-light
+                                );
+                            }
+                            &:active {
+                                background-color: var(
+                                    --button-cancel-bgcolor-active-light
+                                );
+                                color: var(--button-cancel-color-active);
+                            }
                         }
                     }
                 }

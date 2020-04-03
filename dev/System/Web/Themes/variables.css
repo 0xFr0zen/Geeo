@@ -58,12 +58,12 @@
   --button-submit-bgcolor-active-light: #3f94d4;
   --button-cancel-color: #ff0000;
   --button-cancel-color-active: #ffffff;
-  --button-cancel-bgcolor-hover: rgba(255, 0, 0, 0.1);
+  --button-cancel-bgcolor: rgba(255, 0, 0, 0.1);
+  --button-cancel-bgcolor-hover: rgba(255, 0, 0, 0.25);
   --button-cancel-bgcolor-active: rgba(255, 0, 0, 0.5);
-  --button-cancel-color-light: #ff2d2d;
-  --button-cancel-color-active-light: #ffffff;
-  --button-cancel-bgcolor-hover-light: rgba(255, 79, 79, 0.1);
-  --button-cancel-bgcolor-active-light: rgba(255, 79, 79, 0.5);
+  --button-cancel-bgcolor-light: rgba(255, 45, 45, 0.1);
+  --button-cancel-bgcolor-hover-light: rgba(255, 45, 45, 0.25);
+  --button-cancel-bgcolor-active-light: rgba(255, 45, 45, 0.5);
   --label-color: rgba(0, 0, 0, 0.4);
   --label-color-focus: rgba(0, 0, 0, 0.8);
   --label-color-light: rgba(255, 255, 255, 0.4);
