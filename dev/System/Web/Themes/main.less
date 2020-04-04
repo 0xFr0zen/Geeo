@@ -129,11 +129,13 @@ body {
                         background: transparent;
                         border-radius: 40px;
                         cursor: pointer;
-                        padding: 11px;
+                        padding-top: 13px;
                         text-align: center;
-                        border: 2px solid var(--accent-color);
                         color: var(--mode-color);
                         transition: all 0.1s ease-in-out;
+                        &:hover {
+                            background: var(--box-color-low-low);
+                        }
                     }
                     #switcher {
                         position: relative;
@@ -183,7 +185,6 @@ body {
                         border-radius: 40px;
                         overflow: hidden;
                         cursor: pointer;
-                        border: 1px solid var(--box-color-low);
                         #profile {
                             width: 100%;
                             height: 100%;
@@ -444,7 +445,9 @@ body {
                     }
                     #bottom {
                         #mode {
-                            border-color: var(--accent-color-light);
+                            &:hover {
+                                background: var(--accent-color-light);
+                            }
                             color: var(--mode-color-light);
                         }
                         #switcher {
@@ -495,7 +498,7 @@ body {
         #loader {
             background: var(--background-dark);
             #loaderbox * {
-                stroke: var(--background);
+                stroke: var(--scanner-color);
             }
         }
         .geeoselector {
@@ -509,6 +512,7 @@ body {
             }
         }
         #prompter {
+            background-color: var(--box-color-half-low-light);
             #selector {
                 background-color: var(--background-dark);
                 #title {

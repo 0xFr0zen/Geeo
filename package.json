@@ -52,6 +52,7 @@
         "startserver": "nodemon --exec ts-node ./index.ts",
         "prestart": "npm prune & npm install .",
         "start": "nodemon --exec ts-node ./index.ts",
+        "gui": "electron ./output/gui_gen.js",
         "reset": "ts-node ./reset.ts",
         "compile": "tsc",
         "test": "ts-node ./tests/index.ts",

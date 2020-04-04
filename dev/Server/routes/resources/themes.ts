@@ -13,7 +13,7 @@ namespace themes {
                     if (filen.split(',').length >= 1) {
                         let preparedString = '';
                         let files = filen.split(',');
-                        files.forEach(f => {
+                        files.forEach((f) => {
                             if (!f.endsWith('.css')) {
                                 f = f.concat('.css');
                             }
@@ -41,7 +41,7 @@ namespace themes {
                         let preparedString = '';
                         if (filen.length == 0) {
                             let files2 = ['main.css'];
-                            files2.forEach(f2 => {
+                            files2.forEach((f2) => {
                                 let p2 = path.join(
                                     process.cwd(),
                                     './dev/System/Web/Themes/',
@@ -62,7 +62,7 @@ namespace themes {
                 } else {
                     let preparedString = '';
                     let files2 = ['main.css'];
-                    files2.forEach(f2 => {
+                    files2.forEach((f2) => {
                         let p2 = path.join(
                             process.cwd(),
                             './dev/System/Web/Themes/',

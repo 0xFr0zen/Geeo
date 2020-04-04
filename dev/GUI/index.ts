@@ -1,14 +1,14 @@
-import {app, BrowserWindow} from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as dotenv from 'dotenv';
 
 export default class GUI {
-    private mainWindow:BrowserWindow = null;
+    private mainWindow: BrowserWindow = null;
     constructor() {
         app.on('ready', () => {
             this.mainWindow = new BrowserWindow({
                 darkTheme: true,
                 center: true,
-                title: dotenv.config().parsed.windowtitle || "Geeo",
+                title: dotenv.config().parsed.windowtitle || 'Geeo',
                 show: false,
                 webPreferences: {
                     contextIsolation: true,
@@ -21,11 +21,9 @@ export default class GUI {
                 this.mainWindow.show();
             });
             this.mainWindow.loadURL('http://localhost/');
-            
         });
-
     }
-    
+
     public show() {
         app.show();
     }

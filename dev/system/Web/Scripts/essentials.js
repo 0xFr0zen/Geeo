@@ -1,6 +1,6 @@
 window.ResourceLoaderPackage = [];
-$(document).ready(async function() {
-    PageLoader().then(b => {
+$(document).ready(async function () {
+    PageLoader().then((b) => {
         $('#loader').toggleClass('hidden');
         $('#main').toggleClass('hidden');
         setTimeout(() => {
@@ -25,11 +25,11 @@ function prepareResourceLoader() {
                     return new Promise((resolve, reject) => {
                         $('#prompter #selector #title').text(title);
                         $('#prompter #selector #chooser').empty();
-                        elements.forEach(element => {
+                        elements.forEach((element) => {
                             let d = document.createElement('div');
                             d.className = 'option';
                             $(d).attr('value', element);
-                            $(d).on('click', e => {
+                            $(d).on('click', (e) => {
                                 $('#prompter').hide();
                                 resolve(element);
                             });
@@ -38,7 +38,7 @@ function prepareResourceLoader() {
                         let d2 = document.createElement('div');
                         d2.className = 'option cancel';
                         $(d2).attr('value', 'Cancel');
-                        $(d2).on('click', e => {
+                        $(d2).on('click', (e) => {
                             $('#prompter').hide();
                             reject('User rejected');
                         });
@@ -52,7 +52,7 @@ function prepareResourceLoader() {
     );
     window.ResourceLoaderPackage.push(
         ResourceLoader(() => {
-            $('#menu #mode').on('click', e => {
+            $('#menu #mode').on('click', (e) => {
                 let modes = {
                     dark: { goto: 'light', text: 'brightness_2' },
                     light: { goto: 'dark', text: 'wb_sunny' },
@@ -70,18 +70,13 @@ function prepareResourceLoader() {
                 elem.text(modes[currentState].text);
                 document.body.toggleAttribute('dark');
             });
-            $('.geeoselector').on('click', function(e) {
+            $('.geeoselector').on('click', function (e) {
                 let title = $(this).attr('title');
-                Selector.choose(
-                    title,
-                    $(this)
-                        .attr('data-options')
-                        .split(',')
-                )
-                    .then(element => {
+                Selector.choose(title, $(this).attr('data-options').split(','))
+                    .then((element) => {
                         $(this).attr('data-value', element);
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         console.error(e);
                     });
             });
@@ -93,12 +88,22 @@ function prepareResourceLoader() {
                     $('#switcher').attr('state', 'cashier');
                 }
             });
-            $(window).on('keydown', e => {
+            $(window).on('keydown', (e) => {
                 if (e.key === 'Escape') {
                     e.preventDefault();
                     $('#prompter').hide();
                 }
             });
+            let prompter = document.querySelector('#prompter');
+            prompter.addEventListener(
+                'click',
+                (e) => {
+                    if (e.target == prompter) {
+                        $('#prompter').hide();
+                    }
+                },
+                true
+            );
             return true;
         })
     );

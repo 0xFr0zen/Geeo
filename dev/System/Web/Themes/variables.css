@@ -118,6 +118,7 @@
   --box-color-low-light: rgba(255, 255, 255, 0.5);
   --box-color-strong-light: #ffffff;
   --box-color-low-low-light: rgba(255, 255, 255, 0.05);
+  --scanner-color: rgba(0, 136, 255);
 }
 @font-face {
   font-family: 'pass';

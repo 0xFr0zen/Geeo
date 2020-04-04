@@ -27,8 +27,6 @@ namespace images {
                     );
                 }
 
-                res.setHeader('Content-Type', 'application/javascript');
-
                 if (fs.existsSync(p)) {
                     res.sendFile(p);
                 } else {

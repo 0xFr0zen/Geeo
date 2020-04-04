@@ -176,6 +176,7 @@
   --box-color-low-light: rgba(255, 255, 255, 0.5);
   --box-color-strong-light: #ffffff;
   --box-color-low-low-light: rgba(255, 255, 255, 0.05);
+  --scanner-color: rgba(0, 136, 255);
 }
 @font-face {
   font-family: 'pass';
@@ -334,11 +335,13 @@ body #main #main_inner #menu #bottom #mode {
   background: transparent;
   border-radius: 40px;
   cursor: pointer;
-  padding: 11px;
+  padding-top: 13px;
   text-align: center;
-  border: 2px solid var(--accent-color);
   color: var(--mode-color);
   transition: all 0.1s ease-in-out;
+}
+body #main #main_inner #menu #bottom #mode:hover {
+  background: var(--box-color-low-low);
 }
 body #main #main_inner #menu #bottom #switcher {
   position: relative;
@@ -387,7 +390,6 @@ body #main #main_inner #menu #bottom #user {
   border-radius: 40px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--box-color-low);
 }
 body #main #main_inner #menu #bottom #user #profile {
   width: 100%;
@@ -638,8 +640,10 @@ body[dark] #main #main_inner #menu #optionals #loading #loadercircle {
   border-right-color: var(--loader-border-right-color-light);
 }
 body[dark] #main #main_inner #menu #bottom #mode {
-  border-color: var(--accent-color-light);
   color: var(--mode-color-light);
+}
+body[dark] #main #main_inner #menu #bottom #mode:hover {
+  background: var(--accent-color-light);
 }
 body[dark] #main #main_inner #menu #bottom #switcher {
   border: 2px solid var(--switcher-color);
@@ -679,7 +683,7 @@ body[dark] #loader {
   background: var(--background-dark);
 }
 body[dark] #loader #loaderbox * {
-  stroke: var(--background);
+  stroke: var(--scanner-color);
 }
 body[dark] .geeoselector {
   background-color: var(--box-color-light);
@@ -690,6 +694,9 @@ body[dark] .geeoselector:hover {
 body[dark] .geeoselector:active {
   background-color: var(--box-color-low-light);
   color: var(--background-dark);
+}
+body[dark] #prompter {
+  background-color: var(--box-color-half-low-light);
 }
 body[dark] #prompter #selector {
   background-color: var(--background-dark);
