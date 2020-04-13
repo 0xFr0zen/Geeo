@@ -307,6 +307,9 @@
   display: flex;
   flex-wrap: wrap;
 }
+#cashier #cashiermain #input #manual #keyboard.hidden {
+  display: none;
+}
 #cashier #cashiermain #input #manual #keyboard .key {
   flex: 1 0 calc(33% - 5px);
   height: 80px;
