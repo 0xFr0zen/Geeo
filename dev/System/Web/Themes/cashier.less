@@ -278,8 +278,53 @@
                 height: 100%;
                 background-color: var(--box-background);
                 border-radius: var(--border-radius);
+                padding: 10px;
                 &.hidden {
                     opacity: 0;
+                }
+                #tab_selector {
+                    width: 100%;
+                    height: 45%;
+                    border-bottom: 1px solid var(--box-background);
+                    padding: 10px;
+                }
+                #keyboard {
+                    width: 100%;
+                    height: 55%;
+                    padding: 10px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    .key {
+                        // display: flexbox;
+                        flex: 1 0 calc(33% - 5px);
+                        height: 80px;
+                        text-align: center;
+                        cursor: pointer;
+                        padding: 25px;
+                        font-size: 20pt;
+                        background: var(--box-color-low-low);
+                        border-radius: var(--border-radius);
+                        color: var(--background-dark);
+                        margin-bottom: 5px;
+                        &.hl {
+                            background: var(
+                                --keyboard-highlight-color
+                            ) !important;
+                            &:hover {
+                                background: var(
+                                    --keyboard-highlight-color-2
+                                ) !important;
+                                color: var(--background);
+                            }
+                        }
+                        &:not(:last-child) {
+                            margin-right: 5px;
+                        }
+                        &:hover {
+                            background: var(--box-color-half-low);
+                            color: var(--background);
+                        }
+                    }
                 }
             }
         }
@@ -364,6 +409,19 @@ body[dark] #cashier {
         #input {
             #manual {
                 background-color: var(--box-background-light);
+                #tab_selector {
+                    border-bottom-color: var(--box-background-light);
+                }
+                #keyboard {
+                    .key {
+                        background: var(--box-color-low-low-light);
+                        color: var(--background);
+                        &:hover {
+                            background: var(--box-color-half-low-light);
+                            color: var(--background);
+                        }
+                    }
+                }
             }
         }
     }

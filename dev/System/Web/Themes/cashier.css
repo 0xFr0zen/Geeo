@@ -289,9 +289,49 @@
   height: 100%;
   background-color: var(--box-background);
   border-radius: var(--border-radius);
+  padding: 10px;
 }
 #cashier #cashiermain #input #manual.hidden {
   opacity: 0;
+}
+#cashier #cashiermain #input #manual #tab_selector {
+  width: 100%;
+  height: 45%;
+  border-bottom: 1px solid var(--box-background);
+  padding: 10px;
+}
+#cashier #cashiermain #input #manual #keyboard {
+  width: 100%;
+  height: 55%;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+#cashier #cashiermain #input #manual #keyboard .key {
+  flex: 1 0 calc(33% - 5px);
+  height: 80px;
+  text-align: center;
+  cursor: pointer;
+  padding: 25px;
+  font-size: 20pt;
+  background: var(--box-color-low-low);
+  border-radius: var(--border-radius);
+  color: var(--background-dark);
+  margin-bottom: 5px;
+}
+#cashier #cashiermain #input #manual #keyboard .key.hl {
+  background: var(--keyboard-highlight-color) !important;
+}
+#cashier #cashiermain #input #manual #keyboard .key.hl:hover {
+  background: var(--keyboard-highlight-color-2) !important;
+  color: var(--background);
+}
+#cashier #cashiermain #input #manual #keyboard .key:not(:last-child) {
+  margin-right: 5px;
+}
+#cashier #cashiermain #input #manual #keyboard .key:hover {
+  background: var(--box-color-half-low);
+  color: var(--background);
 }
 .noselect {
   -webkit-touch-callout: none;
@@ -358,6 +398,17 @@ body[dark] #cashier #cashiermain #list #total #total_inner #currency #selector {
 }
 body[dark] #cashier #cashiermain #input #manual {
   background-color: var(--box-background-light);
+}
+body[dark] #cashier #cashiermain #input #manual #tab_selector {
+  border-bottom-color: var(--box-background-light);
+}
+body[dark] #cashier #cashiermain #input #manual #keyboard .key {
+  background: var(--box-color-low-low-light);
+  color: var(--background);
+}
+body[dark] #cashier #cashiermain #input #manual #keyboard .key:hover {
+  background: var(--box-color-half-low-light);
+  color: var(--background);
 }
 @media (max-width: 1200px) {
   #waiting {
