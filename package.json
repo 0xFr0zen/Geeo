@@ -31,7 +31,7 @@
         "express-subdomain": "^1.0.5",
         "getmac": "^5.1.0",
         "inquirer": "^7.1.0",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "jsonwebtoken": "^8.5.1",
         "mysql": "^2.18.1",
         "path": "^0.12.7",
