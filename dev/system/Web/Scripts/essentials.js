@@ -5,6 +5,8 @@ $(document).ready(async function () {
         $('#main').toggleClass('hidden');
         setTimeout(() => {
             $('#loader').css('display', 'none');
+            $('#content').toggleClass('hidden');
+            $('#content .mod').css('opacity', '1');
         }, 500);
     });
 });

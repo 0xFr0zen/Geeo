@@ -108,6 +108,9 @@
   --transition-duration-long: 1s;
   --highlight-color: #0984e3;
   --info-color: #0984e3;
+  --action-button-background: #0984e3;
+  --action-button-background-hover: #0876ca;
+  --action-button-background-active: #0767b2;
   --button-submit-bgcolor: #0984e3;
   --button-submit-bgcolor-hover: #0876ca;
   --button-submit-bgcolor-active: #0767b2;
@@ -199,6 +202,204 @@
   /* Internet Explorer/Edge */
   user-select: none;
 }
+#login {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: #eee;
+}
+#login #form {
+  position: fixed;
+  width: 300px;
+  height: 400px;
+  margin-left: -150px;
+  left: 50%;
+  top: 100px;
+}
+#login #form #logo {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 180px;
+  background-color: transparent;
+}
+#login #form #logo #logoimage {
+  position: relative;
+  width: 78px;
+  height: 80px;
+  background: rgba(0, 136, 255, 0.5);
+  top: 50%;
+  left: 50%;
+  margin-top: -40px;
+  margin-left: -40px;
+  border-radius: 100%;
+}
+#login #form #other {
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
+  padding: 10px 5px;
+  color: #0c4c83;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+#login #form #other * {
+  text-decoration: none;
+  color: #0c4c83;
+}
+#login #form #other #left {
+  float: left;
+  width: 50%;
+  height: auto;
+}
+#login #form #other #left a {
+  float: left;
+}
+#login #form #other #right {
+  float: right;
+  width: 50%;
+  height: auto;
+}
+#login #form #other #right a {
+  float: right;
+}
+body[dark] {
+  background: var(--background-dark);
+  color: white;
+}
+body[dark] #main #main_inner #menu {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+}
+body[dark] #main #main_inner #menu #inventories .circle,
+body[dark] #main #main_inner #menu #optionals .circle {
+  color: var(--info-color);
+  background: var(--accent-color-light);
+  border: var(--accent-color-light);
+}
+body[dark] #main #main_inner #menu #inventories .circle:hover,
+body[dark] #main #main_inner #menu #optionals .circle:hover {
+  background: var(--accent-color-hover-light);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+body[dark] #main #main_inner #menu #inventories .circle:active,
+body[dark] #main #main_inner #menu #optionals .circle:active {
+  background: var(--accent-color-active-light);
+}
+body[dark] #main #main_inner #menu #inventories .circle.highlighted,
+body[dark] #main #main_inner #menu #optionals .circle.highlighted {
+  background: var(--highlight-color);
+  color: white;
+}
+body[dark] #main #main_inner #menu #inventories .circle.highlighted2,
+body[dark] #main #main_inner #menu #optionals .circle.highlighted2 {
+  background: #ffd000;
+  color: white;
+}
+body[dark] #main #main_inner #menu #inventories #loading #loadercircle,
+body[dark] #main #main_inner #menu #optionals #loading #loadercircle {
+  border-top-color: var(--loader-border-top-color-light);
+  border-bottom-color: var(--loader-border-bottom-color-light);
+  border-left-color: var(--loader-border-left-color-light);
+  border-right-color: var(--loader-border-right-color-light);
+}
+body[dark] #main #main_inner #menu #bottom #mode {
+  color: var(--mode-color-light);
+}
+body[dark] #main #main_inner #menu #bottom #mode:hover {
+  background: var(--accent-color-light);
+}
+body[dark] #main #main_inner #menu #bottom #switcher {
+  border: 2px solid var(--switcher-color);
+}
+body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] {
+  border-color: rgba(0, 136, 255);
+}
+body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] #state {
+  background: rgba(0, 136, 255);
+}
+body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] {
+  border-color: #00ffaa;
+}
+body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] #state {
+  background: rgba(0, 255, 170);
+}
+body[dark] #main #main_inner #menu #bottom #switcher #state {
+  width: 100%;
+  height: 100%;
+  background: #777;
+  border-radius: 100%;
+}
+body[dark] #main #main_inner #menu #bottom #user {
+  border-color: var(--box-color-low-light);
+}
+body[dark] #main #main_inner #menu #bottom #user #profile {
+  color: var(--background-light);
+}
+body[dark] #main #main_inner #menu #bottom #user #profile:hover {
+  background: var(--box-color-low-low-light);
+}
+body[dark] #main #main_inner #content {
+  background: var(--box-color-low-low-light);
+  transition: all 0.3s var(--transition-timing);
+}
+body[dark] #main #main_inner #content:not(.hidden) {
+  background: transparent;
+}
+body[dark] #main #main_inner #content.hidden {
+  background: var(--box-color-low-low-light);
+}
+body[dark] #main #main_inner #content #inventory .item {
+  background-color: var(--item-background-color-light);
+  border: var(--accent-color-light);
+}
+body[dark] #loader {
+  background: var(--background-dark);
+}
+body[dark] #loader #loaderbox * {
+  stroke: var(--scanner-color);
+}
+body[dark] .geeoselector:active {
+  color: var(--background-dark);
+}
+body[dark] #prompter {
+  background-color: var(--box-color-half-low-light);
+}
+body[dark] #prompter #selector {
+  background-color: var(--background-dark);
+}
+body[dark] #prompter #selector #title {
+  color: var(--background);
+}
+body[dark] #prompter #selector #chooser .option {
+  color: var(--background);
+}
+body[dark] #prompter #selector #chooser .option:hover {
+  background-color: var(--box-color-low-low-light);
+}
+body[dark] #prompter #selector #chooser .option:active {
+  background-color: var(--box-color-half-low-light);
+}
+body[dark] #prompter #selector #chooser .option.cancel {
+  background-color: var(--button-cancel-bgcolor-light);
+}
+body[dark] #prompter #selector #chooser .option.cancel:hover {
+  background-color: var(--button-cancel-bgcolor-hover-light);
+}
+body[dark] #prompter #selector #chooser .option.cancel:active {
+  background-color: var(--button-cancel-bgcolor-active-light);
+  color: var(--button-cancel-color-active);
+}
 * {
   box-sizing: border-box;
   font-family: var(--font-family);
@@ -224,6 +425,7 @@ body #main #main_inner {
   position: relative;
   width: 100%;
   height: 100%;
+  padding: 20px;
 }
 body #main #main_inner #menu {
   -webkit-touch-callout: none;
@@ -242,13 +444,13 @@ body #main #main_inner #menu {
   width: 70px;
   height: 100%;
   background: transparent;
+  padding-right: 10px;
 }
 body #main #main_inner #menu #inventories,
 body #main #main_inner #menu #optionals {
   float: left;
   width: 50px;
   height: auto;
-  padding: 10px;
 }
 body #main #main_inner #menu #inventories .circle,
 body #main #main_inner #menu #optionals .circle {
@@ -295,6 +497,7 @@ body #main #main_inner #menu #optionals #loading {
   padding: 10px;
   box-shadow: none;
   border: none;
+  cursor: default;
 }
 body #main #main_inner #menu #inventories #loading #loadercircle,
 body #main #main_inner #menu #optionals #loading #loadercircle {
@@ -320,18 +523,27 @@ body #main #main_inner #menu #optionals #add {
   text-align: center;
   cursor: pointer;
 }
+body #main #main_inner #menu #inventories #add[hidden],
+body #main #main_inner #menu #optionals #add[hidden] {
+  display: none;
+}
 body #main #main_inner #menu #bottom {
   position: absolute;
-  bottom: 20px;
-  width: 100%;
-  padding: 10px;
+  bottom: 0px;
+  width: auto;
+  display: flex;
+  columns: 1;
+  justify-content: center;
+  flex-direction: column;
+}
+body #main #main_inner #menu #bottom .settingoption {
+  align-self: center;
 }
 body #main #main_inner #menu #bottom .settingoption:not(:last-child) {
   margin-bottom: 10px;
 }
 body #main #main_inner #menu #bottom #mode {
   position: relative;
-  float: right;
   width: 50px;
   height: 50px;
   background: transparent;
@@ -345,47 +557,8 @@ body #main #main_inner #menu #bottom #mode {
 body #main #main_inner #menu #bottom #mode:hover {
   background: var(--box-color-low-low);
 }
-body #main #main_inner #menu #bottom #switcher {
-  position: relative;
-  float: right;
-  width: 50px;
-  height: 50px;
-  background: transparent;
-  border: 2px solid var(--switcher-color);
-  border-radius: 40px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 2px;
-  transition: all 0.1s ease-in-out;
-}
-body #main #main_inner #menu #bottom #switcher[state='overview'] {
-  border-color: rgba(0, 136, 255);
-}
-body #main #main_inner #menu #bottom #switcher[state='overview'] #state {
-  background: rgba(0, 136, 255);
-}
-body #main #main_inner #menu #bottom #switcher[state='cashier'] {
-  border-color: #00ffaa;
-}
-body #main #main_inner #menu #bottom #switcher[state='cashier'] #state {
-  background: rgba(0, 255, 170);
-}
-body #main #main_inner #menu #bottom #switcher:hover {
-  border-width: 4px;
-  padding: 2px;
-}
-body #main #main_inner #menu #bottom #switcher:active {
-  padding: 4px;
-}
-body #main #main_inner #menu #bottom #switcher #state {
-  width: 100%;
-  height: 100%;
-  background: #777;
-  border-radius: 100%;
-}
 body #main #main_inner #menu #bottom #user {
   position: relative;
-  float: right;
   width: 50px;
   height: 50px;
   background: transparent;
@@ -410,14 +583,23 @@ body #main #main_inner #content {
   float: left;
   width: calc(100% - 70px);
   height: 100%;
-  background-color: transparent;
+  border-radius: var(--border-radius);
+  background: var(--box-color-low-low);
+  transition: all 0.3s var(--transition-timing);
+}
+body #main #main_inner #content:not(.hidden) {
+  background: transparent;
+}
+body #main #main_inner #content.hidden {
+  background: var(--box-color-low-low);
 }
 body #main #main_inner #content .mod {
+  opacity: 0;
+  transition: all 0.3s var(--transition-timing);
   position: relative;
   float: left;
   width: 100%;
   height: 100%;
-  background-color: transparent;
 }
 body #main #main_inner #content #inventory {
   float: left;
@@ -491,17 +673,18 @@ body .geeoselector {
   width: max-content;
   max-width: 100px;
   text-align: center;
-  background: var(--box-color);
+  background: var(--action-button-background);
   height: 40px;
   padding: 10px 15px;
   border-radius: var(--border-radius);
+  color: var(--background);
   cursor: pointer;
 }
 body .geeoselector:hover {
-  background-color: var(--box-color-half-low);
+  background-color: var(--action-button-background-hover);
 }
 body .geeoselector:active {
-  background-color: var(--box-color-low);
+  background-color: var(--action-button-background-active);
   color: var(--background);
 }
 body .geeoselector::before {
@@ -592,139 +775,6 @@ body #prompter #selector #chooser .option.cancel:active {
   background-color: var(--button-cancel-bgcolor-active);
   color: var(--button-cancel-color-active);
 }
-body[dark] {
-  background: var(--background-dark);
-  color: white;
-}
-body[dark] #main #main_inner #menu {
-  -webkit-touch-callout: none;
-  /* iOS Safari */
-  -webkit-user-select: none;
-  /* Safari */
-  -khtml-user-select: none;
-  /* Konqueror HTML */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* Internet Explorer/Edge */
-  user-select: none;
-}
-body[dark] #main #main_inner #menu #inventories .circle,
-body[dark] #main #main_inner #menu #optionals .circle {
-  color: var(--info-color);
-  background: var(--accent-color-light);
-  border: var(--accent-color-light);
-}
-body[dark] #main #main_inner #menu #inventories .circle:hover,
-body[dark] #main #main_inner #menu #optionals .circle:hover {
-  background: var(--accent-color-hover-light);
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-}
-body[dark] #main #main_inner #menu #inventories .circle:active,
-body[dark] #main #main_inner #menu #optionals .circle:active {
-  background: var(--accent-color-active-light);
-}
-body[dark] #main #main_inner #menu #inventories .circle.highlighted,
-body[dark] #main #main_inner #menu #optionals .circle.highlighted {
-  background: var(--highlight-color);
-  color: white;
-}
-body[dark] #main #main_inner #menu #inventories .circle.highlighted2,
-body[dark] #main #main_inner #menu #optionals .circle.highlighted2 {
-  background: #ffd000;
-  color: white;
-}
-body[dark] #main #main_inner #menu #inventories #loading #loadercircle,
-body[dark] #main #main_inner #menu #optionals #loading #loadercircle {
-  border-top-color: var(--loader-border-top-color-light);
-  border-bottom-color: var(--loader-border-bottom-color-light);
-  border-left-color: var(--loader-border-left-color-light);
-  border-right-color: var(--loader-border-right-color-light);
-}
-body[dark] #main #main_inner #menu #bottom #mode {
-  color: var(--mode-color-light);
-}
-body[dark] #main #main_inner #menu #bottom #mode:hover {
-  background: var(--accent-color-light);
-}
-body[dark] #main #main_inner #menu #bottom #switcher {
-  border: 2px solid var(--switcher-color);
-}
-body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] {
-  border-color: rgba(0, 136, 255);
-}
-body[dark] #main #main_inner #menu #bottom #switcher[state='overview'] #state {
-  background: rgba(0, 136, 255);
-}
-body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] {
-  border-color: #00ffaa;
-}
-body[dark] #main #main_inner #menu #bottom #switcher[state='cashier'] #state {
-  background: rgba(0, 255, 170);
-}
-body[dark] #main #main_inner #menu #bottom #switcher #state {
-  width: 100%;
-  height: 100%;
-  background: #777;
-  border-radius: 100%;
-}
-body[dark] #main #main_inner #menu #bottom #user {
-  border-color: var(--box-color-low-light);
-}
-body[dark] #main #main_inner #menu #bottom #user #profile {
-  color: var(--background-light);
-}
-body[dark] #main #main_inner #menu #bottom #user #profile:hover {
-  background: var(--box-color-low-low-light);
-}
-body[dark] #main #main_inner #content #inventory .item {
-  background-color: var(--item-background-color-light);
-  border: var(--accent-color-light);
-}
-body[dark] #loader {
-  background: var(--background-dark);
-}
-body[dark] #loader #loaderbox * {
-  stroke: var(--scanner-color);
-}
-body[dark] .geeoselector {
-  background-color: var(--box-color-light);
-}
-body[dark] .geeoselector:hover {
-  background-color: var(--box-color-half-low-light);
-}
-body[dark] .geeoselector:active {
-  background-color: var(--box-color-low-light);
-  color: var(--background-dark);
-}
-body[dark] #prompter {
-  background-color: var(--box-color-half-low-light);
-}
-body[dark] #prompter #selector {
-  background-color: var(--background-dark);
-}
-body[dark] #prompter #selector #title {
-  color: var(--background);
-}
-body[dark] #prompter #selector #chooser .option {
-  color: var(--background);
-}
-body[dark] #prompter #selector #chooser .option:hover {
-  background-color: var(--box-color-low-low-light);
-}
-body[dark] #prompter #selector #chooser .option:active {
-  background-color: var(--box-color-half-low-light);
-}
-body[dark] #prompter #selector #chooser .option.cancel {
-  background-color: var(--button-cancel-bgcolor-light);
-}
-body[dark] #prompter #selector #chooser .option.cancel:hover {
-  background-color: var(--button-cancel-bgcolor-hover-light);
-}
-body[dark] #prompter #selector #chooser .option.cancel:active {
-  background-color: var(--button-cancel-bgcolor-active-light);
-  color: var(--button-cancel-color-active);
-}
 input {
   width: 100%;
   height: 50px;
@@ -778,87 +828,25 @@ button.accept {
 button.cancel {
   background: #aa2b1a;
 }
-#login {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  background: #eee;
-}
-#login #form {
-  position: fixed;
-  width: 300px;
-  height: 400px;
-  margin-left: -150px;
-  left: 50%;
-  top: 100px;
-}
-#login #form #logo {
-  position: relative;
-  float: left;
-  width: 100%;
-  height: 180px;
-  background-color: transparent;
-}
-#login #form #logo #logoimage {
-  position: relative;
-  width: 78px;
-  height: 80px;
-  background: rgba(0, 136, 255, 0.5);
-  top: 50%;
-  left: 50%;
-  margin-top: -40px;
-  margin-left: -40px;
-  border-radius: 100%;
-}
-#login #form #other {
-  margin-top: 10px;
-  width: 100%;
-  height: auto;
-  padding: 10px 5px;
-  color: #0c4c83;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-#login #form #other * {
-  text-decoration: none;
-  color: #0c4c83;
-}
-#login #form #other #left {
-  float: left;
-  width: 50%;
-  height: auto;
-}
-#login #form #other #left a {
-  float: left;
-}
-#login #form #other #right {
-  float: right;
-  width: 50%;
-  height: auto;
-}
-#login #form #other #right a {
-  float: right;
-}
 @keyframes loader {
   0% {
-    transform: rotate(0deg) scale(1);
+    transform: rotate(0deg);
   }
   50% {
-    transform: rotate(180deg) scale(1.5);
+    transform: rotate(180deg);
   }
   100% {
-    transform: rotate(360deg) scale(3);
+    transform: rotate(360deg);
   }
 }
 @-webkit-keyframes loader {
   0% {
-    -webkit-transform: rotate(0deg) scale(1);
+    -webkit-transform: rotate(0deg);
   }
   50% {
-    -webkit-transform: rotate(180deg) scale(1.5);
+    -webkit-transform: rotate(180deg);
   }
   100% {
-    -webkit-transform: rotate(360deg) scale(3);
+    -webkit-transform: rotate(360deg);
   }
 }

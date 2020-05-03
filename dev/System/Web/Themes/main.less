@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,900&display=swap&subset=latin-ext');
 @import url('./font');
 @import url('./variables');
+@import url('./login');
+@import url('./modes/dark');
 * {
     box-sizing: border-box;
     font-family: var(--font-family);
@@ -26,6 +28,7 @@ body {
             position: relative;
             width: 100%;
             height: 100%;
+            padding: 20px;
             #menu {
                 .disablehighlighting();
                 position: relative;
@@ -33,12 +36,14 @@ body {
                 width: 70px;
                 height: 100%;
                 background: transparent;
+                padding-right: 10px;
+
                 #inventories,
                 #optionals {
                     float: left;
                     width: 50px;
                     height: auto;
-                    padding: 10px;
+                    // padding: 10px;
                     .circle {
                         vertical-align: middle;
                         display: table-cell;
@@ -79,6 +84,7 @@ body {
                         padding: 10px;
                         box-shadow: none;
                         border: none;
+                        cursor: default;
                         #loadercircle {
                             width: 30px;
                             height: 30px;
@@ -107,15 +113,21 @@ body {
                         width: 50px !important;
                         text-align: center;
                         cursor: pointer;
+                        &[hidden] {
+                            display: none;
+                        }
                     }
                 }
                 #bottom {
                     position: absolute;
-                    bottom: 20px;
-                    width: 100%;
-                    padding: 10px;
-
+                    bottom: 0px;
+                    width: auto;
+                    display: flex;
+                    columns: 1;
+                    justify-content: center;
+                    flex-direction: column;
                     .settingoption {
+                        align-self: center;
                         &:not(:last-child) {
                             margin-bottom: 10px;
                         }
@@ -123,7 +135,6 @@ body {
 
                     #mode {
                         position: relative;
-                        float: right;
                         width: 50px;
                         height: 50px;
                         background: transparent;
@@ -137,48 +148,9 @@ body {
                             background: var(--box-color-low-low);
                         }
                     }
-                    #switcher {
-                        position: relative;
-                        float: right;
-                        width: 50px;
-                        height: 50px;
-                        background: transparent;
-                        border: 2px solid var(--switcher-color);
-                        border-radius: 40px;
-                        overflow: hidden;
-                        cursor: pointer;
-                        padding: 2px;
-                        transition: all 0.1s ease-in-out;
-
-                        &[state='overview'] {
-                            border-color: rgba(0, 136, 255);
-                            #state {
-                                background: rgba(0, 136, 255);
-                            }
-                        }
-                        &[state='cashier'] {
-                            border-color: rgb(0, 255, 170);
-                            #state {
-                                background: rgba(0, 255, 170);
-                            }
-                        }
-                        &:hover {
-                            border-width: 4px;
-                            padding: 2px;
-                        }
-                        &:active {
-                            padding: 4px;
-                        }
-                        #state {
-                            width: 100%;
-                            height: 100%;
-                            background: #777;
-                            border-radius: 100%;
-                        }
-                    }
                     #user {
                         position: relative;
-                        float: right;
+                        // float: right;
                         width: 50px;
                         height: 50px;
                         background: transparent;
@@ -205,13 +177,24 @@ body {
                 float: left;
                 width: ~'calc(100% - 70px)';
                 height: 100%;
-                background-color: transparent;
+                border-radius: var(--border-radius);
+                background: var(--box-color-low-low);
+                transition: all 0.3s var(--transition-timing);
+                &:not(.hidden) {
+                    background: transparent;
+                }
+                &.hidden {
+                    background: var(--box-color-low-low);
+                }
+
                 .mod {
+                    opacity: 0;
+                    transition: all 0.3s var(--transition-timing);
+
                     position: relative;
                     float: left;
                     width: 100%;
                     height: 100%;
-                    background-color: transparent;
                 }
                 #inventory {
                     float: left;
@@ -290,16 +273,17 @@ body {
         width: max-content;
         max-width: 100px;
         text-align: center;
-        background: var(--box-color);
+        background: var(--action-button-background);
         height: 40px;
         padding: 10px 15px;
         border-radius: var(--border-radius);
+        color: var(--background);
         cursor: pointer;
         &:hover {
-            background-color: var(--box-color-half-low);
+            background-color: var(--action-button-background-hover);
         }
         &:active {
-            background-color: var(--box-color-low);
+            background-color: var(--action-button-background-active);
             color: var(--background);
         }
         &::before {
@@ -396,158 +380,6 @@ body {
             }
         }
     }
-    &[dark] {
-        background: var(--background-dark);
-        color: white;
-        #main {
-            #main_inner {
-                #menu {
-                    .disablehighlighting();
-                    #inventories,
-                    #optionals {
-                        .circle {
-                            color: var(--info-color);
-                            background: var(--accent-color-light);
-                            border: var(--accent-color-light);
-                            &:hover {
-                                background: var(--accent-color-hover-light);
-                                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-                            }
-                            &:active {
-                                background: var(--accent-color-active-light);
-                            }
-
-                            &.highlighted {
-                                background: var(--highlight-color);
-                                color: white;
-                            }
-                            &.highlighted2 {
-                                background: rgb(255, 208, 0);
-                                color: white;
-                            }
-                        }
-                        #loading {
-                            #loadercircle {
-                                border-top-color: var(
-                                    --loader-border-top-color-light
-                                );
-                                border-bottom-color: var(
-                                    --loader-border-bottom-color-light
-                                );
-                                border-left-color: var(
-                                    --loader-border-left-color-light
-                                );
-                                border-right-color: var(
-                                    --loader-border-right-color-light
-                                );
-                            }
-                        }
-                    }
-                    #bottom {
-                        #mode {
-                            &:hover {
-                                background: var(--accent-color-light);
-                            }
-                            color: var(--mode-color-light);
-                        }
-                        #switcher {
-                            border: 2px solid var(--switcher-color);
-
-                            &[state='overview'] {
-                                border-color: rgba(0, 136, 255);
-                                #state {
-                                    background: rgba(0, 136, 255);
-                                }
-                            }
-                            &[state='cashier'] {
-                                border-color: rgb(0, 255, 170);
-                                #state {
-                                    background: rgba(0, 255, 170);
-                                }
-                            }
-                            #state {
-                                width: 100%;
-                                height: 100%;
-                                background: #777;
-                                border-radius: 100%;
-                            }
-                        }
-                        #user {
-                            border-color: var(--box-color-low-light);
-                            #profile {
-                                color: var(--background-light);
-                                &:hover {
-                                    background: var(--box-color-low-low-light);
-                                }
-                            }
-                        }
-                    }
-                }
-                #content {
-                    #inventory {
-                        .item {
-                            background-color: var(
-                                --item-background-color-light
-                            );
-                            border: var(--accent-color-light);
-                        }
-                    }
-                }
-            }
-        }
-        #loader {
-            background: var(--background-dark);
-            #loaderbox * {
-                stroke: var(--scanner-color);
-            }
-        }
-        .geeoselector {
-            background-color: var(--box-color-light);
-            &:hover {
-                background-color: var(--box-color-half-low-light);
-            }
-            &:active {
-                background-color: var(--box-color-low-light);
-                color: var(--background-dark);
-            }
-        }
-        #prompter {
-            background-color: var(--box-color-half-low-light);
-            #selector {
-                background-color: var(--background-dark);
-                #title {
-                    color: var(--background);
-                }
-                #chooser {
-                    .option {
-                        color: var(--background);
-                        &:hover {
-                            background-color: var(--box-color-low-low-light);
-                        }
-                        &:active {
-                            background-color: var(--box-color-half-low-light);
-                        }
-                        &.cancel {
-                            background-color: var(
-                                --button-cancel-bgcolor-light
-                            );
-                            &:hover {
-                                background-color: var(
-                                    --button-cancel-bgcolor-hover-light
-                                );
-                            }
-                            &:active {
-                                background-color: var(
-                                    --button-cancel-bgcolor-active-light
-                                );
-                                color: var(--button-cancel-color-active);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 input {
@@ -603,87 +435,26 @@ button {
         background: rgb(170, 43, 26);
     }
 }
-#login {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    background: #eee;
-    #form {
-        position: fixed;
-        width: 300px;
-        height: 400px;
-        margin-left: -150px;
-        left: 50%;
-        top: 100px;
-        #logo {
-            position: relative;
-            float: left;
-            width: 100%;
-            height: 180px;
-            background-color: transparent;
-            #logoimage {
-                position: relative;
-                width: 78px;
-                height: 80px;
-                background: rgba(0, 136, 255, 0.5);
-                top: 50%;
-                left: 50%;
-                margin-top: -40px;
-                margin-left: -40px;
-                border-radius: 100%;
-            }
-        }
-        #other {
-            margin-top: 10px;
-            width: 100%;
-            height: auto;
-            padding: 10px 5px;
-            color: rgb(12, 76, 131);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            * {
-                text-decoration: none;
-                color: rgb(12, 76, 131);
-            }
-            #left {
-                float: left;
-                width: 50%;
-                height: auto;
-                a {
-                    float: left;
-                }
-            }
-            #right {
-                float: right;
-                width: 50%;
-                height: auto;
-                a {
-                    float: right;
-                }
-            }
-        }
-    }
-}
+
 @keyframes loader {
     0% {
-        transform: rotate(0deg) scale(1);
+        transform: rotate(0deg);
     }
     50% {
-        transform: rotate(180deg) scale(1.5);
+        transform: rotate(180deg);
     }
     100% {
-        transform: rotate(360deg) scale(3);
+        transform: rotate(360deg);
     }
 }
 @-webkit-keyframes loader {
     0% {
-        -webkit-transform: rotate(0deg) scale(1);
+        -webkit-transform: rotate(0deg);
     }
     50% {
-        -webkit-transform: rotate(180deg) scale(1.5);
+        -webkit-transform: rotate(180deg);
     }
     100% {
-        -webkit-transform: rotate(360deg) scale(3);
+        -webkit-transform: rotate(360deg);
     }
 }
