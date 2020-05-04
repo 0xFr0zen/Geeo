@@ -13,12 +13,12 @@ namespace resourceprotecter {
                 let p = path.join(
                     process.cwd(),
                     './dev/System/Web/',
-                    req.params.type
+                    req.params.type.toUpperCase()
                 );
                 let p2 = path.join(
                     process.cwd(),
                     './dev/System/Web/',
-                    req.params.type,
+                    req.params.type.toUpperCase(),
                     req.params.file
                 );
                 let rel = path.relative(p, p2);

@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 namespace themes {
     export function get() {
-        let error = false;
+        let error = '';
         return [
             '/themes(/:file(*))?',
             (req: express.Request, res: express.Response) => {
@@ -29,13 +29,15 @@ namespace themes {
                                     .toString()
                                     .concat('\n');
                             } else {
-                                error = true;
+                                error = `${p} doesnt exist`;
                             }
                         });
-                        if (!error) {
+                        if (error.length === 0) {
                             return res.send(preparedString);
                         } else {
-                            return res.status(404).send('File not found.');
+                            return res
+                                .status(404)
+                                .send(`File not found. Error: ${error}`);
                         }
                     } else {
                         let preparedString = '';

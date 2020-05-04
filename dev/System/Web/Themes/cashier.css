@@ -54,6 +54,7 @@
   width: 100%;
   height: calc(40%);
   padding: 7px;
+  padding-right: 20px;
   text-align: right;
   opacity: 0.4;
 }
@@ -61,7 +62,7 @@
   float: left;
   width: 100%;
   height: calc(60%);
-  padding: 7px 15px;
+  padding: 7px 20px;
 }
 #cashier #cashiermain #list #history #current .item {
   width: 100%;
@@ -241,7 +242,7 @@
   float: right;
   width: 50%;
   height: 100%;
-  padding: 35px 10px;
+  padding: 35px 20px;
   line-height: 205x;
   font-size: 25px;
   text-align: right;
@@ -310,8 +311,10 @@
   font-size: 20pt;
   background: var(--box-color-low-low);
   border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-5);
   color: var(--background-dark);
   margin-bottom: 5px;
+  border: 1px solid var(--box-color-low-low);
 }
 #cashier #cashiermain #input #manual #keyboard .key.hl {
   background: var(--keyboard-highlight-color) !important;
@@ -420,6 +423,7 @@ body[dark] #cashier #cashiermain #input #manual #tab_selector #tab_inner {
 }
 body[dark] #cashier #cashiermain #input #manual #keyboard .key {
   background: var(--box-color-low-low-light);
+  border: 1px solid var(--box-color-low-low-light);
   color: var(--background);
 }
 body[dark] #cashier #cashiermain #input #manual #keyboard .key:hover {

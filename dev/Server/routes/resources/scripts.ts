@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 namespace scripts {
     export function get() {
-        let error = false;
+        let error = '';
         return [
             '/scripts(/:file(*))?',
             (req: express.Request, res: express.Response) => {
@@ -14,7 +14,7 @@ namespace scripts {
                     if (filen.split(',').length >= 1) {
                         let preparedString = '';
                         let files = filen.split(',');
-                        files.forEach(f => {
+                        files.forEach((f) => {
                             if (!f.endsWith('.js')) {
                                 f = f.concat('.js');
                             }
@@ -30,19 +30,21 @@ namespace scripts {
                                     .toString()
                                     .concat('\n');
                             } else {
-                                error = true;
+                                error = `${p} doesnt exist`;
                             }
                         });
-                        if (!error) {
+                        if (error.length === 0) {
                             return res.send(preparedString);
                         } else {
-                            return res.status(404).send('File not found.');
+                            return res
+                                .status(404)
+                                .send(`File not found. Error: ${error}`);
                         }
                     } else {
                         let preparedString = '';
                         if (filen.length == 0) {
                             let files2 = ['essentials.js', 'main.js'];
-                            files2.forEach(f2 => {
+                            files2.forEach((f2) => {
                                 let p2 = path.join(
                                     process.cwd(),
                                     './dev/System/Web/Scripts/',
@@ -63,7 +65,7 @@ namespace scripts {
                 } else {
                     let preparedString = '';
                     let files2 = ['essentials.js', 'main.js'];
-                    files2.forEach(f2 => {
+                    files2.forEach((f2) => {
                         let p2 = path.join(
                             process.cwd(),
                             './dev/System/Web/Scripts/',
