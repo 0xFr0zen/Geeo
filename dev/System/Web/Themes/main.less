@@ -182,9 +182,11 @@ body {
                 transition: all 0.3s var(--transition-timing);
                 &:not(.hidden) {
                     background: transparent;
+                    opacity: 1;
                 }
                 &.hidden {
                     background: var(--box-color-low-low);
+                    opacity: 0.5;
                 }
 
                 .mod {
@@ -277,8 +279,8 @@ body {
         height: 40px;
         padding: 10px 15px;
         border-radius: var(--border-radius);
+        font-size: 14pt;
         color: var(--background);
-        cursor: pointer;
         &:hover {
             background-color: var(--action-button-background-hover);
         }
@@ -288,10 +290,6 @@ body {
         }
         &::before {
             content: attr(data-value);
-        }
-        .geeoselectoroption {
-            width: auto;
-            display: none;
         }
     }
 
@@ -381,7 +379,75 @@ body {
         }
     }
 }
+.toggler {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background: var(--action-button-background);
+    box-shadow: var(--box-shadow);
+    margin-left: -17.5px;
+    margin-top: -17.5px;
+    padding: 6px;
+    color: var(--action-button-text-color-light);
 
+    &.transparent {
+        box-shadow: none;
+        background: transparent;
+    }
+    &:hover {
+        background: var(--action-button-background-hover);
+        box-shadow: var(--box-shadow);
+        color: var(--action-button-text-color);
+    }
+    &:active {
+        background: var(--action-button-background-active);
+        box-shadow: var(--box-shadow);
+    }
+    &.bottom {
+        left: 50%;
+    }
+    &.top {
+        top: 0%;
+        left: 50%;
+    }
+    &.left {
+        top: 50%;
+        left: 0%;
+    }
+    &.right {
+        top: 50%;
+        right: 0%;
+    }
+}
+
+button {
+    background: #eee;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    &.accept {
+        background: rgb(11, 158, 55);
+    }
+    &.cancel {
+        background: rgb(170, 43, 26);
+    }
+    &.action {
+        background: var(--action-button-background);
+        box-shadow: var(--box-shadow);
+        color: var(--action-button-text-color);
+        &:hover {
+            background: var(--action-button-background-hover);
+            color: var(--action-button-text-color-hover);
+        }
+        &:active {
+            background: var(--action-button-background-active);
+            color: var(--action-button-text-color-active);
+        }
+    }
+}
 input {
     width: 100%;
     height: 50px;
@@ -419,20 +485,6 @@ input {
         &:active {
             background: var(--button-submit-bgcolor-active);
         }
-    }
-}
-button {
-    background: #eee;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    &.accept {
-        background: rgb(11, 158, 55);
-    }
-    &.cancel {
-        background: rgb(170, 43, 26);
     }
 }
 

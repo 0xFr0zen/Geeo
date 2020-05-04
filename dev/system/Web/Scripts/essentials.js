@@ -7,7 +7,7 @@ $(document).ready(async function () {
             $('#loader').css('display', 'none');
             $('#content').toggleClass('hidden');
             $('#content .mod').css('opacity', '1');
-        }, 500);
+        }, 1000);
     });
 });
 function PageLoader() {
@@ -50,6 +50,18 @@ function prepareResourceLoader() {
                     });
                 },
             };
+            $('.toggler').on('click', function () {
+                let modes = $(this).data('modes').split(',');
+                let currentMode = $(this).data('value');
+                let index = modes.indexOf(currentMode);
+                let newMode = modes[(index + 1) % modes.length];
+                $(this).data('value', newMode);
+                $(this).text(newMode);
+                modes.forEach((mode) => {
+                    $(this).parent().removeClass(mode);
+                });
+                $(this).parent().addClass(newMode);
+            });
         })
     );
     window.ResourceLoaderPackage.push(

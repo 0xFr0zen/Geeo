@@ -111,6 +111,12 @@
   --action-button-background: #0984e3;
   --action-button-background-hover: #0876ca;
   --action-button-background-active: #0767b2;
+  --action-button-text-color: white;
+  --action-button-text-color-hover: white;
+  --action-button-text-color-active: white;
+  --action-button-text-color-light: var(--background-dark);
+  --action-button-text-color-hover-light: var(--background-dark);
+  --action-button-text-color-active-light: var(--background-dark);
   --button-submit-bgcolor: #0984e3;
   --button-submit-bgcolor-hover: #0876ca;
   --button-submit-bgcolor-active: #0767b2;
@@ -400,6 +406,9 @@ body[dark] #prompter #selector #chooser .option.cancel:active {
   background-color: var(--button-cancel-bgcolor-active-light);
   color: var(--button-cancel-color-active);
 }
+body[dark] .toggler {
+  color: var(--action-button-text-color);
+}
 * {
   box-sizing: border-box;
   font-family: var(--font-family);
@@ -589,9 +598,11 @@ body #main #main_inner #content {
 }
 body #main #main_inner #content:not(.hidden) {
   background: transparent;
+  opacity: 1;
 }
 body #main #main_inner #content.hidden {
   background: var(--box-color-low-low);
+  opacity: 0.5;
 }
 body #main #main_inner #content .mod {
   opacity: 0;
@@ -677,8 +688,8 @@ body .geeoselector {
   height: 40px;
   padding: 10px 15px;
   border-radius: var(--border-radius);
+  font-size: 14pt;
   color: var(--background);
-  cursor: pointer;
 }
 body .geeoselector:hover {
   background-color: var(--action-button-background-hover);
@@ -689,10 +700,6 @@ body .geeoselector:active {
 }
 body .geeoselector::before {
   content: attr(data-value);
-}
-body .geeoselector .geeoselectoroption {
-  width: auto;
-  display: none;
 }
 body #prompter {
   z-index: 999;
@@ -775,6 +782,73 @@ body #prompter #selector #chooser .option.cancel:active {
   background-color: var(--button-cancel-bgcolor-active);
   color: var(--button-cancel-color-active);
 }
+.toggler {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background: var(--action-button-background);
+  box-shadow: var(--box-shadow);
+  margin-left: -17.5px;
+  margin-top: -17.5px;
+  padding: 6px;
+  color: var(--action-button-text-color-light);
+}
+.toggler.transparent {
+  box-shadow: none;
+  background: transparent;
+}
+.toggler:hover {
+  background: var(--action-button-background-hover);
+  box-shadow: var(--box-shadow);
+  color: var(--action-button-text-color);
+}
+.toggler:active {
+  background: var(--action-button-background-active);
+  box-shadow: var(--box-shadow);
+}
+.toggler.bottom {
+  left: 50%;
+}
+.toggler.top {
+  top: 0%;
+  left: 50%;
+}
+.toggler.left {
+  top: 50%;
+  left: 0%;
+}
+.toggler.right {
+  top: 50%;
+  right: 0%;
+}
+button {
+  background: #eee;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+button.accept {
+  background: #0b9e37;
+}
+button.cancel {
+  background: #aa2b1a;
+}
+button.action {
+  background: var(--action-button-background);
+  box-shadow: var(--box-shadow);
+  color: var(--action-button-text-color);
+}
+button.action:hover {
+  background: var(--action-button-background-hover);
+  color: var(--action-button-text-color-hover);
+}
+button.action:active {
+  background: var(--action-button-background-active);
+  color: var(--action-button-text-color-active);
+}
 input {
   width: 100%;
   height: 50px;
@@ -813,20 +887,6 @@ input#signup:hover {
 }
 input#signup:active {
   background: var(--button-submit-bgcolor-active);
-}
-button {
-  background: #eee;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-}
-button.accept {
-  background: #0b9e37;
-}
-button.cancel {
-  background: #aa2b1a;
 }
 @keyframes loader {
   0% {

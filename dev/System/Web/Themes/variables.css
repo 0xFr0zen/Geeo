@@ -53,6 +53,12 @@
   --action-button-background: #0984e3;
   --action-button-background-hover: #0876ca;
   --action-button-background-active: #0767b2;
+  --action-button-text-color: white;
+  --action-button-text-color-hover: white;
+  --action-button-text-color-active: white;
+  --action-button-text-color-light: var(--background-dark);
+  --action-button-text-color-hover-light: var(--background-dark);
+  --action-button-text-color-active-light: var(--background-dark);
   --button-submit-bgcolor: #0984e3;
   --button-submit-bgcolor-hover: #0876ca;
   --button-submit-bgcolor-active: #0767b2;

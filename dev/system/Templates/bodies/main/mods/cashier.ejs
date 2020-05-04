@@ -2,7 +2,7 @@
 <script defer src="scripts/cashier.js"></script>
 <div id="cashier">
     <div id="cashiermain">
-        <div id="list">
+        <div class="cashiermod" id="list">
             <div id="history">
                 <div id="past">
                     <div class="item">0.00</div>
@@ -19,27 +19,33 @@
             <div id="total">
                 <div id="total_inner">
                     <div id="currency">
-                        <div
-                            class="geeoselector"
+                        <button
+                            class="action geeoselector"
                             title="Choose a currency"
                             data-value="CHF"
                             data-options="CHF,EUR,USD"
-                        ></div>
+                        ></button>
                     </div>
                     <div id="price">0.00</div>
                 </div>
             </div>
         </div>
-
-        <div id="scanner">
-            <div id="waiting" class="material-icons">
-                track_changes
-            </div>
-        </div>
-        <div id="input">
+        <div class="spacer"></div>
+        <div class="cashiermod" id="input">
             <div id="manual">
-                <div id="tab_selector"></div>
-                <div id="keyboard" class="hidden">
+                <div id="tab_selector" class="expand_more">
+                    <div id="tab_inner"></div>
+                    <button
+                        id="tabexpander"
+                        class="toggler transparent bottom material-icons"
+                        data-modes="expand_more,expand_less"
+                        data-value="expand_more"
+                    >
+                        expand_more
+                    </button>
+                </div>
+
+                <div id="keyboard" class="">
                     <div class="key">7</div>
                     <div class="key">8</div>
                     <div class="key">9</div>
@@ -53,6 +59,10 @@
                     <div class="key">0</div>
                     <div class="key hl material-icons">add</div>
                 </div>
+                <button class="action" id="next">
+                    <span class="text">Next</span>
+                    <span class="material-icons">navigate_next</span>
+                </button>
             </div>
         </div>
     </div>

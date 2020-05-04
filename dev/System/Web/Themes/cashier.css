@@ -9,6 +9,12 @@
   height: 100%;
   overflow: hidden;
   border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+#cashier #cashiermain .spacer {
+  width: 40px;
 }
 #cashier #cashiermain #list {
   -webkit-touch-callout: none;
@@ -248,34 +254,6 @@
   content: 'Total: 0.00';
   position: relative;
 }
-#cashier #cashiermain #scanner {
-  float: left;
-  width: calc(100% - 1200px);
-  height: 100%;
-  -webkit-touch-callout: none;
-  /* iOS Safari */
-  -webkit-user-select: none;
-  /* Safari */
-  -khtml-user-select: none;
-  /* Konqueror HTML */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* Internet Explorer/Edge */
-  user-select: none;
-}
-#cashier #cashiermain #scanner #waiting {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 60px;
-  height: 60px;
-  transform: translateX(-50%) translateY(-50%);
-  color: var(--scanner-color);
-  opacity: 0.4;
-  font-size: 60px;
-  cursor: default;
-}
 #cashier #cashiermain #input {
   float: left;
   width: max-content;
@@ -287,23 +265,38 @@
   height: 100%;
   background-color: var(--box-background);
   border-radius: var(--border-radius);
-  padding: 10px;
+  padding: 20px;
 }
 #cashier #cashiermain #input #manual.hidden {
   opacity: 0;
 }
 #cashier #cashiermain #input #manual #tab_selector {
   width: 100%;
+  height: auto;
+  transition: all 0.3s var(--transition-timing);
+}
+#cashier #cashiermain #input #manual #tab_selector.expand_less {
   height: 45%;
-  border-bottom: 1px solid var(--box-background);
-  padding: 10px;
+}
+#cashier #cashiermain #input #manual #tab_selector.expand_more {
+  height: 10%;
+}
+#cashier #cashiermain #input #manual #tab_selector #tab_inner {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
+  background: var(--box-background);
+}
+#cashier #cashiermain #input #manual #tab_selector #tabexpander {
+  margin-top: 7.5px;
+  padding-left: 6px;
 }
 #cashier #cashiermain #input #manual #keyboard {
   width: 100%;
-  height: 55%;
-  padding: 10px;
+  height: max-content;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 50px;
 }
 #cashier #cashiermain #input #manual #keyboard.hidden {
   display: none;
@@ -330,9 +323,28 @@
 #cashier #cashiermain #input #manual #keyboard .key:not(:last-child) {
   margin-right: 5px;
 }
+#cashier #cashiermain #input #manual #keyboard .key:nth-child(3n) {
+  margin-right: 0px;
+}
 #cashier #cashiermain #input #manual #keyboard .key:hover {
   background: var(--box-color-half-low);
   color: var(--background);
+}
+#cashier #cashiermain #input #manual #next {
+  float: right;
+  padding: 10px 20px;
+  padding-left: 10px;
+  border-radius: 40px;
+  margin-top: 5px;
+}
+#cashier #cashiermain #input #manual #next .text {
+  font-size: 16pt;
+  float: right;
+  text-align: center;
+}
+#cashier #cashiermain #input #manual #next .material-icons {
+  float: right;
+  font-size: 20pt;
 }
 .noselect {
   -webkit-touch-callout: none;
@@ -402,6 +414,9 @@ body[dark] #cashier #cashiermain #input #manual {
 }
 body[dark] #cashier #cashiermain #input #manual #tab_selector {
   border-bottom-color: var(--box-background-light);
+}
+body[dark] #cashier #cashiermain #input #manual #tab_selector #tab_inner {
+  background: var(--box-background-light);
 }
 body[dark] #cashier #cashiermain #input #manual #keyboard .key {
   background: var(--box-color-low-low-light);
