@@ -19,8 +19,6 @@ $(document).ready(() => {
         });
         $('#cashiermain').hide();
 
-        
-
         return true;
     }).then((e) => {
         setTimeout(() => {

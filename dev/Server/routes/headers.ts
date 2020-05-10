@@ -5,13 +5,13 @@ namespace headers {
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
-    ){
+    ) {
         res.setHeader(
             'Cache-Control',
-            'private, no-cache, no-store, must-revalidate'
+            'must-revalidate'
         );
-        res.setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
-        res.setHeader('Pragma', 'no-cache');
+        // res.setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
+        // res.setHeader('Pragma', 'no-cache');
         next();
     }
 }
