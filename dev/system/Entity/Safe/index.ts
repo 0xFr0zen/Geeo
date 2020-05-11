@@ -27,17 +27,20 @@ export default class Safe extends Entity {
     constructor(
         username: string,
         name: string,
-        storagetype: StorageType = StorageType.Inventory
+        storagetype: StorageType = StorageType.Inventory,
+        demo: boolean = false
     ) {
         super('safe', name);
-        let p = path.join(
-            process.cwd(),
-            './saved/entities/users/',
-            Buffer.from(username, 'utf8').toString('hex'),
-            'safes'
-        );
-        if (!fs.existsSync(p)) {
-            fs.mkdirSync(p);
+        if (!demo) {
+            let p = path.join(
+                process.cwd(),
+                './saved/entities/users/',
+                Buffer.from(username, 'utf8').toString('hex'),
+                'safes'
+            );
+            if (!fs.existsSync(p)) {
+                fs.mkdirSync(p);
+            }
         }
         this.addParameter('user', username);
         this.addParameter('storagetype', storagetype);
@@ -48,9 +51,9 @@ export default class Safe extends Entity {
             let results: Safe[] = [];
             let db = new Database();
             db.query(Queries.STORAGE.LOAD, [username])
-                .then(res => {
+                .then((res) => {
                     if (res.length > 0) {
-                        res.forEach(r => {
+                        res.forEach((r) => {
                             let safe = new Safe(
                                 r.getRow('username'),
                                 r.getRow('safename'),
@@ -62,7 +65,7 @@ export default class Safe extends Entity {
                         reject('No Safe found.');
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     return reject(e);
                 });
             return resolve(results);
@@ -74,7 +77,7 @@ export default class Safe extends Entity {
 
         let keys = Object.keys(json);
 
-        keys.forEach(key => {
+        keys.forEach((key) => {
             safe.addParameter(key, json[key]);
         });
         safe.updateParameter('last_loaded', Date.now());
@@ -84,6 +87,7 @@ export default class Safe extends Entity {
         return new Promise((resolve, reject) => {
             let result = null;
             let s = this.getParameter('space');
+            // console.log('s', s);
             let gm: GeeoMap<string, any> = new GeeoMap<string, any>();
             gm.fromJSON(JSON.parse(JSON.stringify(s)));
             result = gm;
@@ -137,18 +141,18 @@ export namespace Safes {
         return new Promise((resolve, reject) => {
             let db = new Database();
             db.query(Queries.STORAGE.LOAD, [username])
-                .then(resultlist => {
+                .then((resultlist) => {
                     let list: string[] = [];
                     for (const key in resultlist) {
                         let s = resultlist[key];
                         list.push(s.getRow('safeid'));
                     }
                     console.log('done did it yaaay', list);
-                    
+
                     resolve(list);
                     db.close();
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log('safes error', e);
 
                     reject(e);

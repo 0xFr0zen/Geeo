@@ -50,11 +50,7 @@ export default class Entity extends EventEmitter {
         });
     }
     protected getParameter(name: string): any {
-        return async () => {
-            if (await this.hasParameter(name)) {
-                return this.properties[name];
-            }
-        };
+        return this.hasParameter(name) ? this.properties[name] : null;
     }
     public getName(): string {
         return this.properties.name;

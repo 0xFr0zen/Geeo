@@ -57,6 +57,7 @@
         "compile": "tsc",
         "test": "ts-node ./tests/index.ts",
         "test-inv": "ts-node ./tests/inventory.ts",
+        "test-inv2": "ts-node ./tests/inventory_test.ts",
         "test-geeopage": "ts-node ./tests/geeoweb.ts"
     },
     "keywords": [],

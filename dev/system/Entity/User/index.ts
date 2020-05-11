@@ -6,6 +6,7 @@ import Node from '../../../Crypt';
 import Database from '../../../Database/index';
 import Queries from '../../../Database/Queries';
 import Options from '../../../Database/Options';
+import Inventories from '../../Inventory';
 export interface UserFilter extends EntityFilter {
     username?: string;
     email?: string;
@@ -28,7 +29,13 @@ export class User extends Entity {
     constructor(name: string) {
         super('user', name);
         this.addParameter('loggedin', false);
-        this.loadSafes();
+        if (User.exists(name)) {
+            this.loadSafes();
+        }
+    }
+    public static async exists(name: string): Promise<boolean> {
+        let u = await User.findFirst({ username: name });
+        return u != null;
     }
     public static find(filter: UserFilter): Promise<User[]> {
         return new Promise(async (resolve, reject) => {
@@ -36,7 +43,7 @@ export class User extends Entity {
             let filtered_values = await db.format(filter);
 
             db.query(Queries.USER.FIND_MULTIPLE.replace('?', filtered_values))
-                .then(results => {
+                .then((results) => {
                     if (results.length == 0) {
                         return reject(`No User via '${filter}' found`);
                     }
@@ -57,7 +64,7 @@ export class User extends Entity {
                     }
                     return resolve(ret);
                 })
-                .catch(e => {
+                .catch((e) => {
                     if (e === 'No result') {
                         return reject(`No User via '${filter}' found`);
                     } else {
@@ -97,6 +104,9 @@ export class User extends Entity {
             ]);
             console.log(results);
         });
+    }
+    public static demo(): User {
+        return new DemoUser();
     }
     public setLoggedIn(s: boolean) {
         this.addParameter('loggedin', s);
@@ -142,16 +152,22 @@ export class User extends Entity {
         });
     }
     public getSafe(name: string): Promise<Safe> {
-        let result = null;
-        if (this.hasParameter('storages')) {
-            let storages = this.getParameter('storages');
-            if (storages != null && Array.isArray(storages)) {
-                result = storages.filter((storage: Safe) => {
-                    return storage.getName() === name;
-                })[0];
+        return new Promise((resolve, reject) => {
+            let result: Safe = null;
+            if (this.hasParameter('storages')) {
+                let storages = this.getParameter('storages');
+                if (storages != null && Array.isArray(storages)) {
+                    result = storages.filter((storage: Safe) => {
+                        return storage.getName() === name;
+                    })[0];
+                }
             }
-        }
-        return result;
+            if (result != null) {
+                return resolve(result);
+            } else {
+                return reject('No Safe found');
+            }
+        });
     }
     public removeSafe(name: string): boolean {
         let result = false;
@@ -180,6 +196,21 @@ export class User extends Entity {
             }
         }
         return result;
+    }
+}
+class DemoUser extends User {
+    public demoSafe: Safe = null;
+    constructor() {
+        super('demouser');
+        this.demoSafe = new Safe(
+            this.getName(),
+            'demosafe',
+            StorageType.Inventory,
+            true
+        );
+        this.demoSafe.addItem('demoitem', 'demoItem_test_1');
+        this.demoSafe.addItem('demoitem', 'demoItem_test_2');
+        this.demoSafe.addItem('demoitem', 'demoItem_test_3');
     }
 }
 export default User;
