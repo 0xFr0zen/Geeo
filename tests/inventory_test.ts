@@ -1,9 +1,8 @@
 import User from '../dev/system/Entity/User/index';
-import Safe from '../dev/System/Entity/Safe';
 let demouser: User = User.demo();
-
+//DB resends queries. check that pls tests/log.txt
 demouser
-    .getSafe('demosafe')
+    .getSafes()
     .then((safe) => {
         console.log(safe);
     })

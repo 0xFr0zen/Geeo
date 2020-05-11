@@ -31,11 +31,20 @@ export class User extends Entity {
         this.addParameter('loggedin', false);
         if (User.exists(name)) {
             this.loadSafes();
+        } else {
+            console.log('User doesnt exists');
         }
     }
-    public static async exists(name: string): Promise<boolean> {
-        let u = await User.findFirst({ username: name });
-        return u != null;
+    public static exists(name: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            User.findFirst({ username: name })
+                .then((b) => {
+                    return b != null;
+                })
+                .catch((e) => {
+                    return reject(e);
+                });
+        });
     }
     public static find(filter: UserFilter): Promise<User[]> {
         return new Promise(async (resolve, reject) => {
@@ -75,8 +84,14 @@ export class User extends Entity {
     }
     public static findFirst(filter: UserFilter): Promise<User> {
         return new Promise(async (resolve, reject) => {
-            let users = await User.find(filter);
-            return resolve(users[0]);
+            User.find(filter)
+                .then((users) => {
+                    return resolve(users[0]);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    return reject(e);
+                });
         });
     }
     /**
@@ -130,16 +145,21 @@ export class User extends Entity {
      * @private
      * @memberof User
      */
-    public addSafe(storage: string): Promise<boolean> {
+    public addSafe(storage: string | Safe): Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             if (this.hasParameter('storages')) {
                 let storages = this.getParameter('storages');
                 if (storages != null && Array.isArray(storages)) {
-                    let s = new Safe(
-                        this.getName(),
-                        storage,
-                        StorageType.Inventory
-                    );
+                    let s = null;
+                    if (typeof storage == 'string') {
+                        s = new Safe(
+                            this.getName(),
+                            storage,
+                            StorageType.Inventory
+                        );
+                    } else {
+                        s = storage;
+                    }
                     if (storages.length < storages.push(s)) {
                         return resolve(
                             this.updateParameter('storages', storages)
@@ -148,6 +168,8 @@ export class User extends Entity {
                         return resolve(false);
                     }
                 }
+            } else {
+                return reject({ message: 'No Storage available' });
             }
         });
     }
@@ -165,7 +187,7 @@ export class User extends Entity {
             if (result != null) {
                 return resolve(result);
             } else {
-                return reject('No Safe found');
+                return reject({ message: 'No Safe found', name: name });
             }
         });
     }
@@ -187,30 +209,26 @@ export class User extends Entity {
         }
         return result;
     }
-    public getSafes(): Safe[] {
-        let result: Safe[] = [];
-        if (this.hasParameter('storages')) {
-            let storages = this.getParameter('storages');
-            if (storages != null && Array.isArray(storages)) {
-                result = storages;
+    public getSafes(): Promise<Safe[]> {
+        return new Promise((resolve, reject) => {
+            let result: Safe[] = [];
+            if (this.hasParameter('storages')) {
+                let storages = this.getParameter('storages');
+                if (storages != null && Array.isArray(storages)) {
+                    result = storages;
+                }
             }
-        }
-        return result;
+            return resolve(result);
+        });
     }
 }
 class DemoUser extends User {
     public demoSafe: Safe = null;
     constructor() {
         super('demouser');
-        this.demoSafe = new Safe(
-            this.getName(),
-            'demosafe',
-            StorageType.Inventory,
-            true
-        );
-        this.demoSafe.addItem('demoitem', 'demoItem_test_1');
-        this.demoSafe.addItem('demoitem', 'demoItem_test_2');
-        this.demoSafe.addItem('demoitem', 'demoItem_test_3');
+        this.addSafe('demosafe')
+            .then((b) => console.log(b))
+            .catch((e) => console.error);
     }
 }
 export default User;

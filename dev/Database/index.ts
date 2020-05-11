@@ -30,6 +30,8 @@ export default class Database {
     private static avgLatency: number = 0;
     private static db_life: number;
     private static dboptions: mysql.PoolConfig = {};
+    static lastQuerySyntax: string = '';
+    static lastQueryValues: any[] = null;
     constructor() {
         if (Database.cluster == null) {
             Database.deltas = [];
@@ -67,12 +69,12 @@ export default class Database {
             }
             Database.db_life = Date.now();
 
-            Database.cluster.on('error', error => {
+            Database.cluster.on('error', (error) => {
                 console.log('db-error', error);
                 console.error(error);
             });
 
-            Database.cluster.on('offline', e => {
+            Database.cluster.on('offline', (e) => {
                 // console.log('Removed node: ', e);
             });
             console.log(
@@ -95,13 +97,13 @@ export default class Database {
             Database.deltas.push(delta);
 
             let sumDeltas = 0;
-            Database.deltas.forEach(d => {
+            Database.deltas.forEach((d) => {
                 sumDeltas += d;
             });
 
             Database.avgLatency = Math.floor(sumDeltas / Database.idleCounter);
             if (delta >= this.avgLatency) {
-                Database.cluster.end(err => {
+                Database.cluster.end((err) => {
                     if (err) {
                         console.log(err.message);
                     }
@@ -145,10 +147,19 @@ export default class Database {
     }
     public query(syntax: string, values?: any[]): Promise<Result[]> {
         return new Promise((resolve, reject) => {
-            Database.lastQueried = Date.now();
+            if (
+                Database.lastQuerySyntax === syntax &&
+                Database.lastQueryValues === values
+            ) {
+                return reject({
+                    message: `same command, waiting...`,
+                });
+            }
+            Database.lastQuerySyntax = syntax;
+            Database.lastQueryValues = values;
             // console.log('Last Queried: ' + new Date().toISOString());
             let retresults: Result[] = [];
-            this.isValidQuery(syntax, values).then(goodQuery => {
+            this.isValidQuery(syntax, values).then((goodQuery) => {
                 if (goodQuery) {
                     if (Database.cluster != null) {
                         try {
@@ -163,17 +174,17 @@ export default class Database {
                                                 console.log('row', row);
 
                                                 this.parseResult(row)
-                                                    .then(resultBox => {
+                                                    .then((resultBox) => {
                                                         retresults.push(
                                                             resultBox
                                                         );
                                                         resolve(retresults);
                                                     })
-                                                    .catch(e => {
+                                                    .catch((e) => {
                                                         reject(e);
                                                     });
                                             })
-                                            .on('packet', packet => {
+                                            .on('packet', (packet) => {
                                                 console.log('packet', packet);
                                             })
                                             .on(
@@ -190,13 +201,13 @@ export default class Database {
                                             .query(syntax)
                                             .on('result', (row, index) => {
                                                 this.parseResult(row)
-                                                    .then(resultBox => {
+                                                    .then((resultBox) => {
                                                         retresults.push(
                                                             resultBox
                                                         );
                                                         resolve(retresults);
                                                     })
-                                                    .catch(e => {
+                                                    .catch((e) => {
                                                         reject(e);
                                                     });
                                             })
@@ -216,7 +227,7 @@ export default class Database {
                                         throw myerror;
                                     }
                                 })
-                                .catch(e => {
+                                .catch((e) => {
                                     throw e;
                                 });
                         } catch (e) {
