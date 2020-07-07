@@ -1,9 +1,9 @@
-import System from './dev/system/index';
+import System from './dev/system';
 
 
 (async ()=>{
     let system:System = new System();
-    system.on('ready', () => {
-        console.log("System running.");
+    system.on('ready', (port) => {
+        console.log(`Running Web-Server + Auth-Server on port: ${port}`);
     });
 })();

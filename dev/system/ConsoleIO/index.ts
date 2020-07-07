@@ -1,11 +1,11 @@
 import System from '../';
-import * as readline from 'readline';
-import * as inquirer from 'inquirer';
+import readline from 'readline';
+import inquirer from 'inquirer';
 import Command from './commands/';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { EventEmitter } from 'events';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import equal = require('deep-equal');
 interface ICommandRegExp {
     start: number;
@@ -17,11 +17,13 @@ export interface ICommand {
 }
 export default class ConsoleIO extends EventEmitter {
     private updateInterval: NodeJS.Timeout;
-    
+
     private static interface: readline.Interface = null;
     private commands: ICommand[] = ConsoleIO.loadCommands();
     private static system: System = null;
-    private static DEFAULT_UPDATE_INTERVAL = (parseInt(dotenv.config().parsed.COMMAND_UPDATE_INTERVAL) * 1000) || 60000;
+    private static DEFAULT_UPDATE_INTERVAL =
+        parseInt(dotenv.config().parsed.COMMAND_UPDATE_INTERVAL) * 1000 ||
+        60000;
     constructor(system: System) {
         super();
         ConsoleIO.system = system;
@@ -57,7 +59,7 @@ export default class ConsoleIO extends EventEmitter {
     }
     private updater() {
         let nC = ConsoleIO.loadCommands();
-        
+
         if (!equal(this.commands, nC)) {
             this.commands = nC;
             console.log('updated command.');
@@ -65,21 +67,18 @@ export default class ConsoleIO extends EventEmitter {
     }
     private static loadCommands(): ICommand[] {
         let result: ICommand[] = [];
-        let x = JSON.parse(
-            fs
-                .readFileSync(
-                    path.join(
-                        process.cwd(),
-                        './dev/system/ConsoleIO/commands/list.json'
-                    )
-                )
-                .toString()
+        let folder = path.join(
+            process.cwd(),
+            './dev/system/ConsoleIO/commands/'
         );
+        let x = fs.readdirSync(folder);
+        x = x.filter((f: string) => f.endsWith('.ts'));
         for (const key in x) {
             const element = x[key];
+            let el = require(path.join(folder, element));
             let c: ICommand = {
-                name: key,
-                regex: ConsoleIO.RegExpParser(element),
+                name: element,
+                regex: ConsoleIO.RegExpParser(new el.default().regex),
             };
             result.push(c);
         }
@@ -111,10 +110,10 @@ export default class ConsoleIO extends EventEmitter {
         if (parameters) {
             let params = parameters[0];
             let optional = parameters[1];
-            let com = require(`./commands/${command}/`);
+            let com = require(`./commands/${command}`);
             let comJS: Command<any> = new com.default();
             comJS.on('done', () => {
-                // console.log(`executed command '${command}'`);
+                console.log(`executed command '${command}'`);
             });
             comJS.run(params, optional).then(obj => {
                 // console.log(obj);

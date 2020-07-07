@@ -1,6 +1,34 @@
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v16/S6u8w4BMUTPHjxsAUi-v.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v16/S6uyw4BMUTPHjxAwWw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v16/S6u9w4BMUTPHh6UVSwaPHA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Lato Black'), local('Lato-Black'), url(https://fonts.gstatic.com/s/lato/v16/S6u9w4BMUTPHh50XSwaPHA.ttf) format('truetype');
+}
 * {
   box-sizing: border-box;
-  font-family: 'Fira Code', monospace;
+  font-family: 'Lato', sans-serif;
 }
 .disablehighlighting {
   -webkit-touch-callout: none;
@@ -174,25 +202,33 @@ body {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  background: black;
+  background: white;
 }
 #login #form {
   position: fixed;
   width: 300px;
-  height: 200px;
+  height: auto;
   margin-left: -150px;
-  margin-top: -100px;
+  margin-top: -115px;
   left: 50%;
   top: 50%;
 }
 #login #form input {
   width: 100%;
-  height: 40px;
-  padding: 10px;
-  border: none;
+  height: 50px;
+  padding: 5px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
-  font-size: 12pt;
   outline: none;
+  border-radius: 25px;
+  font-size: 13pt;
+}
+#login #form input:focus {
+  background: rgba(0, 153, 255, 0.05);
+  border: 1px solid rgba(0, 153, 255, 0.8);
+}
+#login #form input:last-child {
+  margin-bottom: 0px;
 }
 #login #form input[type='password'] {
   letter-spacing: 0.5em;
@@ -209,7 +245,7 @@ body {
   background: #66b8ff;
 }
 #login #form input#signup {
-  color: white;
+  color: #08f;
   background: transparent;
   border: 1px solid #005299;
   cursor: pointer;

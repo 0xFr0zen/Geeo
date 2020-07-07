@@ -12,9 +12,9 @@ import ConsoleIO from './ConsoleIO';
 
 export default class System extends Entity {
     private static device: Device = new Device();
-    private ADMIN: Identity = null;
-    private server: Server = null;
-    private consoleIO: ConsoleIO = null;
+    private ADMIN: Identity;
+    private server: Server;
+    private consoleIO: ConsoleIO;
     constructor(env: dotenv.DotenvParseOutput = dotenv.config().parsed) {
         super('system', env.SYSTEM_NAME);
         reset().then((folders)=>{
@@ -23,7 +23,6 @@ export default class System extends Entity {
             System.device.initialize();
             this.server = new Server(this);
             this.consoleIO = new ConsoleIO(this);
-            this.server.start();
         }).catch((e)=> {
             console.error(e);
         });
@@ -40,7 +39,7 @@ export default class System extends Entity {
      * @memberof Device
      */
     public createIdentity(name: string): Identity {
-        let i: Identity = null;
+        let i: Identity;
         // console.error(`Trying to create Identity '${name}'.`);
         if (!System.device.hasIdentity(name)) {
             let mac_hex = Buffer.from(

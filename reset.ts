@@ -1,6 +1,5 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as del from 'del';
+import path from 'path';
+import del from 'del';
 
 export async function reset(): Promise<string[]> {
     //reset

@@ -1,7 +1,0 @@
-{
-    "say": "say <text>",
-    "update": "update <any>",
-    "user": "user <text> <?any>",
-    "gui": "gui <text>",
-    "entities": "entities <any> <text>"
-}

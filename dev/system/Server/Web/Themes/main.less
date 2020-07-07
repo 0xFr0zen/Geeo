@@ -1,7 +1,7 @@
-//@import url('https://fonts.googleapis.com/css?family=Fira+Code:400,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,900&display=swap&subset=latin-ext');
 * {
     box-sizing: border-box;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Lato', sans-serif;
 }
 .disablehighlighting {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -166,23 +166,31 @@ body {
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background: black;
+    background: white;
     #form {
         position: fixed;
         width: 300px;
-        height: 200px;
+        height: auto;
         margin-left: -150px;
-        margin-top: -100px;
+        margin-top: -115px;
         left: 50%;
         top: 50%;
         input {
             width: 100%;
-            height: 40px;
-            padding: 10px;
-            border: none;
+            height: 50px;
+            padding: 5px 20px;
+            border: 1px solid rgba(0,0,0,0.2);
             margin-bottom: 10px;
-            font-size: 12pt;
             outline: none;
+            border-radius:25px;
+            font-size: 13pt;
+            &:focus {
+                background: rgba(0,153,255,0.05);
+                border: 1px solid rgba(0,153,255,0.8);
+            }
+            &:last-child {
+                margin-bottom: 0px;
+            }
             &[type='password'] {
                 letter-spacing: 0.5em;
             }
@@ -198,7 +206,7 @@ body {
                 }
             }
             &#signup {
-                color: white;
+                color: #08f;
                 background: transparent;
                 border: 1px solid darken(#08f, 20%);
                 cursor: pointer;

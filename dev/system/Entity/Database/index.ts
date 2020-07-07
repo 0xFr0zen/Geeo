@@ -2,103 +2,125 @@ import Entity from '..';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mysql from 'mysql';
-
-export default class Database extends Entity {
+import { EventEmitter } from 'events';
+interface IDatabase {
+    username: string;
+    password: string;
+}
+export default class Database {
+    
     public static readonly GeeoDatabaseRoot = path.join(
         process.cwd(),
         './config/db/'
     );
-    public static readonly GeeoCypherFile = path.join(
-        Database.GeeoDatabaseRoot,
-        './users.geeocypher'
-    );
     private static MYSQL_PORT: number = 3306;
-    private static connection: mysql.Connection = null;
-    constructor(options = { port: 3306, username: 'root', password: 'root' }) {
-        super('database', 'db');
-        this.addParameter('port', options.port | Database.MYSQL_PORT);
-        this.addParameter('pwd', options.password);
-        this.addParameter('username', options.username); //get from Randomized Database user.
+    private connection: mysql.Connection = null;
+    private port: number = Database.MYSQL_PORT;
+    private username: string = '';
+    private pwd: string = '';
+    private static connections: mysql.Connection[] = [];
+    constructor(
+        name:string, 
+        options: IDatabase = {username: 'root', password: '' }
+    ) {
+        // super();
+        this.port = Database.MYSQL_PORT!;
+        this.pwd = options.password;
+        this.username = options.username;
 
-        if (Database.connection == null) {
-            Database.connection = mysql.createConnection({
+        if (this.connection == null) {
+            let dboptions:mysql.ConnectionConfig = {
+                insecureAuth: false,
+                multipleStatements: true,
                 localAddress: '127.0.0.1',
-                connectTimeout: 60,
-                user: options.username,
-                password: options.username,
-                port: options.port | Database.MYSQL_PORT,
-                database: 'm104',
-            });
+                connectTimeout: 60000,
+                user: this.username,
+                password: this.pwd,
+                port: this.port,
+                database:name
+            };
+            this.connection = mysql.createConnection(dboptions);
 
-            Database.connection.connect(function(err) {
-                console.error(err);
+            this.connection.connect((err, ...argss) => {
+                if (err) {
+                    console.log(err, argss);
+                } else {
+                    Database.connections.push(this.connection);
+                }
             });
         }
     }
-    public query(string: string, values?: any[]): any {
-        let retresults = null;
-        if (Database.connection != null) {
+    public query(string: string, values?: any[]): Promise<any> {
+        
+        return new Promise((resolve, reject)=> {
+            let retresults:any[] = [];
+        if (this.connection != null) {
             if (values) {
-                Database.connection.query(string, values, function(
+                this.connection.query(string, values, async (
                     error,
                     results,
                     fields
-                ) {
-                    if (error) throw error;
-                    retresults = results;
+                ) => {
+                    if (error) reject(error);
+                    retresults = await this.parseResult(results);
+                    resolve(retresults);
                 });
             } else {
-                Database.connection.query(string, function(
+                this.connection.query(string, async (
                     error,
                     results,
                     fields
-                ) {
-                    if (error) throw error;
-                    retresults = results;
+                ) => {
+                    if (error) reject(error);
+                    retresults = await this.parseResult(results);
+                    
+                    resolve(retresults);
                 });
             }
+        }else {
+            reject(new Error("no connection"));
         }
-        return retresults;
+        });
     }
-    public static exit() {
-        if (Database.connection != null) {
-            Database.connection.end();
+    parseResult(results: any): PromiseLike<any[]> {
+        return new Promise((resolve, reject)=> {
+            if(results.length == 0){
+                reject([]);
+            }
+            let result:any[] = [];
+            for (const key in results) {
+                let colnames:string[] = Object.keys(results[key]);
+                
+                let s:any = {};
+                colnames.forEach(col => {
+                    s[col] = results[key][col];
+                });
+                result.push(s);
+            }
+            resolve(result);
+            
+        });
+    }
+    public close() {
+        if (this.connection != null) {
+            this.connection.end();
         }
+    }
+    public static exitAll() {
+        Database.connections.forEach((con:mysql.Connection)=>con.end());
     }
 }
-export class DatabaseUser extends Entity {
-    constructor(username: string) {
-        super('dbuser', username);
-        // let json = JSON.parse(
-        //     new Node(
-        //         fs
-        //             .readFileSync(
-        //                 path.join(
-        //                     Database.GeeoDatabaseRoot,
-        //                     './admin-user.geeocypher'
-        //                 )
-        //             )
-        //             .toString(),
-        //         true
-        //     ).toString()
-        // );
-        // this.addParameter('username', json['username']);
-        // this.addParameter('password', new Node(json['password']).toString());
+export class DatabaseUser {
+    private username: string = '';
+    private password: string = '';
+    constructor(username: string, password: string) {
+        this.username = username;
+        this.password = password;
     }
     public getUsername(): string {
-        let result = null;
-        let p = this.getParameter('username');
-        if (typeof p === 'string') {
-            result = p;
-        }
-        return result;
+        return this.username;
     }
     public getPassword(): string {
-        let result = null;
-        let p = this.getParameter('password');
-        if (typeof p === 'string') {
-            result = p;
-        }
-        return result;
+        return this.password;
     }
 }
