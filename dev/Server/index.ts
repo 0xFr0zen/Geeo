@@ -15,7 +15,7 @@ export default class Server {
         this.application.set(
             'views',
             path.join(
-                path.dirname(require.main.filename),
+                process.cwd(),
                 './dev/Server/Web/Templates/'
             )
         );

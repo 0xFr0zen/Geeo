@@ -1,5 +1,5 @@
 import * as express from 'express';
-import User from '../../User';
+import User from '../../Entity/User';
 import Identity from '../../Identity';
 function RLogin() {
     let router: express.Router = express.Router({ mergeParams: true });
@@ -8,7 +8,7 @@ function RLogin() {
     });
     router.post('/$', function(req:express.Request, res:express.Response){
         let queries = req.query;
-        let user = User.from(Identity.of("oezguer"));
+        let user = User.from(Identity.of("admin"));
         user.setLoggedIn(true);
         if(user.save()){
             res.send("OK");

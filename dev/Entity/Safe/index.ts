@@ -30,52 +30,35 @@ export default class Safe extends Entity {
         standalone = false
     ) {
         super('safe', name);
+        let p = path.join(
+            process.cwd(),
+            './saved/entities/users/',
+            Buffer.from(username, 'utf8').toString('hex'),
+            'safes'
+        );
+        if (!fs.existsSync(p)) {
+            fs.mkdirSync(p);
+        }
+        this.addParameter(
+            'path',
+            path
+                .relative(path.dirname(require.main.filename), p)
+                .toString()
+                .replace(/\\/g, '/')
+        );
+        this.addParameter('user', username);
+        this.addParameter('storagetype', storagetype);
+        this.addParameter('space', new GeeoMap<string, any>());
         if(!standalone){
-            let p = path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
-                Buffer.from(username, 'utf8').toString('hex'),
-                'safes'
-            );
-            if (!fs.existsSync(p)) {
-                fs.mkdirSync(p);
-            }
-            this.addParameter(
-                'path',
-                path
-                    .relative(path.dirname(require.main.filename), p)
-                    .toString()
-                    .replace(/\\/g, '/')
-            );
-            this.addParameter('user', username);
-            this.addParameter('storagetype', storagetype);
-            this.addParameter('space', new GeeoMap<string, any>());
             this.save();
         }else {
-            let p = path.join(
-                path.dirname(require.main.filename),
-                '../saved/entities/users/',
-                Buffer.from(username, 'utf8').toString('hex'),
-                'safes'
-            );
-            if (!fs.existsSync(p)) {
-                fs.mkdirSync(p);
-            }
-            this.addParameter(
-                'path',
-                path
-                    .relative(path.dirname(require.main.filename), p)
-                    .toString()
-                    .replace(/\\/g, '/')
-            );
-            this.addParameter('user', username);
-            this.addParameter('storagetype', storagetype);
-            this.addParameter('space', new GeeoMap<string, any>());
         }
     }
     public static from(json: any): Safe {
+        console.log("SAFE JSON", json);
+        
         json = json.safe;
-        let safe: Safe = new Safe(json.user.name, json.name);
+        let safe: Safe = new Safe(json.user.name, json.name, StorageType.Inventory, true);
 
         let keys = Object.keys(json);
 
@@ -112,18 +95,20 @@ export default class Safe extends Entity {
             : null;
         return result;
     }
-    public save() {
-        let type = this.getType();
-        let safeFolder = path.join(
-            path.dirname(require.main.filename),
-            this.getPath()
-        );
-        let randFilename = Node.randomString(16);
-        let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
-        let text = JSON.stringify(this.compare(s));
-        let data: string = new Node(text).toString();
-        
-        let filepath = path.join(safeFolder, randFilename);
-        fs.writeFileSync(filepath, JSON.parse(data).data);
+    public getUsername():string {
+        return this.getParameter('user').toString()
     }
+    // public save() {
+    //     let safeFolder = path.join(
+    //         path.dirname(require.main.filename),
+    //         this.getPath()
+    //     );
+    //     let randFilename = Date.now().toString();
+    //     let s = new Safe(this.getParameter('user').toString(), 'standalone', StorageType.Inventory, true);
+    //     let text = JSON.stringify(this.compare(s));
+    //     let data: string = new Node(text, {privateKey:Identity.of(this.getUsername()).getPrivateKey()}).toString();
+        
+    //     let filepath = path.join(safeFolder, randFilename);
+    //     fs.writeFileSync(filepath, JSON.parse(data).data);
+    // }
 }

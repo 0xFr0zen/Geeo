@@ -2,14 +2,14 @@ import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import RUser from '../User/';
-import User from '../../User/';
+import User from '../../Entity/User';
 import Login from '../Login/';
 import Logout from '../Logout';
 import Identity from '../../Identity';
 function RIndex() {
     let router: express.Router = express.Router({mergeParams:true});
     router.use('/$', function(req: express.Request, res: express.Response) {
-        let user:User = User.from(Identity.of("oezguer"));
+        let user:User = User.from(Identity.of("admin"));
         if(!user.isLoggedIn()){
             res.redirect("/login");
             return;
@@ -26,7 +26,7 @@ function RIndex() {
         res: express.Response
     ) {
         let p = path.join(
-            path.dirname(require.main.filename),
+            process.cwd(),
             './dev/Server/Web/Themes/',
             req.params.file
         );
@@ -44,7 +44,7 @@ function RIndex() {
         res: express.Response
     ) {
         let p = path.join(
-            path.dirname(require.main.filename),
+            process.cwd(),
             './dev/Server/Web/Scripts/',
             req.params.file
         );
@@ -67,7 +67,7 @@ function RIndex() {
             let type = file[0];
             let fname = file[1];
             p = path.join(
-                path.dirname(require.main.filename),
+                process.cwd(),
                 './dev/Server/Web/Images/',
                 type,
                 fname
@@ -76,7 +76,7 @@ function RIndex() {
             let type = file[0];
             let fname = file[1];
             p = path.join(
-                path.dirname(require.main.filename),
+                process.cwd(),
                 './dev/Server/Web/Images/default/',
                 req.params.file
             );

@@ -1,64 +1,116 @@
 import Identity from '../Identity';
 import { GeeoMap } from '../GeeoMap';
 import getMAC from 'getmac';
-import User from '../User';
 import Node from '../Crypt';
 import * as fs from 'fs';
 import * as path from 'path';
-interface PK_IDENTITY {
+import Entity from '../Entity';
+export interface PK_IDENTITY {
     pk: Buffer;
     ident: Identity;
 }
-export default abstract class Device {
-    private static identities: GeeoMap<
+export default class Device extends Entity {
+    
+    private identities: GeeoMap<string, PK_IDENTITY> = new GeeoMap<
         string,
         PK_IDENTITY
-    > = Device.loadIdentities();
-    private static PUBLIC_KEY = Device.loadPublicKey();
-    private static MAC_ADRESS = getMAC();
-    private static MAC_ADRESS_HEX = Buffer.from(
-        Device.MAC_ADRESS.split(':').join(''),
-        'hex'
-    ).toString('hex');
+    >();
+    constructor() {
+        super(
+            'device',
+            Buffer.from(
+                getMAC()
+                    .split(':')
+                    .join(''),
+                'hex'
+            ).toString('hex')
+        );
+        if (!this.hasParameter('entity')) {
+            this.addParameter('entity', this);
+            this.addParameter(
+                'mac_hex',
+                Buffer.from(
+                    getMAC()
+                        .split(':')
+                        .join(''),
+                    'hex'
+                ).toString('hex')
+            );
+            this.addParameter('mac', getMAC());
+
+            this.save();
+        } else {
+            throw new Error('ONLY ONE DEVICE CAN BE STORED. (so far)');
+        }
+    }
 
     /**
      * Checks if Identity exists
      *
      * @static
      * @param {string} name
-     * @returns
+     * @returns {boolean} true/false if Identity exists
      * @memberof Device
      */
-    public static hasIdentity(name: string) {
-        return Device.identities.hasItem(name);
+    public hasIdentity(name: string): boolean {
+        return this.identities.hasItem(name);
     }
-    private static loadIdentities(): GeeoMap<string, PK_IDENTITY> {
+    public addIdentity(name: string, pk_i: PK_IDENTITY) {
+        this.identities = this.identities.addItem(name, pk_i);
+    }
+    public initialize(){
+        this.addParameter('public_key', this.loadPublicKey());
+        this.addParameter('private_key', this.getPrivateKey('admin'));
+    }
+    /**
+     *  loads saved Identies into memory
+     *
+     * @private
+     * @static
+     * @returns {GeeoMap<string, PK_IDENTITY>}
+     * @memberof Device
+     */
+    private loadIdentities(): GeeoMap<string, PK_IDENTITY> {
         let result = new GeeoMap<string, PK_IDENTITY>();
-        let rootUsers = path.join(
-            path.dirname(require.main.filename),
-            '../saved/entities/users/'
-        );
-        let f = fs.readdirSync(rootUsers);
-        f.filter((v: string, index: number) => {
-            return fs.statSync(path.join(rootUsers, v)).isDirectory();
-        });
-        f.forEach(value => {
-            let name = Buffer.from(value, 'hex').toString('utf8');
-            let user_path = path.join(rootUsers, value, 'user');
-            let user_pk = fs.readFileSync(user_path).toString();
-            result = result.addItem(name, {
-                ident: Identity.of(name),
-                pk: Buffer.from(user_pk, 'hex'),
+        let rootUsers = path.join(process.cwd(), './saved/entities/users/');
+        if (fs.existsSync(rootUsers)) {
+            let f = fs.readdirSync(rootUsers);
+            f.filter((v: string, index: number) => {
+                return fs.statSync(path.join(rootUsers, v)).isDirectory();
             });
-        });
+            f.forEach(value => {
+                let name = Buffer.from(value, 'hex').toString('utf8');
+                let user_path = path.join(rootUsers, value, 'user');
+                let user_pk = fs.readFileSync(user_path).toString();
+                result = result.addItem(name, {
+                    ident: Identity.of(name),
+                    pk: Buffer.from(user_pk, 'hex'),
+                });
+            });
+        }
 
         return result;
     }
-    private static loadPublicKey(): Buffer {
+
+    /**
+     * loadsPublicKey of curent device
+     *
+     * @private
+     * @static
+     * @returns {Buffer}
+     * @memberof Device
+     */
+    private loadPublicKey(): Buffer {
         let s = Node.randomString(16);
+        let MAC_ADRESS_HEX = Buffer.from(
+            getMAC()
+                .split(':')
+                .join(''),
+            'hex'
+        ).toString('hex');
         let path2 = path.join(
-            path.dirname(require.main.filename),
-            '../saved/device/k'
+            process.cwd(),
+            `./saved/device/${MAC_ADRESS_HEX}/k`
         );
         if (fs.existsSync(path2)) {
             let sstring = fs.readFileSync(path2).toString();
@@ -73,8 +125,8 @@ export default abstract class Device {
         let b = Buffer.from(s, 'utf8');
         return b;
     }
-    public static getPublicKey(): Buffer {
-        return Device.PUBLIC_KEY;
+    public getPublicKey(): Buffer {
+        return Buffer.from(this.getParameter('public_key').toString(), 'hex');
     }
     /**
      *
@@ -84,40 +136,12 @@ export default abstract class Device {
      * @returns
      * @memberof Device
      */
-    public static getIdentity(name: string): Identity {
-        return Device.hasIdentity(name)
-            ? Device.identities.getItem(name).ident
+    public getIdentity(name: string): Identity {
+        return this.hasIdentity(name)
+            ? this.identities.getItem(name).ident
             : null;
     }
 
-    /**
-     *
-     * Creates Identity and stores it.
-     * @param {string} name
-     * @memberof Device
-     */
-    public static createIdentity(name: string): Identity {
-        let i: Identity = null;
-        console.error(`Trying to create Identity '${name}'.`);
-        if (!Device.hasIdentity(name)) {
-            let s = Device.MAC_ADRESS_HEX;
-            let diff = 32 - s.length;
-            let additionalSLength = Math.ceil(Math.log2(diff)) * 2;
-            let randomS = Node.randomString(additionalSLength);
-            let newS: string = s.concat(
-                Buffer.from(randomS, 'utf8').toString('hex')
-            );
-            let pk = Buffer.from(newS, 'hex');
-            i = new Identity(name, pk);
-            let pk_i: PK_IDENTITY = { pk: pk, ident: i };
-            Device.identities = Device.identities.addItem(name, pk_i);
-            console.log(`Created Identity '${name}'.`);
-        } else {
-            console.error('Identity exists already, aborting.');
-            i = Device.identities.getItem(name).ident;
-        }
-        return i;
-    }
 
     /**
      *
@@ -126,7 +150,7 @@ export default abstract class Device {
      * @returns {Buffer}
      * @memberof Device
      */
-    public static getPrivateKey(name: string): Buffer {
-        return Device.identities.getItem(name).pk;
+    public getPrivateKey(name: string): Buffer {
+        return this.identities.getItem(name).pk;
     }
 }
